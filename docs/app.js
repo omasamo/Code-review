@@ -16,6 +16,8 @@
     config: null, overview: null, data: null, findings: [], issues: new Map(), issuesError: null,
     filters: { status: new Set(['open']), sev: new Set(SEV), q: '' },
     selected: new Set(),
+    openTop: new Set(),
+    localOrder: (() => { try { return JSON.parse(safeGet('top10Order')); } catch { return null; } })(),
     token: safeGet('gh_token') || '',
   };
 
@@ -183,9 +185,9 @@
       return `<a class="catbar" href="#/cat/${cat}"><span>${esc(CAT_LABEL[cat] || cat)}</span><span class="bar"><span class="p-fixed" style="width:${w(cc.fixed)}%;background:var(--fixed)"></span><span class="p-closed" style="width:${w(cc.closed)}%;background:var(--closed)"></span></span><span class="num">${cc.open} open / ${cc.total}</span></a>`;
     }).join('');
     const verdictFirst = (o.verdict || '').split('\n')[0];
-    const topRefs = o.top10.slice(0, 10);
+    const topRefs = orderedTop10();
     content.innerHTML = `
-      <h1>At a glance</h1>
+      <div class="titlebar"><h1>At a glance</h1><a class="btn primary" href="#/new">+ New finding</a></div>
       <p class="muted">Review of <a href="https://github.com/${esc(state.config.appRepo)}" target="_blank" rel="noopener">${esc(state.config.appRepo)}</a> at commit <code>${esc(state.data.reviewedCommit)}</code>, 5 to 6 October 2026. ${all.length} findings, each verified by independent checkers before being listed.</p>
       <div class="tiles">
         <div class="tile"><div class="big">${c.open}</div><div class="lbl">Open findings</div><div class="sub">of ${c.total}</div></div>
@@ -202,7 +204,7 @@
       <div class="card"><div class="catbars">${catbars}</div></div>
 
       <h2>Top 10 to fix <a class="faint" href="#/top10" style="font-weight:400">full list →</a></h2>
-      <div class="card"><ol class="top10">${topRefs.map((t) => `<li><div><div class="t-title">${esc(t.title)}</div><div class="t-refs">${refChips(t.refs)}</div></div></li>`).join('')}</ol></div>
+      <div class="card"><ol class="top10">${topRefs.map((t) => `<li class="${topDone(t) ? 't-done' : ''}"><div><div class="t-title">${esc(t.title)}</div><div class="t-refs">${refChips(t.refs)}</div></div></li>`).join('')}</ol></div>
 
       <h2>Plan</h2>
       <div class="card">${md(o.plan || '')}</div>
@@ -216,10 +218,73 @@
     }).join('');
   }
 
+  // ------------------------------------------------------------------ top 10 (reorderable, collapsible)
+  // Order lives in overview.json (`top10Order`, a list of ranks). A reorder is applied at once in
+  // this browser; "Save order" writes it back to the repository through the GitHub contents API
+  // when a token with Contents: write is set, otherwise it stays in this browser only.
+  function orderedTop10() {
+    const o = state.overview, saved = state.localOrder || o.top10Order;
+    const byRank = new Map(o.top10.map((t) => [t.rank, t]));
+    const out = [];
+    for (const r of saved || []) if (byRank.has(r)) { out.push(byRank.get(r)); byRank.delete(r); }
+    for (const t of o.top10) if (byRank.has(t.rank)) out.push(t);
+    return out;
+  }
+  function topDone(t) { return t.refs.length > 0 && t.refs.every((id) => { const f = state.findings.find((x) => x.id === id); return f && statusOf(f) !== 'open'; }); }
   function renderTop10() {
-    const o = state.overview;
-    content.innerHTML = `<h1>Top 10 to fix</h1><p class="muted">The council's final ranking. Each item names the findings it bundles; a struck-through reference is already resolved.</p>
-      <div class="card"><ol class="top10">${o.top10.map((t) => `<li><div><div class="t-title">${esc(t.title)}</div><div class="t-body">${inline(t.body)}</div><div class="t-refs">${refChips(t.refs)}${t.seats.length ? `<span class="faint">Top 5 for: ${esc(t.seats.join(', '))}</span>` : ''}</div></div></li>`).join('')}</ol></div>`;
+    const items = orderedTop10();
+    const dirty = JSON.stringify(items.map((t) => t.rank)) !== JSON.stringify((state.overview.top10Order || state.overview.top10.map((t) => t.rank)));
+    const canSave = state.config.reviewRepo && state.token;
+    content.innerHTML = `<div class="titlebar"><h1>Top 10 to fix</h1><a class="btn" href="#/new">+ New finding</a></div>
+      <p class="muted">The council's final ranking. Click a row to open it; use the arrows to rearrange. Each item bundles findings; close or reopen them inside the row. An item is struck through once every finding in it is resolved.</p>
+      <div class="selectbar"><span class="muted">${dirty ? 'Order changed in this browser.' : 'Order as saved in the repository.'}</span>
+        <button class="btn primary" id="saveOrder" ${dirty ? '' : 'disabled'}>Save order${canSave ? ' to repository' : ''}</button>
+        <button class="btn" id="resetOrder" ${dirty ? '' : 'disabled'}>Reset</button><span class="notice" id="orderMsg">${!canSave && dirty ? 'Add a token with Contents: write in Settings to save for everyone; until then it is kept in this browser.' : ''}</span></div>
+      <div class="card"><ol class="top10 top10-edit">${items.map((t, i) => `<li class="${topDone(t) ? 't-done' : ''}" data-rank="${t.rank}"><details ${state.openTop.has(t.rank) ? 'open' : ''}>
+          <summary><span class="t-title">${esc(t.title)}</span><span class="t-tools"><button class="btn mini" data-move="up" ${i === 0 ? 'disabled' : ''} title="Move up">▲</button><button class="btn mini" data-move="down" ${i === items.length - 1 ? 'disabled' : ''} title="Move down">▼</button></span></summary>
+          <div class="t-body">${inline(t.body)}</div>
+          ${t.seats.length ? `<div class="faint">Top 5 for: ${esc(t.seats.join(', '))}</div>` : ''}
+          <div class="t-findings">${t.refs.map((id) => topRefRow(id)).join('') || '<span class="faint">No individual findings linked.</span>'}</div>
+        </details></li>`).join('')}</ol></div>`;
+    content.querySelectorAll('[data-move]').forEach((b) => b.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const li = b.closest('li'), rank = Number(li.dataset.rank);
+      const order = items.map((t) => t.rank), i = order.indexOf(rank), j = b.dataset.move === 'up' ? i - 1 : i + 1;
+      if (j < 0 || j >= order.length) return;
+      [order[i], order[j]] = [order[j], order[i]];
+      state.localOrder = order; safeSet('top10Order', JSON.stringify(order)); renderTop10();
+    }));
+    content.querySelectorAll('.top10-edit details').forEach((d) => d.addEventListener('toggle', () => { const r = Number(d.closest('li').dataset.rank); d.open ? state.openTop.add(r) : state.openTop.delete(r); }));
+    $('#resetOrder').addEventListener('click', () => { state.localOrder = null; safeSet('top10Order', null); renderTop10(); });
+    $('#saveOrder').addEventListener('click', async () => {
+      const msg = $('#orderMsg');
+      if (!canSave) { msg.textContent = 'Kept in this browser. Add a token with Contents: write in Settings to save it to the repository.'; return; }
+      $('#saveOrder').disabled = true; msg.textContent = 'Saving…';
+      try { await saveOverviewToRepo({ ...state.overview, top10Order: items.map((t) => t.rank) }); state.overview.top10Order = items.map((t) => t.rank); state.localOrder = null; safeSet('top10Order', null); renderTop10(); $('#orderMsg').textContent = 'Saved. The site updates after GitHub Pages rebuilds (about a minute).'; }
+      catch (e) { msg.textContent = e.message; $('#saveOrder').disabled = false; }
+    });
+    wireActions();
+  }
+  function topRefRow(id) {
+    const f = state.findings.find((x) => x.id === id);
+    if (!f) return `<div class="t-ref-row"><span class="ref">${esc(id)}</span><span class="faint">not in the data</span></div>`;
+    const st = statusOf(f), issue = issueOf(f);
+    return `<div class="t-ref-row ${st !== 'open' ? 'done' : ''}"><a class="ref" href="#/f/${esc(id)}">${esc(id)}</a><span class="badge sev-${f.severity}">${SEV_LABEL[f.severity]}</span><span class="t-ref-title">${esc(f.title)}</span><span class="badge st-${st}">${STATUS_LABEL[st]}</span><span class="actions" data-id="${esc(id)}">${quickButtons(f, st, issue)}</span></div>`;
+  }
+  function quickButtons(f, st, issue) {
+    const cfg = state.config;
+    if (!(cfg.issuesEnabled && cfg.reviewRepo)) return '';
+    if (state.token) {
+      if (!issue) return `<button class="btn mini" data-act="create">Create issue</button>`;
+      return st === 'open' ? `<button class="btn mini" data-act="close">Close</button>` : (st === 'closed' ? `<button class="btn mini" data-act="reopen">Reopen</button>` : '');
+    }
+    return issue ? `<a class="btn mini" href="${issue.html_url}" target="_blank" rel="noopener">#${issue.number} ↗</a>` : '';
+  }
+  async function saveOverviewToRepo(overview) {
+    const repo = state.config.reviewRepo, path = 'docs/data/overview.json';
+    const cur = await gh(`/repos/${repo}/contents/${path}`);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(overview, null, 2) + '\n')));
+    return gh(`/repos/${repo}/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: 'Reorder the top 10 from the dashboard', content, sha: cur.sha }) });
   }
 
   function renderPlan() {
@@ -451,7 +516,7 @@
         <p class="muted">${cfg.issuesEnabled && cfg.reviewRepo ? `Live open/closed state comes from issues labelled <code>finding</code> on <a href="https://github.com/${esc(cfg.reviewRepo)}/issues" target="_blank" rel="noopener">${esc(cfg.reviewRepo)}</a>. Anyone can open or close them on GitHub; the dashboard reflects it on reload.` : `Not enabled. Set <code>reviewRepo</code> and <code>issuesEnabled: true</code> in <code>docs/config.json</code>, then run <code>npm run sync-issues</code> once to create one issue per finding.`}</p>
         <label>Personal access token (optional, stored only in this browser)</label>
         <input id="tok" type="password" value="${esc(state.token)}" placeholder="github_pat_… with Issues: read and write on the review repo">
-        <p class="faint">Lets you close, reopen and create issues from this page without leaving it. Create a fine-grained token at GitHub → Settings → Developer settings, scoped to the review repository with <em>Issues: Read and write</em>. Without a token the buttons link to GitHub instead.</p>
+        <p class="faint">Lets you close, reopen and create issues from this page without leaving it, and save the top-10 order for everyone. Create a fine-grained token at GitHub → Settings → Developer settings, scoped to the review repository with <em>Issues: Read and write</em> (and <em>Contents: Read and write</em> for saving the order). Without a token the buttons link to GitHub instead.</p>
         <div class="actions"><button class="btn primary" id="saveTok">Save</button><button class="btn" id="clearTok">Forget token</button></div>
       </div>
       <div class="card form">
