@@ -5,7 +5,7 @@
 //   node scripts/sync-issues.mjs            create missing issues, pull open/closed state, close fixed ones
 //   node scripts/sync-issues.mjs --dry-run  show what would change
 //
-// One issue per finding, titled "[A1] …", labelled finding + id:A1 + severity:x + category:y.
+// One issue per finding, titled "[A1] …", labelled finding + severity:x + category:y (the id is in the title).
 // Rules:
 //   issue closed on GitHub            → finding status "closed" (unless the scanner already marked it "fixed")
 //   issue reopened on GitHub          → finding status "open"
@@ -69,7 +69,7 @@ for (const i of issues) {
 }
 console.log(`${issues.length} finding issues on ${repo}, ${findings.length} findings in data`);
 
-ensureLabels([...new Set(findings.flatMap((f) => [`category:${f.category}`, `id:${f.id}`]))]);
+ensureLabels([...new Set(findings.map((f) => `category:${f.category}`))]);
 
 let created = 0, closedOnGh = 0, reopened = 0, closedFixed = 0, imported = 0;
 
@@ -80,7 +80,7 @@ for (const f of findings) {
     console.log(`create ${f.id} ${f.title.slice(0, 70)}`);
     created++;
     if (!dry) {
-      const url = gh(['issue', 'create', '-R', repo, '--title', `[${f.id}] ${f.title}`, '--body', body(f), '--label', `finding,id:${f.id},severity:${f.severity},category:${f.category}`]).trim();
+      const url = gh(['issue', 'create', '-R', repo, '--title', `[${f.id}] ${f.title}`, '--body', body(f), '--label', `finding,severity:${f.severity},category:${f.category}`]).trim();
       f.issue = Number(url.split('/').pop());
       if (f.status !== 'open') { gh(['issue', 'close', '-R', repo, String(f.issue), '--comment', `Status in the review data: ${f.status}.`]); }
     }
@@ -111,7 +111,6 @@ for (const i of unlabelled) {
   imported++;
   if (dry) continue;
   findings.push({ id, title, severity: SEVERITIES.includes(sev) ? sev : 'medium', category: CATEGORIES.includes(cat) ? cat : 'bug', file: whereM ? whereM[1] : null, line: whereM && whereM[2] ? Number(whereM[2]) : null, verifiers: null, what: field('What') || i.body.slice(0, 2000), evidence: field('Evidence'), goesWrong: field('What goes wrong'), fix: field('Suggested fix'), source: 'github-issue', commit: data.scannedCommit || data.reviewedCommit, status: i.state === 'CLOSED' ? 'closed' : 'open', issue: i.number, history: [{ at: new Date().toISOString(), status: i.state === 'CLOSED' ? 'closed' : 'open', note: `Imported from issue #${i.number}` }] });
-  gh(['issue', 'edit', '-R', repo, String(i.number), '--add-label', `id:${id}`]);
   gh(['issue', 'edit', '-R', repo, String(i.number), '--title', `[${id}] ${title}`]);
 }
 
