@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tinnitus Tracker Review</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-title">Tinnitus Tracker</div>
+      <div class="brand-sub">Code review dashboard</div>
+    </div>
+    <div class="nav-section">
+      <a class="nav-item" href="#/" data-route="/">At a glance</a>
+      <a class="nav-item" href="#/top10" data-route="/top10">Top 10 to fix</a>
+      <a class="nav-item" href="#/all" data-route="/all">All findings <span class="count" id="countAll"></span></a>
+    </div>
+    <div class="nav-label">Categories</div>
+    <div class="nav-section" id="navCategories"></div>
+    <div class="nav-label">Severity</div>
+    <div class="nav-section" id="navSeverities"></div>
+    <div class="nav-label">More</div>
+    <div class="nav-section">
+      <a class="nav-item" href="#/plan" data-route="/plan">Plan and council notes</a>
+      <a class="nav-item" href="#/settings" data-route="/settings">Settings</a>
+    </div>
+    <div class="nav-foot" id="navFoot"></div>
+  </nav>
+  <main class="content" id="content">
+    <p class="muted">Loading…</p>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

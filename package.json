@@ -1,0 +1,20 @@
+{
+  "name": "tinnitus-app-review",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Code review dashboard and quality scanner for the Tinnitus Tracker app",
+  "type": "module",
+  "scripts": {
+    "import": "node scripts/import-report.mjs",
+    "scan": "node scripts/scan.mjs scan",
+    "check": "node scripts/scan.mjs check",
+    "sync-issues": "node scripts/sync-issues.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
