@@ -7,7 +7,7 @@ A standalone companion to [kamil12345/tinnitus-app](https://github.com/kamil1234
 - `docs/data/overview.json` – the council verdict, top 10 and plan for the "At a glance" page
 - `reports/` – the original markdown reports the data was generated from
 - `scripts/` – importer, scanner, issue sync, local preview server
-- `.github/workflows/` – on-demand scan and issue sync
+- `.github/workflows/` – optional issue-sync workflow (no secrets)
 
 ## Enable GitHub Pages (once)
 
@@ -80,8 +80,7 @@ npm run import                    # regenerate data from reports/ (keeps existin
 
 ## GitHub Actions
 
-- **Quality scan** (`workflow_dispatch`): checks out the app repo, runs the scan with the `api` backend, syncs issues and commits the data. Needs two repository secrets: `ANTHROPIC_API_KEY`, and `APP_REPO_TOKEN` (a fine-grained PAT with *Contents: read* on the private app repo).
-- **Sync issues**: runs when an issue is opened, closed or reopened, and nightly. Needs no secrets.
+The scan runs locally only, by design: no API key is ever stored on GitHub. The one optional workflow, `.github/workflows/sync-issues.yml`, keeps the data file in step with issue state (opened, closed, reopened, nightly) using only the built-in `GITHUB_TOKEN`; pushing it needs a GitHub login with the `workflow` scope. Without it, `npm run sync-issues` does the same job locally.
 
 ## Data model
 
