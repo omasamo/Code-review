@@ -146,13 +146,23 @@
       (state.config.issuesEnabled ? `<br>${state.issuesError ? 'Issues: ' + esc(state.issuesError) : state.issues.size ? `Live state from ${state.issues.size} issues` : 'Loading issue state…'}` : '<br>Status from data file');
     document.querySelectorAll('.nav-item').forEach((a) => a.classList.toggle('active', a.dataset.route === currentRoute()));
   }
+  const STATUS_ROUTES = { open: ['open'], resolved: ['fixed', 'closed'], fixed: ['fixed'], closed: ['closed'] };
+  const STATUS_TITLE = { open: 'Open findings', resolved: 'Resolved findings', fixed: 'Fixed in code', closed: 'Closed findings' };
   function currentRoute() { return (location.hash || '#/').slice(1); }
   function route() {
     const r = currentRoute();
     document.querySelectorAll('.nav-item').forEach((a) => a.classList.toggle('active', a.dataset.route === r));
     $('#sidebar').classList.remove('open');
     let m;
+    // Each list page starts from its own status filter: status pages show their
+    // statuses, every other list shows open findings until the chips change it.
+    if (r !== state.lastRoute) {
+      const sm = r.match(/^\/status\/(.+)$/);
+      state.filters.status = new Set(sm ? (STATUS_ROUTES[sm[1]] || ['open']) : ['open']);
+      state.lastRoute = r;
+    }
     if (r === '/' || r === '') return renderHome();
+    if ((m = r.match(/^\/status\/(.+)$/))) return renderList({ title: STATUS_TITLE[m[1]] || 'Findings', list: state.findings.filter((f) => (STATUS_ROUTES[m[1]] || ['open']).includes(statusOf(f))) });
     if (r === '/top10') return renderTop10();
     if (r === '/all') return renderList({ title: 'All findings', list: state.findings });
     if ((m = r.match(/^\/cat\/(.+)$/))) return renderList({ title: CAT_LABEL[m[1]] || m[1], list: state.findings.filter((f) => f.category === m[1]), intro: catIntro(m[1]) });
@@ -190,12 +200,12 @@
       <div class="titlebar"><h1>At a glance</h1><a class="btn primary" href="#/new">+ New finding</a></div>
       <p class="muted">Review of <a href="https://github.com/${esc(state.config.appRepo)}" target="_blank" rel="noopener">${esc(state.config.appRepo)}</a> at commit <code>${esc(state.data.reviewedCommit)}</code>, 5 to 6 October 2026. ${all.length} findings, each verified by independent checkers before being listed.</p>
       <div class="tiles">
-        <div class="tile"><div class="big">${c.open}</div><div class="lbl">Open findings</div><div class="sub">of ${c.total}</div></div>
-        <div class="tile"><div class="big" style="color:var(--fixed)">${done}</div><div class="lbl">Resolved</div><div class="sub">${c.fixed} fixed in code, ${c.closed} closed</div></div>
+        <a class="tile" href="#/status/open"><div class="big">${c.open}</div><div class="lbl">Open findings</div><div class="sub">of ${c.total}</div></a>
+        <a class="tile" href="#/status/resolved"><div class="big" style="color:var(--fixed)">${done}</div><div class="lbl">Resolved</div><div class="sub">${c.fixed} fixed in code, ${c.closed} closed</div></a>
         ${sevTiles}
       </div>
       <div class="progress"><span class="p-fixed" style="width:${pct(c.fixed)}%"></span><span class="p-closed" style="width:${pct(c.closed)}%"></span></div>
-      <div class="legend"><span><i style="background:var(--fixed)"></i>Fixed (code gone, confirmed by scanner)</span><span><i style="background:var(--closed)"></i>Closed (decided or won't fix)</span><span><i style="background:var(--code-bg);border:1px solid var(--border)"></i>Open</span></div>
+      <div class="legend"><a href="#/status/fixed"><i style="background:var(--fixed)"></i>Fixed (code gone, confirmed by scanner)</a><a href="#/status/closed"><i style="background:var(--closed)"></i>Closed (decided or won't fix)</a><a href="#/status/open"><i style="background:var(--code-bg);border:1px solid var(--border)"></i>Open</a></div>
 
       <h2>Verdict</h2>
       <div class="card verdict">${md(o.verdict || '')}</div>
