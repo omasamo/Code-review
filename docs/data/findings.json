@@ -1,7 +1,7 @@
 {
   "version": 1,
   "reviewedCommit": "5513c30",
-  "scannedCommit": null,
+  "scannedCommit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5",
   "findings": [
     {
       "id": "A1",
@@ -72,6 +72,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The shared IntensityScaleSelector replaced one duplicated component (5f755a2), but the rest of the Add and Edit forms are still copies, and the new Pro-lock FieldCard code was pasted into both (3ed8ad4).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -96,6 +102,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: IntensityScaleSelector is now shared (5f755a2). The forms, the six choice screens and triggers/sound-types are still copies.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -377,13 +389,19 @@
       "fix": "Either return null from computePeriodChange when prevAvg === 0 (and show \"—\"), or stop using a percentage of the prior average on a 0–5 ordinal scale and show the difference in levels (\"+3.0 levels\"), which is exactly the reasoning the team already applied to Trigger Impact (trends.tsx:171-173).",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 16,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "7613fe5: computePeriodChangePercent is now computePeriodChange()*20 (app/stats/sevenDayTrend.ts:340-344), so arrow and caption can no longer disagree.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -425,13 +443,19 @@
       "fix": "CLAUDE.md only acknowledges Learn/Reports/Milestones as English-fallback; the stats.trigger (20 locales), anchor (20), settings (27) and de/es/fr gaps are unplanned drift. Fix the 5 de/es/fr keys and `settings.on` everywhere now, generate the remaining sections the same way the rest were produced, and wire the key-parity one-liner into CI (fail when any locale's key set != en.json).",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 18,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "15bac03/2242a29: all 27 non-English locales now have every one of en.json's 595 keys, including settings.on and stats.trigger.*.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -449,13 +473,19 @@
       "fix": "Add an `entryForm.intensityLevels` array (or reuse reports.pdf.levels) and render `t(...)[i]`; keep INTENSITY_LABELS only if something needs a locale-independent key.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 19,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "5f755a2: INTENSITY_LABELS removed; IntensityScaleSelector.tsx renders t('entryForm.intensityLevels'), translated in all locales.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -504,6 +534,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The 9pt faint intensity captions are gone (5f755a2). The inactive tab tint and muted text still fail contrast.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -576,6 +612,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: trends.tsx grew from 2,298 to 2,443 lines with the inline locked cards (3ed8ad4).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -648,6 +690,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: New src -> app imports were added: reportExport.ts imports app/db/queries, and reportHtml.ts imports app/i18n/builtInNames (8a476a7).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -737,13 +785,19 @@
       "fix": "When `periodChangePercent` is null but `periodChange` is not, render a non-numeric caption (e.g. \"—\" or a `stats.changeFromZero` string) instead of coercing to 0. Alternatively express the caption as the absolute level change (`+3.0`) which is always defined on this scale. Update the 1-5 wording in CLAUDE.md and the comment at sevenDayTrend.ts:335.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 31,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "Same fix as A16 (7613fe5): a prior average of 0 now gives a real figure instead of 0%.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -1344,6 +1398,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: Back-button styles are now consistent (8a476a7). hexToRgba is still copied into 23 files.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1368,6 +1428,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: ScaleSelector consolidated (5f755a2). triggers/sound-types and the choice screens are unchanged, and new duplication was added (3ed8ad4, 8a476a7).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1440,6 +1506,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: The guide sentence that contradicts the 60% verdict was copied into all 28 per-locale guides (15bac03).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1560,6 +1632,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: Premium now unlocks real features and the banner copy is truthful (3ed8ad4, 2242a29). The paywall still appears straight after the disclaimer.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1632,6 +1710,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: Dates now follow the app language (c0d7b86). The Trigger Impact chip sort still uses locale-less localeCompare.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1649,13 +1733,19 @@
       "fix": "Format with `i18n.resolvedLanguage` for date/month/weekday names (keep hour12 from expo-localization, which is a device preference), or explicitly scope the Language setting to copy only and say so on the Language screen.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 69,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "c0d7b86: getDisplayLocale()/setDisplayLanguage in app/utils/datetime.ts; every display formatter now uses the app language.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -1673,13 +1763,19 @@
       "fix": "Either machine-translate the 49 non-exempt keys using the same practice as the rest, or explicitly whitelist the exempt namespaces in the parity script so the exception is encoded rather than tribal knowledge; update CLAUDE.md to match reality.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 70,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "Full key parity in all 28 locales (15bac03, 2242a29), and Learn/statistics guides are translated per locale.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -1728,6 +1824,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: All locales now have full key parity (15bac03). ConfirmDialog still hard-codes \"Cancel\" and StatusDialog defaults to \"OK\".",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1793,13 +1895,19 @@
       "fix": "Add an `entryForm.intensityLevels` array (or reuse `reports.pdf.levels`) and read it via `t(..., { returnObjects: true })` in ScaleSelector; keep INTENSITY_LABELS only as the English fallback.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 75,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "Same fix as A19 (5f755a2).",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -1848,6 +1956,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The missing keys are now present in all 28 locales. Nothing checks key parity automatically yet.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1920,6 +2034,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Still open: The new sound-type table in the PDF is translated (8a476a7), but trigger names are still printed in English, so the PDF is now inconsistent with itself.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1944,6 +2064,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Still open: The new sound-type table is translated, but the trigger tables still print raw English names (reportHtml.ts:114, :119).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -1968,6 +2094,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The rewritten guide dropped the 90% threshold and the overlap flag. It still says no direction is shown when the range crosses zero, which the app does show.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -2088,6 +2220,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: The in-app \"Clinical review required\" marker was removed (8a476a7) while the Medicines guide, still missing from the clinical review pack, now ships in all 28 languages (15bac03).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -2160,6 +2298,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The test no longer hard-codes 6 guides. There is still no runner or test script.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -2232,6 +2376,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: Pitch Test and Widgets are now sold as Pro, but subscribers still land on Coming soon (3ed8ad4). See the new finding.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -2249,13 +2399,19 @@
       "fix": "Replace with a user-facing \"Content updated {{date}}\" interpolated from `LEARN_CONTENT_UPDATED` (formatted in the app language) and keep the review reminder in a code comment or a `__DEV__`-only badge.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 94,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "8a476a7 removed the learn.updated footer ('Clinical review required before release') from app/learn/index.tsx.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -2496,6 +2652,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: Four new built-in triggers were added (8a476a7). They are seeded case-sensitively, so they can duplicate a user's custom trigger with different casing.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -2976,6 +3138,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.854Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The sevenDayTrend.ts comment now says 0-5 (7613fe5). CLAUDE.md still says 1-5 and there is no CHECK constraint.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -3000,6 +3168,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: One unused style was removed (5f755a2). intensityError, the unused imports and tooltip styles remain.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -3216,6 +3390,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The throw moved from module load into getLearnArticles(), so a slug typo now crashes the Learn screen rather than startup. There is still no fallback.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -3240,6 +3420,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Partly fixed: The stale footer date was removed (8a476a7). LEARN_CONTENT_UPDATED is still unused.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -3521,13 +3707,19 @@
       "fix": "Add the key to de/es/fr and add a parity check for the `reports.pdf` block to tests/features.validation.ts.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 147,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "reports.pdf.notEnoughImpact is present in all 28 locales (15bac03).",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -4001,13 +4193,19 @@
       "fix": "Add `accessibilityRole=\"radio\"`, `accessibilityLabel={label}` and `accessibilityState={{ selected }}` to each scale button, and group them with `accessibilityRole=\"radiogroup\"`.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 167,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "IntensityScaleSelector.tsx:128-130 adds accessibilityRole, accessibilityLabel and accessibilityState.selected (5f755a2).",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -4080,6 +4278,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: Still open, and new code added more left/right positioning (Pro badges in trends.tsx and the entry forms).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -4176,6 +4380,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: New 38x38 buttons were added (the Home milestones button, among others).",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -4200,6 +4410,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:27.855Z",
+          "status": "open",
+          "note": "Re-check at 26dedb1 — Worse: The Developer section now also holds a Subscription Tier override that unlocks Premium in release builds (3ed8ad4). See the new finding.",
+          "commit": "26dedb1"
         }
       ]
     },
@@ -4217,13 +4433,19 @@
       "fix": "Call `unlockEvent('first_guide')` in StatisticsMethodologyScreen on mount as well, or change the milestone copy to 'Read one of the articles in Learn'.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 176,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-10T21:34:09.878Z",
+          "status": "fixed",
+          "note": "No longer applies: 8a476a7 removed the statistics-guide row from the Learn screen, so the milestone text no longer points at it.",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
     },
@@ -4682,7 +4904,167 @@
           "note": "Imported from review-2026-10-05"
         }
       ]
+    },
+    {
+      "id": "S1",
+      "title": "Anyone can unlock Premium for free via Settings > Developer > Subscription Tier",
+      "severity": "high",
+      "category": "security",
+      "file": "app/settings.tsx",
+      "line": 184,
+      "verifiers": null,
+      "what": "The Premium commit added a Real / Free / Premium tier override to the Developer section of Settings. That section has no __DEV__ guard (only a 'TODO: remove before release' comment), and the override directly decides isSubscribed.",
+      "evidence": "app/settings.tsx:184-213 renders the Developer section with t('settings.tierOverride'); app/contexts/SubscriptionContext.tsx:64 `const isSubscribed = tierOverride === 'real' ? hasEntitlement : tierOverride === 'premium';` (3ed8ad4).",
+      "goesWrong": "Any user of a release build opens Settings, picks Premium and gets every Pro feature without paying. The choice is persisted in settings.dev_tier_override.",
+      "fix": "Render the Developer section only when __DEV__ is true (or remove it), and make SubscriptionContext ignore dev_tier_override outside __DEV__.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 196,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "title": "Pitch Test and Widgets are sold as Pro but only open a 'Coming soon' screen for subscribers",
+      "severity": "high",
+      "category": "legal",
+      "file": "app/(tabs)/more.tsx",
+      "line": 194,
+      "verifiers": null,
+      "what": "Free users see a Pro badge on Pitch Test and Widgets and are sent to the paywall; paying users who tap them get the /coming-soon placeholder.",
+      "evidence": "app/(tabs)/more.tsx:194 `onPress={proLocked ? () => openPaywall('pitch_test') : cs('more.pitchTest')}` and :287 the same for widgets; cs() at :116 pushes /coming-soon (3ed8ad4).",
+      "goesWrong": "The paywall promotes features that do not exist, which invites refunds and store complaints (Play subscriptions policy, Apple 3.1.2).",
+      "fix": "Hide Pitch Test and Widgets until they exist, or show them as 'coming soon' without a Pro badge or paywall.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 197,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "title": "Stats keeps old-language axis labels and date range after a language switch",
+      "severity": "low",
+      "category": "i18n",
+      "file": "app/(tabs)/trends.tsx",
+      "line": 1614,
+      "verifiers": null,
+      "what": "itemBuckets and rangeDates are memoised on [processed, range] only, but since c0d7b86 their labels depend on getDisplayLocale(). The focus effect skips setEntries when the diary fingerprint is unchanged, so the memos never recompute.",
+      "evidence": "app/(tabs)/trends.tsx:1614 and :1675 memo deps; fingerprint check at :1594.",
+      "goesWrong": "After changing the app language, Stats still shows month/day labels and the range text in the previous language until the diary changes or the app restarts.",
+      "fix": "Add the display language to those memo dependencies.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 198,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "Locked Pro cards and badged controls in Stats have no screen-reader role or label",
+      "severity": "low",
+      "category": "ux",
+      "file": "app/(tabs)/trends.tsx",
+      "line": 438,
+      "verifiers": null,
+      "what": "The tappable LockedStatsCard wrapper and the Pro-badged chips/toggles added in 3ed8ad4 have no accessibilityRole or accessibilityLabel, unlike the locked entry-form cards.",
+      "evidence": "app/(tabs)/trends.tsx:438 (LockedStatsCard), :948 and :1160 (badged controls).",
+      "goesWrong": "TalkBack/VoiceOver users hear unlabelled elements and are not told they open the paywall.",
+      "fix": "Add accessibilityRole=\"button\" and a label such as 'Trigger Impact, Premium, opens upgrade screen'.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 199,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "title": "report_created is logged even when the share or save is cancelled",
+      "severity": "low",
+      "category": "code-quality",
+      "file": "app/reports.tsx",
+      "line": 65,
+      "verifiers": null,
+      "what": "The analytics event is sent regardless of whether the Android save-folder picker or share sheet completed.",
+      "evidence": "app/reports.tsx:58-66 logs report_created after createAndSaveReportAndroid/share even when it returns false (8a476a7).",
+      "goesWrong": "Report-usage analytics are inflated by cancelled attempts.",
+      "fix": "Log only when the save/share actually succeeded.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 200,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "title": "LanguageContext mutates module state inside useMemo",
+      "severity": "low",
+      "category": "code-quality",
+      "file": "app/contexts/LanguageContext.tsx",
+      "line": 82,
+      "verifiers": null,
+      "what": "setDisplayLanguage(language) runs inside a useMemo during render, mutating module-level state and clearing formatter caches.",
+      "evidence": "app/contexts/LanguageContext.tsx:82-88 (c0d7b86).",
+      "goesWrong": "Works today; under React strict/concurrent rendering a discarded render could switch the date locale before the language commit.",
+      "fix": "Set the display language synchronously at init and in setLanguage, not inside a memo.",
+      "source": "scan-2026-10-10",
+      "commit": "26dedb1",
+      "status": "open",
+      "issue": 201,
+      "history": [
+        {
+          "at": "2026-10-10T21:34:09.874Z",
+          "status": "open",
+          "note": "Found by quality scan at 26dedb1",
+          "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        }
+      ]
     }
   ],
-  "updatedAt": "2026-10-06T11:43:01.974Z"
+  "updatedAt": "2026-10-10T21:35:16.170Z",
+  "scans": [
+    {
+      "at": "2026-10-10T21:34:09.874Z",
+      "head": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5",
+      "fixed": 11,
+      "added": 6,
+      "note": "scan ingested from recheck-26dedb1.json",
+      "notes": "Re-check of all 178 review findings against main 26dedb1 (12 commits since 5513c30): 11 fixed, 16 partly fixed, 8 worse, 142 still open, 1 no longer applies. Translations, the Change tile, intensity labels and date locale were fixed. queries.ts, app.json, package.json, App Lock, onboarding, dialogs and notifications were not touched, so the data, import, App Lock, release-config and privacy blockers remain. The Premium commit introduced a release blocker: the Developer-menu tier override unlocks Premium for anyone."
+    }
+  ]
 }
