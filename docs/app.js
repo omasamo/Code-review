@@ -141,7 +141,7 @@
     $('#countAll').textContent = `${c.open}/${c.total}`;
     const d = state.data;
     $('#navFoot').innerHTML = `Reviewed <a href="https://github.com/${esc(state.config.appRepo)}/commit/${esc(d.reviewedCommit)}" target="_blank" rel="noopener">${esc(d.reviewedCommit || '')}</a>` +
-      (d.scannedCommit ? `<br>Last scan <a href="https://github.com/${esc(state.config.appRepo)}/commit/${esc(d.scannedCommit)}" target="_blank" rel="noopener">${esc(d.scannedCommit.slice(0, 7))}</a>` : '') +
+      (d.scannedCommit ? `<br>Last checked <a href="https://github.com/${esc(state.config.appRepo)}/commit/${esc(d.scannedCommit)}" target="_blank" rel="noopener">${esc(d.scannedCommit.slice(0, 7))}</a>` : '') +
       `<br>Data updated ${esc((d.updatedAt || '').slice(0, 10))}` +
       (state.config.issuesEnabled ? `<br>${state.issuesError ? 'Issues: ' + esc(state.issuesError) : state.issues.size ? `Live state from ${state.issues.size} issues` : 'Loading issue state…'}` : '<br>Status from data file');
     document.querySelectorAll('.nav-item').forEach((a) => a.classList.toggle('active', a.dataset.route === currentRoute()));
@@ -198,7 +198,7 @@
     const topRefs = orderedTop10();
     content.innerHTML = `
       <div class="titlebar"><h1>At a glance</h1><a class="btn primary" href="#/new">+ New finding</a></div>
-      <p class="muted">Review of <a href="https://github.com/${esc(state.config.appRepo)}" target="_blank" rel="noopener">${esc(state.config.appRepo)}</a> at commit <code>${esc(state.data.reviewedCommit)}</code>, 5 to 6 October 2026. ${all.length} findings, each verified by independent checkers before being listed.</p>
+      <p class="muted">Review of <a href="https://github.com/${esc(state.config.appRepo)}" target="_blank" rel="noopener">${esc(state.config.appRepo)}</a> at commit <code>${esc(state.data.reviewedCommit)}</code>, 5 to 6 October 2026. ${all.length} findings, each verified by independent checkers before being listed.${lastCheck()}</p>
       <div class="tiles">
         <a class="tile" href="#/status/open"><div class="big">${c.open}</div><div class="lbl">Open findings</div><div class="sub">of ${c.total}</div></a>
         <a class="tile" href="#/status/resolved"><div class="big" style="color:var(--fixed)">${done}</div><div class="lbl">Resolved</div><div class="sub">${c.fixed} fixed in code, ${c.closed} closed</div></a>
@@ -219,6 +219,13 @@
       <h2>Plan</h2>
       <div class="card">${md(o.plan || '')}</div>
       <p class="faint">Source reports: ${state.config.reviewRepo ? `<a href="https://github.com/${esc(state.config.reviewRepo)}/tree/main/reports" target="_blank" rel="noopener">reports/</a> in this repository` : '<code>reports/</code> in this repository'}. Status comes from ${state.config.issuesEnabled ? 'GitHub Issues on this repository' : 'the data file'}; the quality scanner marks a finding fixed when its code is gone.</p>`;
+  }
+  function lastCheck() {
+    const d = state.data, s = (d.scans || []).slice(-1)[0];
+    if (!d.scannedCommit) return '';
+    const sha = d.scannedCommit.slice(0, 7);
+    const who = s && s.commitAuthor ? ` (${esc(s.commitAuthor)}'s ${s.commitMessage && /^Merge/.test(s.commitMessage) ? 'merge' : 'commit'}${s.commitDate ? ', ' + esc(s.commitDate) : ''})` : '';
+    return ` <strong>Last checked against <a href="https://github.com/${esc(state.config.appRepo)}/commit/${esc(d.scannedCommit)}" target="_blank" rel="noopener">${esc(sha)}</a>${who}</strong>${s && s.at ? ` on ${esc(s.at.slice(0, 10))}` : ''}.`;
   }
   function refChips(refs) {
     return refs.map((id) => {
