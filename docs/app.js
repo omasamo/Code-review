@@ -10,7 +10,7 @@
     testing: 'Tooling and tests', legal: 'Legal and privacy',
   };
   const CAT_ORDER = ['bug', 'legal', 'architecture', 'design-decision', 'i18n', 'ux', 'security', 'performance', 'testing', 'code-quality'];
-  const STATUS_LABEL = { open: 'Open', fixed: 'Fixed', closed: 'Closed' };
+  const STATUS_LABEL = { open: 'Open', fixed: 'Fixed', closed: "Closed, not fixed" };
 
   const state = {
     config: null, overview: null, data: null, findings: [], issues: new Map(), issuesError: null,
@@ -146,8 +146,8 @@
       (state.config.issuesEnabled ? `<br>${state.issuesError ? 'Issues: ' + esc(state.issuesError) : state.issues.size ? `Live state from ${state.issues.size} issues` : 'Loading issue state…'}` : '<br>Status from data file');
     document.querySelectorAll('.nav-item').forEach((a) => a.classList.toggle('active', a.dataset.route === currentRoute()));
   }
-  const STATUS_ROUTES = { open: ['open'], resolved: ['fixed', 'closed'], fixed: ['fixed'], closed: ['closed'] };
-  const STATUS_TITLE = { open: 'Open findings', resolved: 'Resolved findings', fixed: 'Fixed in code', closed: 'Closed findings' };
+  const STATUS_ROUTES = { open: ['open'], resolved: ['fixed', 'closed'], fixed: ['fixed'], closed: ['fixed', 'closed'], wontfix: ['closed'] };
+  const STATUS_TITLE = { open: 'Open findings', resolved: 'Resolved findings', fixed: 'Fixed in code', closed: 'Closed issues', wontfix: 'Closed without a code fix' };
   function currentRoute() { return (location.hash || '#/').slice(1); }
   function route() {
     const r = currentRoute();
@@ -201,11 +201,11 @@
       <p class="muted">Review of <a href="https://github.com/${esc(state.config.appRepo)}" target="_blank" rel="noopener">${esc(state.config.appRepo)}</a> at commit <code>${esc(state.data.reviewedCommit)}</code>, 5 to 6 October 2026. ${all.length} findings, each verified by independent checkers before being listed.${lastCheck()}</p>
       <div class="tiles">
         <a class="tile" href="#/status/open"><div class="big">${c.open}</div><div class="lbl">Open findings</div><div class="sub">of ${c.total}</div></a>
-        <a class="tile" href="#/status/resolved"><div class="big" style="color:var(--fixed)">${done}</div><div class="lbl">Resolved</div><div class="sub">${c.fixed} fixed in code, ${c.closed} closed</div></a>
+        <a class="tile" href="#/status/resolved"><div class="big" style="color:var(--fixed)">${done}</div><div class="lbl">Resolved</div><div class="sub">${c.fixed} fixed in code, ${c.closed} closed without a fix</div></a>
         ${sevTiles}
       </div>
       <div class="progress"><span class="p-fixed" style="width:${pct(c.fixed)}%"></span><span class="p-closed" style="width:${pct(c.closed)}%"></span></div>
-      <div class="legend"><a href="#/status/fixed"><i style="background:var(--fixed)"></i>Fixed (code gone, confirmed by scanner)</a><a href="#/status/closed"><i style="background:var(--closed)"></i>Closed (decided or won't fix)</a><a href="#/status/open"><i style="background:var(--code-bg);border:1px solid var(--border)"></i>Open</a></div>
+      <div class="legend"><a href="#/status/fixed"><i style="background:var(--fixed)"></i>Fixed (code gone, confirmed by scanner)</a><a href="#/status/wontfix"><i style="background:var(--closed)"></i>Closed without a code fix (decided or won't fix)</a><a href="#/status/open"><i style="background:var(--code-bg);border:1px solid var(--border)"></i>Open</a></div>
 
       <h2>Verdict</h2>
       <div class="card verdict">${md(o.verdict || '')}</div>
@@ -328,7 +328,7 @@
     const renderItems = (l) => l.length ? l.map((x) => findingCard(x, open)).join('') : '<p class="muted">Nothing matches these filters.</p>';
     content.innerHTML = `
       <h1>${esc(title)}</h1>
-      <p class="muted">${esc(intro)} ${c.open} open, ${c.fixed} fixed, ${c.closed} closed.</p>
+      <p class="muted">${esc(intro)} ${c.open} open, ${c.fixed} fixed, ${c.closed} closed without a fix.</p>
       <div class="toolbar">
         <input type="search" id="q" placeholder="Search id, title, file…" value="${esc(f.q)}">
         <div class="chip-group">${chips(['open', 'fixed', 'closed'], f.status, 'status')}</div>
