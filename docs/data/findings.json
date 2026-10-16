@@ -1,7 +1,7 @@
 {
   "version": 1,
   "reviewedCommit": "5513c30",
-  "scannedCommit": "f2eb90ed658e819ef4c359f19dbe512744b5806e",
+  "scannedCommit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31",
   "findings": [
     {
       "id": "A1",
@@ -17,13 +17,19 @@
       "fix": "Wrap the call in `if (__DEV__)` today and delete seedDevData() (and the `dev_seeded` key) before release; add a release-checklist grep for `seedDevData` / `TODO: remove before release`.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 1,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A8 (b8315e0): seed is __DEV__-only and never completes onboarding, so the medical disclaimer is always shown.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -737,6 +743,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Worse: trends.tsx grew from 2,298 to 2,443 lines with the inline locked cards (3ed8ad4).",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: trends.tsx is now 2,460 lines after the day-count change (345f375).",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -1085,6 +1097,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: The overlay change (b49ca80) did not touch the re-prompt-on-every-active behaviour.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -1126,13 +1144,19 @@
       "fix": "Wrap saveEntry, updateEntry, importEntries (and deleteEntry once it deletes join rows) in `db.withTransactionSync(() => { ... })`; this also makes the import ~10-50x faster.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 40,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "1370d30: saveEntry, updateEntry and importEntries each run their multi-statement writes inside db.withTransactionSync (app/db/queries.ts).",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1222,13 +1246,19 @@
       "fix": "Wrap the loop in `db.withTransactionSync(() => {...})`; validate `Number.isInteger(intensity) && intensity >= 0 && intensity <= 5`, `!Number.isNaN(Date.parse(created_at))`, and the enum fields against the `Pitch`/`Location`/`DurationPattern`/`Distress` unions, skipping or rejecting bad rows up front; hoist `getDeviceTimeZone()` out of the loop. Apply the same transaction wrap to `saveEntry` (416-455) and `updateEntry` (247-284) so an entry can never be left without its join rows.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 44,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A10 (1370d30): per-row validation plus one transaction around the whole import.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1246,13 +1276,19 @@
       "fix": "Wrap the whole loop in `db.withTransactionSync(() => { ... })` so a failed import rolls back completely, and validate every entry before inserting any.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 45,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A10: importEntries is wrapped in db.withTransactionSync, so a failure leaves nothing behind.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1270,13 +1306,19 @@
       "fix": "Validate each entry against the DB types (integer intensity 0–5, enum values from app/db/types.ts, string|null note, parseable ISO date) and reject the file (inside the transaction) with a count of invalid rows; check `schema_version <= SCHEMA_VERSION`.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 46,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A10: validateImportEntry() rejects out-of-range intensity and coerces wrong-type/unknown optional values to null.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1294,13 +1336,19 @@
       "fix": "Wrap the whole import in `db.withTransactionSync(() => { ... })` so a failure rolls everything back and the 'could not be read' message is actually true; do the same for `updateEntry` and `saveEntry`. Validate the file fully (previous finding) before starting the transaction so the common case never rolls back.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 47,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A10: the import is atomic and a retry can no longer duplicate the already-imported rows.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1318,13 +1366,19 @@
       "fix": "Clamp or reject at the write boundary (importEntries/updateEntry: `Number.isInteger(v) && v >= 0 && v <= 5`), and in the edit screen treat an out-of-range loaded value as null so the user must re-select before saving.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 48,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "1370d30/345f375: out-of-range intensity is rejected at import and computeDistribution clamps defensively, so no such row can reach the entry screens.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1342,13 +1396,19 @@
       "fix": "Add `timezone` (and `source`) to the export payload and bump `SCHEMA_VERSION`; on import, use the stored timezone for `computeLocalDate` and fall back to the device zone only for version-1 backups.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 49,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A15 (1370d30).",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1366,13 +1426,19 @@
       "fix": "Add a `savingRef`/`saved` guard at the top of handleSave and pass `disabled={saved}` to the PressableScale (and the same in [id].tsx).",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 50,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A14 (6a60a8f).",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1523,6 +1589,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: Back-button styles are now consistent (8a476a7). hexToRgba is still copied into 23 files.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.175Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Partly fixed: The six choice screens and the two manage-list screens now share one implementation each (3d3c2a1), and the entry forms share EntryForm (6a60a8f); hexToRgba is still defined per file in the remaining screens.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -1540,7 +1612,7 @@
       "fix": "Extract `ChoiceSettingScreen<T>` (title, intro, options, pending/save), a `ManageItemsScreen` shared by triggers/sound-types, a `SettingsRow`, and move hexToRgba/withAlpha into constants/theme.ts.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 57,
       "history": [
         {
@@ -1553,6 +1625,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: ScaleSelector consolidated (5f755a2). triggers/sound-types and the choice screens are unchanged, and new duplication was added (3ed8ad4, 8a476a7).",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "3d3c2a1: the six single-choice screens and triggers.tsx/sound-types.tsx are now wrappers around SingleChoiceScreen/ManageItemsScreen. hexToRgba is still copied in the remaining screens (tracked by A56).",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -1679,6 +1757,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: Import is now validated and atomic (1370d30) but still appends with no identity, so re-importing your own backup still duplicates every entry.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -1703,6 +1787,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: See A62 — no dedup was added in 1370d30.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -1727,6 +1817,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: See A62 — the import still appends.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -2332,7 +2428,7 @@
       "fix": "Add a 'Medicines and tinnitus' row (claims: ototoxic drug classes, dose-dependence, reversibility, 'never stop on your own'; sources NHS/NIDCD; clinical risk High) and update 'Prepared'/'Review candidate' to the current commit. Consider a tiny script/test that asserts every slug in `en` in content.ts appears in the package table so the two cannot drift again.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 87,
       "history": [
         {
@@ -2345,6 +2441,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Worse: The in-app \"Clinical review required\" marker was removed (8a476a7) while the Medicines guide, still missing from the clinical review pack, now ships in all 28 languages (15bac03).",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "4c8ab16: the clinical review package now covers all eight guides including 'Medicines and tinnitus' and 'Management options', with a dated review record and explicit open items.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -2440,13 +2542,19 @@
       "fix": "In `TabBarButton`, destructure `...rest` and spread it onto `Pressable`. In `AddTabButton`, forward `props['aria-label']`/`testID` (or set `accessibilityRole=\"button\"` and `accessibilityLabel={t('tabs.add')}` explicitly) on the `PressableScale`, and remove the unused `tabBarIcon` for the add screen.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 91,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "c03bb6a: AddTabButton in app/(tabs)/_layout.tsx takes accessibilityState from BottomTabBarButtonProps and labels the FAB with tabs.add.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -2501,6 +2609,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Worse: Pitch Test and Widgets are now sold as Pro, but subscribers still land on Coming soon (3ed8ad4). See the new finding.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Partly fixed: Pitch Test and Widgets are gone from More (b8315e0). The \"Rate app\" row still opens Coming soon.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -2651,6 +2765,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: The pending-date branch in calendar.tsx still returns before skipFocusResetRef is cleared (6a60a8f only removed the render-phase initializers).",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -2897,6 +3017,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: 1370d30 did not add a syncAchievements() call after import.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -3202,13 +3328,19 @@
       "fix": "Wrap in try/finally (`finally { setSaving(false); }`) and `recordError` the failure; optionally show StatusDialog with lock.failed.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 122,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "3d3c2a1: SingleChoiceScreen.handleSave wraps onSave in try/finally so `saving` is always reset; app-lock.tsx no longer owns that state.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -3293,6 +3425,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: One unused style was removed (5f755a2). intensityError, the unused imports and tooltip styles remain.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Partly fixed: The forms were consolidated into EntryForm (6a60a8f); the write-only intensityError state and tooltipBox styles were dropped with it, but the LayoutAnimation/UIManager setup is still carried over.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -3358,13 +3496,19 @@
       "fix": "Rename the map parameter (`row`) in both screens.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 128,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "3d3c2a1: ManageItemsScreen maps with `item =>`; the i18n `t` is no longer shadowed.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -3545,6 +3689,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: The stale footer date was removed (8a476a7). LEARN_CONTENT_UPDATED is still unused.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: Content review bumped LEARN_CONTENT_UPDATED to 2026-10-14 (4c8ab16), but nothing reads it.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -3610,13 +3760,19 @@
       "fix": "Either migrate in initDatabase (`UPDATE entries SET impact = CASE impact WHEN 1 THEN 'manageable' WHEN 2 THEN 'manageable' WHEN 3 THEN 'bothersome' WHEN 4 THEN 'distressing' WHEN 5 THEN 'distressing' END WHERE typeof(impact)='integer'`, or NULL them) and document the column as TEXT, or at minimum have importEntries/updateEntry reject non-enum values so the mismatch cannot be re-introduced. Add a CHECK on new installs.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 138,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "1370d30: entries.impact is declared TEXT in app/db/database.ts with a comment on the affinity; import validation only admits the three string values.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -4078,13 +4234,19 @@
       "fix": "Decide explicitly: either set `\"android\": { \"allowBackup\": false }` in app.json (matching the local-first/App Lock story and the manual export path), or keep it on and add a `fullBackupContent`/`dataExtractionRules` XML that excludes `databases/` and `files/SQLite` while allowing preferences. Either way it should be a recorded decision rather than the template default.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 157,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as L6 (b8315e0).",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -4109,6 +4271,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: The iOS export still writes the full JSON to Paths.cache before sharing (unchanged in 1370d30).",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -4517,6 +4685,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Worse: New 38x38 buttons were added (the Home milestones button, among others).",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Still open: c03bb6a added labels and roles to the icon buttons but did not enlarge their tap targets.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -4547,6 +4721,12 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Worse: The Developer section now also holds a Subscription Tier override that unlocks Premium in release builds (3ed8ad4). See the new finding.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:26:01.176Z",
+          "status": "open",
+          "note": "Re-check at 611eeb5 — Partly fixed: The Developer section is now __DEV__-only (b8315e0). The \"Rate app\" Coming-soon row remains.",
+          "commit": "611eeb5"
         }
       ]
     },
@@ -4690,13 +4870,19 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 181,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as S2 (b8315e0): the two rows that sold non-existent features are gone; Reports, Learn and Milestones behind the paywall do exist.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -4714,13 +4900,19 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 182,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:26:01.067Z",
+          "status": "fixed",
+          "note": "Same fix as A8 (b8315e0): release builds never write the fake 'Alex' data.",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
         }
       ]
     },
@@ -5227,9 +5419,84 @@
           "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
         }
       ]
+    },
+    {
+      "id": "S7",
+      "title": "Learn is shown by default before independent clinician sign-off",
+      "severity": "medium",
+      "category": "legal",
+      "file": "app/utils/remoteConfig.ts",
+      "line": 11,
+      "verifiers": null,
+      "what": "On the owner's instruction learn_enabled now defaults to true, so the Learn guides (including the medicines guide that names drug classes) ship visible while the review package still lists independent clinician and native-speaker sign-off as open.",
+      "evidence": "app/utils/remoteConfig.ts:11 `learn_enabled: true` with the comment 'independent clinician sign-off is still open'; docs/release-checklists/learn-clinical-review-package.md 'Open items that need a human: 1. Independent clinician sign-off … 2. Native-speaker review of the 27 translations'.",
+      "goesWrong": "If App Review or a user challenges a medical statement, the only review on record is an internal editorial one; the kill switch (Remote Config learn_enabled=false) is the fallback.",
+      "fix": "Obtain and record the clinician sign-off in the review package, or set learn_enabled to false in the Firebase console until then.",
+      "source": "scan-2026-10-16",
+      "commit": "611eeb5",
+      "status": "open",
+      "issue": 202,
+      "history": [
+        {
+          "at": "2026-10-16T12:26:01.066Z",
+          "status": "open",
+          "note": "Found by quality scan at 611eeb5",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "title": "Dark-mode textMuted still fails 4.5:1 on small informational text",
+      "severity": "low",
+      "category": "ux",
+      "file": "app/constants/theme.ts",
+      "line": 127,
+      "verifiers": null,
+      "what": "The light textMuted token was raised to #6B7A90 (4.6:1), but the dark token stays #6B7788 on #151C2E (about 3.4:1) and is used on the same 10–14pt labels, hints and subtitles.",
+      "evidence": "app/constants/theme.ts: darkColors `textMuted: '#6B7788'` on `surface: '#151C2E'`; same consumers as the light token (e.g. app/components/EntryForm.tsx cardHint fontSize 12, app/(tabs)/more.tsx rowSub).",
+      "goesWrong": "In dark mode the card hints, row subtitles and tile labels are harder to read than in light mode for users with reduced contrast sensitivity.",
+      "fix": "Raise darkColors.textMuted to about #8A94A8 (≥4.5:1 on #151C2E) or avoid the token below 13pt in dark mode.",
+      "source": "scan-2026-10-16",
+      "commit": "611eeb5",
+      "status": "open",
+      "issue": 203,
+      "history": [
+        {
+          "at": "2026-10-16T12:26:01.066Z",
+          "status": "open",
+          "note": "Found by quality scan at 611eeb5",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "title": "App Lock re-locks after in-app system dialogs on Android",
+      "severity": "low",
+      "category": "design-decision",
+      "file": "app/contexts/AppLockContext.tsx",
+      "line": 43,
+      "verifiers": null,
+      "what": "The overlay fix keeps navigation and form state, but AppLockContext still sets unlocked=false on every AppState 'background', which on Android also fires for the notification-permission dialog, the document picker and Play Billing started by the app itself.",
+      "evidence": "app/contexts/AppLockContext.tsx:43 `if (nextState === 'background' && enabledRef.current) { setUnlocked(false); }` — no suppression around ensureNotificationPermission() (app/reminders.tsx), DocumentPicker.getDocumentAsync (app/my-data.tsx) or the RevenueCat purchase flow.",
+      "goesWrong": "A user with App Lock on who grants the reminder permission, picks a backup file or completes a purchase is asked to re-authenticate immediately afterwards, mid-task.",
+      "fix": "Expose a suppressNextLock() on the context and call it right before those in-app system flows, or add a short grace period (a few seconds) before locking on 'background'.",
+      "source": "scan-2026-10-16",
+      "commit": "611eeb5",
+      "status": "open",
+      "issue": 204,
+      "history": [
+        {
+          "at": "2026-10-16T12:26:01.066Z",
+          "status": "open",
+          "note": "Found by quality scan at 611eeb5",
+          "commit": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31"
+        }
+      ]
     }
   ],
-  "updatedAt": "2026-10-16T12:21:24.289Z",
+  "updatedAt": "2026-10-16T12:26:23.038Z",
   "scans": [
     {
       "at": "2026-10-10T21:34:09.874Z",
@@ -5252,6 +5519,14 @@
       "commitAuthor": "kamil12345",
       "commitDate": "2026-10-13",
       "commitMessage": "Merge pull request #7 from kamil12345/kamil"
+    },
+    {
+      "at": "2026-10-16T12:26:01.066Z",
+      "head": "611eeb5d5ef39c3f7f496c7a7a5b1fc30706ba31",
+      "fixed": 18,
+      "added": 3,
+      "note": "scan ingested from recheck-611eeb5.json",
+      "notes": "A focused fix round for the 23 findings handed over on 14 October: release hardening (dev-only tier override and seed, allowBackup off, AD_ID blocked, fingerprint runtime policy), the App Lock overlay, one shared EntryForm plus SingleChoiceScreen/ManageItemsScreen, day-level Trigger Impact counts, a validated and transactional backup import with timezone anchoring and custom-item catalogs, accessibility labels on every icon-only control, higher light-mode contrast, and a Learn kill switch with an internal content review. The same changes also close a number of duplicate findings (A1/L4, A40, A44–A50, A57, A87, A91, A122, A128, A138, A157, L3). Typecheck and the three test scripts pass, and the change set was smoke-tested on the iOS simulator, where one bug in the new validation (Hermes parsing '2026-13-45' leniently) was found and fixed in 702cc1c. Remaining caveats: Android was not built, Learn ships before clinician sign-off, and the new locale strings are machine-translated."
     }
   ]
 }
