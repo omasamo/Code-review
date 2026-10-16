@@ -41,13 +41,20 @@
       "fix": "Render LockScreen as an overlay on top of the Stack (e.g. `<>{stack}{locked && <LockScreen style={StyleSheet.absoluteFill}/>}</>` or a full-screen Modal) instead of replacing it, so navigation and screen state survive. Additionally consider not re-locking when the pause was caused by an in-app-initiated system Activity (set a 'suppressNextBackground' ref around permission requests, pickers and purchases), or add a short grace period before locking.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 2,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.282Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): LockScreen rendered as an absolute-fill overlay above the Stack in app/_layout.tsx, so navigation and form state survive a re-lock. Verified on iOS simulator. Same fix as A7.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -65,7 +72,7 @@
       "fix": "Extract a single EntryForm component (fields, header pickers, footer, styles) that takes initial values and an onSave callback, with new.tsx and [id].tsx as thin wrappers; move the shared date-combining into app/utils/datetime.ts.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 3,
       "history": [
         {
@@ -78,6 +85,13 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: The shared IntensityScaleSelector replaced one duplicated component (5f755a2), but the rest of the Add and Edit forms are still copies, and the new Pro-lock FieldCard code was pasted into both (3ed8ad4).",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): single app/components/EntryForm.tsx; new.tsx and [id].tsx are thin wrappers; Edit now has every field tooltip; date-combining moved to app/utils/datetime.ts. Same fix as A4.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -95,7 +109,7 @@
       "fix": "Extract `SingleChoiceScreen<T>({ titleKey, introKey, options, value, onSave, renderOption? })` and migrate the six screens; extract `ManageItemsScreen` parameterised by the four query functions; extract one `EntryForm` component with `mode: 'create' | 'edit'` and keep new.tsx/[id].tsx as thin wrappers that only decide save/delete/navigation.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 4,
       "history": [
         {
@@ -108,6 +122,13 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: IntensityScaleSelector is now shared (5f755a2). The forms, the six choice screens and triggers/sound-types are still copies.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): EntryForm, SingleChoiceScreen (6 settings screens) and ManageItemsScreen (triggers, sound types) extracted under app/components/. Same root cause as A3.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -125,13 +146,20 @@
       "fix": "Switch to `\"runtimeVersion\": { \"policy\": \"fingerprint\" }` so OTA compatibility is computed from native code rather than a manually maintained string; otherwise add a hard rule (and a CLAUDE.md note) that every native dependency or config-plugin change bumps `expo.version` before any build or update.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 5,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): app.json runtimeVersion.policy = \"fingerprint\"; rule added to CLAUDE.md. Dev client confirmed hash runtime version.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -149,13 +177,20 @@
       "fix": "Compute day-level counts in computeTopTriggers (or from model.input.days) independently of whether an estimate exists: `count` = number of distinct days in range whose trigger set includes the name, `total` = number of logged days in the range (model.input.days.length). Never fall back to `tr.count` for `total`; keep the entry-level tally only for the chip ordering/pct if still wanted, and label it as entries.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 6,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): Trigger Impact count/total come from the model's input days in app/(tabs)/trends.tsx; verified \"9 of 19 days\" against the DB.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -173,13 +208,20 @@
       "fix": "Render LockScreen as an absolute-fill overlay (or a full-screen Modal) on top of the Stack rather than instead of it, so the navigator and screen state stay mounted; optionally also persist the add-form draft.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 7,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): LockScreen overlay above the Stack (app/_layout.tsx, app/components/LockScreen.tsx); draft entry survived background/unlock in simulator test. Same fix as A2.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -197,13 +239,20 @@
       "fix": "Wrap the call in `if (__DEV__) seedDevData();` today so the backlog TODO can't be missed, and remove the `onboarding_completed` write from the seed regardless so the dev build still exercises onboarding.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 8,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): seedDevData() only under __DEV__ and no longer writes onboarding_completed (app/db/database.ts); fresh install opens on onboarding.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -221,13 +270,20 @@
       "fix": "On the edit screen, derive the date/time pickers in `entry.timezone` and only pass `createdAt` when the user actually changed date or time; additionally have `updateEntry` compare the incoming ISO with the stored `created_at` and skip recomputation when equal. Keep `timezone` on unchanged edits.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 9,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): edit pickers derived in the entry's timezone, createdAt sent only when touched, updateEntry recomputes only on a real change (app/entry/[id].tsx, EntryForm, app/utils/datetime.ts, app/db/queries.ts). Verified NY entry edited from Europe/Prague kept its day. Same fix as A12.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -245,13 +301,20 @@
       "fix": "Validate each row (intensity integer 0-5, created_at parses to a finite Date, pitch/duration/location/impact in their allowed sets, note length) and skip/report invalid rows; wrap the whole import (and saveEntry/updateEntry) in `db.withTransactionSync`; clamp defensively in computeDistribution.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 10,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): importEntries validates every row (strict ISO date, integer intensity 0-5, enum checks, note cap), runs in one transaction, computeDistribution clamps, impact column TEXT. Follow-up 702cc1c rejects lenient dates like 2026-13-45. Same fix as A11.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -269,13 +332,20 @@
       "fix": "Validate each entry before insert: `created_at` must be a string that parses to a finite Date (re-serialise with `.toISOString()`), `intensity` an integer in the app's range, `pitch`/`impact`/`duration`/`location` either null or one of the enum values in app/db/types.ts, `note` a string (cap length), `tinnitus_types`/`triggers` arrays of strings. Reject the whole file (not just the row) with the existing importFailed dialog when `schema_version` is missing or unknown. Also fix the `impact INTEGER` column type comment/schema so it matches the string values actually stored.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 11,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): same validation as A10; files with missing/unknown schema_version rejected via the importFailed dialog.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -293,13 +363,20 @@
       "fix": "In the edit screen, pass createdAt only when the user actually changed the date or time (compare against the loaded entry's created_at, or track a `dateTouched` flag), and build/display the form date-time in the entry's stored `timezone` rather than the device zone. Keep seconds from the original timestamp when untouched.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 12,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): same change as A9; seconds preserved, timezone kept on note-only edits.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -317,13 +394,20 @@
       "fix": "Return to the existing tab navigator instead of replacing into a new one: `router.dismissTo('/(tabs)/calendar')` / `router.dismissTo('/(tabs)')` (pops the root stack back to the already-mounted `(tabs)` route and jumps to the tab), or plain `router.back()` followed by the tab jump. Once the Calendar instance is guaranteed to survive, the module-global in app/utils/calendarNav.ts and the render-phase `consumePendingCalendarDate()` + lazy `getEntriesForMonth` initializers in app/(tabs)/calendar.tsx:81-107 can be replaced by an ordinary focus-time read (or a route param), removing the only render-time side effect in the app that depends on a render never being discarded. Verify after the change that a delete from Calendar lands on the entry's month without a flash and that hardware back from the tabs exits the app.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 13,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): router.dismissTo('/(tabs)/calendar') / dismissTo('/(tabs)') in app/entry/[id].tsx; calendar render-phase pending-date initializers replaced by a focus-time read. Simulator: delete lands on the entry's month, no stale tab copy.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -341,13 +425,20 @@
       "fix": "Add an early return when `saved` is already true (or a `savingRef`), pass `disabled={saved}` to the PressableScale, and only schedule one router.back().",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 14,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): savingRef guard, disabled={saved}, single router.back() in EntryForm. Double-tap created one row in simulator test.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -365,13 +456,20 @@
       "fix": "Export `timezone`, `local_date` and `source` per entry (bump `schema_version`) and, on import, use the stored timezone (falling back to the device zone only for older backups). Set `source` explicitly on import instead of leaving it NULL.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 15,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): backup exports timezone/local_date/source (schema_version 2); import anchors to the stored timezone and sets source explicitly (app/my-data.tsx, app/db/queries.ts).",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -419,13 +517,20 @@
       "fix": "Export the custom catalog (names with `is_custom`/`is_active`) alongside entries and re-create missing custom items on import (built-in names stay matched by English identity), or at minimum report 'M trigger links skipped' in the result dialog.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 17,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): export carries the custom trigger/sound-type catalog; import re-creates missing custom items; result dialog reports skipped rows and links (new myData keys in 28 locales).",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -503,13 +608,20 @@
       "fix": "Add `accessibilityRole=\"button\"` + `accessibilityLabel` (existing keys cover most: common.edit/delete, tabs.add, entryForm.customize) to every icon-only Pressable, forward `accessibilityState`/`accessibilityLabel` from BottomTabBarButtonProps in AddTabButton, and give Switches a label via the row text.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 20,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): accessibilityRole/Label on FAB (forwards accessibilityState), back buttons on 17 screens, entry-row edit/expand, delete, calendar month nav, info buttons, InfoModal close, switches; new common.*/calendar.* keys in 28 locales. Visual check only, no VoiceOver pass.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -527,7 +639,7 @@
       "fix": "Use textSecondary (#64748B, 4.76:1) or at least textMuted for inactive tab tint; raise textMuted to ~#6B7A90 in light mode (≥4.5:1 on white) or stop using it below 13pt; render unselected scale labels in textSecondary.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 21,
       "history": [
         {
@@ -540,6 +652,13 @@
           "status": "open",
           "note": "Re-check at 26dedb1 — Partly fixed: The 9pt faint intensity captions are gone (5f755a2). The inactive tab tint and muted text still fail contrast.",
           "commit": "26dedb1"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): light textMuted -> #6B7A90 (4.6:1), inactive tab tint -> textSecondary, unselected intensity icons -> textMuted. Dark-mode textMuted (~3.4:1) left as backlog.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4619,13 +4738,20 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 183,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): Learn gated behind new Remote Config flag learn_enabled; all 8 guides reviewed (Medicines and Appointment guides corrected in 28 locales), review recorded in docs/release-checklists/learn-clinical-review-package.md as an internal editorial review. Flag default set to true at the owner's request; independent clinician sign-off still outstanding.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4643,13 +4769,20 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 184,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): app.json android.allowBackup = false. Needs a fresh Android build to take effect.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4667,13 +4800,20 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 185,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Resolved in kamil12345/tinnitus-app#8 (merged 611eeb5): at HEAD all 28 locales already carry translated learn.disclaimerBody, reports.pdf.disclaimer and the onboarding disclaimer, so no code change was needed; translations are machine-made and still need native/legal review.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4691,13 +4831,20 @@
       "fix": "",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 186,
       "history": [
         {
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): app.json android.blockedPermissions = [\"com.google.android.gms.permission.AD_ID\"]. Merged-manifest check and the Play Data safety / Apple privacy forms remain for the next build.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4931,7 +5078,7 @@
       "fix": "Render the Developer section only when __DEV__ is true (or remove it), and make SubscriptionContext ignore dev_tier_override outside __DEV__.",
       "source": "scan-2026-10-10",
       "commit": "26dedb1",
-      "status": "open",
+      "status": "fixed",
       "issue": 196,
       "history": [
         {
@@ -4939,6 +5086,13 @@
           "status": "open",
           "note": "Found by quality scan at 26dedb1",
           "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): Settings > Developer section rendered only under __DEV__ and SubscriptionContext ignores dev_tier_override outside __DEV__.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -4956,7 +5110,7 @@
       "fix": "Hide Pitch Test and Widgets until they exist, or show them as 'coming soon' without a Pro badge or paywall.",
       "source": "scan-2026-10-10",
       "commit": "26dedb1",
-      "status": "open",
+      "status": "fixed",
       "issue": 197,
       "history": [
         {
@@ -4964,6 +5118,13 @@
           "status": "open",
           "note": "Found by quality scan at 26dedb1",
           "commit": "26dedb1655f937f6ae9b3ab2d035dc0321ad63d5"
+        },
+        {
+          "at": "2026-10-16T12:21:24.288Z",
+          "status": "fixed",
+          "note": "Fixed in kamil12345/tinnitus-app#8 (merged 611eeb5): Pitch Test and Widgets rows hidden on More until the features exist.",
+          "commit": "611eeb5",
+          "pr": 8
         }
       ]
     },
@@ -5068,7 +5229,7 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-14T11:59:20.120Z",
+  "updatedAt": "2026-10-16T12:21:24.289Z",
   "scans": [
     {
       "at": "2026-10-10T21:34:09.874Z",
