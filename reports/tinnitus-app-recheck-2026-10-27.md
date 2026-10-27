@@ -62,3 +62,26 @@ Still no `test`/`typecheck`/`lint` scripts in package.json, `tsx` is not a devDe
 - Widgets: deep links validated (`widgetLinks.ts:26-36`, intensity `/^[0-5]$/`), Pro actions re-check the tier (`useWidgetActions.ts:21-24`), App Lock publishes a "private" snapshot without data (`widgets.ts:77`), snapshot prefs `MODE_PRIVATE` (`WidgetSnapshot.kt:70,76`), the exported `TIME_SET`/`TIMEZONE_CHANGED` receiver is required (`home-widgets AndroidManifest.xml:66-73`).
 - Consent flow: `firebase.json` disables auto-collection for Analytics and Crashlytics; `consent.ts` toggles collection and calls `deleteUnsentReports` on decline; existing installs get a one-time ask (`app/index.tsx:9` → `/consent`); changeable in Settings › Privacy.
 - No TODO/FIXME/console.log or release-reachable dev-only code added in the diff.
+
+## Second pass, same day: does everything still hold?
+
+An independent re-verification of all 210 findings against the code at `6be7c70`, treating the dashboard as claims to test (tsc and the three tests pass again).
+
+| Verdict | Count |
+|---|---|
+| Holds as described | 169 |
+| Holds, but file/line/evidence were outdated (now updated) | 30 |
+| No longer applies, closed | 4 — A114, A135, A175, L11 |
+| Was marked fixed in error, reopened | 5 — A38, A91, A104, A130, S3 |
+| Cannot be verified from code | 2 — L1 (live privacy page), L10 (RevenueCat paywall template) |
+
+Corrections to the morning pass:
+
+- **A38** `LockScreen.tsx:59-62` still calls `attempt()` on every AppState "active"; after a cancel the guards reset, so the prompt reopens. `cancelAuthenticate()` only clears orphaned sessions.
+- **A104** `database.ts:15,22` still declare `name TEXT NOT NULL UNIQUE` without `COLLATE`, and the seeds use exact-name `INSERT OR IGNORE`; the `COLLATE NOCASE` lookups in queries.ts predate the finding and are the other half of the mismatch.
+- **A130** the gifted-charts stub is gone, but `metro.config.js:5-9` still carries the no-op `unstable_conditionNames = ['default']` with its false comment.
+- **S3** `trends.tsx:1627/1688` memoise buckets and range dates on `[processed, range]` only, and nothing remounts Stats on a language change, so the locale-keyed label cache never recomputes.
+- **A91** (closed in the PR #8 round) only the add button got a role and label; `TabBarButton` (`_layout.tsx:21`) still forwards only `children/onPress/onLongPress/style`, so the four regular tabs lose role, selected state and label.
+- **A78, A111/A112** left open as unconfirmed this morning are now confirmed open: the iOS Hermes 0.14.1 binary has no `Intl.DisplayNames` symbols and no polyfill is installed, so country names silently fall back to English; `syncReminderNotifications` has no serialisation and both callers fire-and-forget.
+- **A76** correction: lv does have `_zero` for all 11 plural keys; ru/uk have `_few/_many` for only 4 of 11, hr/sr/ro `_few` for 4, sl `_two/_few` for 4.
+- **S14** CLAUDE.md records keeping `@react-native-firebase/remote-config` as a deliberate decision for future A/B flags, so it is open by design rather than an oversight.
