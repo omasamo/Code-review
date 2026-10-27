@@ -55,7 +55,7 @@ const pagesUrl = config.pagesUrl || `https://${repo.split('/')[0]}.github.io/${r
 function fileUrl(f) { return f.file ? `https://github.com/${appRepo}/blob/${f.commit || data.reviewedCommit}/${f.file}${f.line ? `#L${f.line}` : ''}` : null; }
 function body(f) {
   const loc = fileUrl(f) ? `**Where:** [${f.file}${f.line ? ':' + f.line : ''}](${fileUrl(f)})${f.verifiers ? `  ·  **Verifiers upholding:** ${f.verifiers}` : ''}\n\n` : '';
-  return `${loc}**What:** ${f.what}\n\n${f.evidence ? `**Evidence:** ${f.evidence}\n\n` : ''}${f.goesWrong ? `**What goes wrong:** ${f.goesWrong}\n\n` : ''}${f.fix ? `**Suggested fix:** ${f.fix}\n\n` : ''}---\nDashboard: ${pagesUrl}#/f/${f.id}  ·  Source: ${f.source}`;
+  return `${loc}${f.eli5 ? `**In plain words:** ${f.eli5}\n\n` : ''}**What:** ${f.what}\n\n${f.evidence ? `**Evidence:** ${f.evidence}\n\n` : ''}${f.goesWrong ? `**What goes wrong:** ${f.goesWrong}\n\n` : ''}${f.fix ? `**Suggested fix:** ${f.fix}\n\n` : ''}---\nDashboard: ${pagesUrl}#/f/${f.id}  ·  Source: ${f.source}`;
 }
 
 // 1. fetch all finding issues

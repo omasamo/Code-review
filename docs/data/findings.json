@@ -6,6 +6,7 @@
     {
       "id": "A1",
       "title": "Dev seed data runs on every fresh install and skips onboarding + medical disclaimer",
+      "eli5": "Every brand-new install came with a made-up user called Alex and 15 pretend diary entries, and it skipped the welcome screens and the medical warning. Real people would have seen fake health history as their own. Fixed: the fake data only appears in developer builds now.",
       "severity": "critical",
       "category": "bug",
       "file": "app/db/database.ts",
@@ -36,6 +37,7 @@
     {
       "id": "A2",
       "title": "App Lock re-lock unmounts the entire navigator, losing navigation and form state",
+      "eli5": "If you had the app lock turned on and switched to another app for a second, the whole app was rebuilt from scratch when you came back, so a half-written entry vanished. Fixed: the lock screen now sits on top of the app instead of replacing it.",
       "severity": "high",
       "category": "architecture",
       "file": "app/_layout.tsx",
@@ -67,6 +69,7 @@
     {
       "id": "A3",
       "title": "Add and Edit screens are ~450-line copies of each other and have already diverged",
+      "eli5": "The 'add entry' and 'edit entry' screens were two separate copies of the same long code, and they had already started to differ (the edit screen lost its little info tips). Fixed: there is now one shared form used by both.",
       "severity": "high",
       "category": "architecture",
       "file": "app/components/EntryForm.tsx",
@@ -104,6 +107,7 @@
     {
       "id": "A4",
       "title": "Six copy-pasted single-choice settings screens, two copy-pasted manage-list screens and two copy-pasted entry forms (already diverging)",
+      "eli5": "Ten screens were copy-pasted from each other, so every small fix had to be made ten times and was sometimes forgotten. Fixed: they now share a few common building blocks.",
       "severity": "high",
       "category": "architecture",
       "file": "app/components/SingleChoiceScreen.tsx",
@@ -141,6 +145,7 @@
     {
       "id": "A5",
       "title": "OTA updates can be published to a binary that lacks native modules added since the last version bump",
+      "eli5": "The app could push a code update over the air to phones whose installed version did not have the newer built-in parts it needs, which would crash them on launch. Fixed: updates now only go to builds that match exactly.",
       "severity": "high",
       "category": "bug",
       "file": "app.json",
@@ -172,6 +177,7 @@
     {
       "id": "A6",
       "title": "Trigger Impact row prints \"N of N days\" (entry counts) whenever the model has no estimate; PDF prints the real day counts",
+      "eli5": "The Trigger Impact list sometimes said things like '2 of 2 days' when it was really counting entries, not days, so it looked like perfect evidence when it was not. Fixed: it always counts days now.",
       "severity": "high",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
@@ -203,6 +209,7 @@
     {
       "id": "A7",
       "title": "App Lock replaces the whole navigator on background, destroying in-progress entries and all screen state",
+      "eli5": "Same problem as A2: with the app lock on, backgrounding the app threw away whatever you were doing. Fixed together with A2.",
       "severity": "high",
       "category": "bug",
       "file": "app/_layout.tsx",
@@ -234,6 +241,7 @@
     {
       "id": "A8",
       "title": "seedDevData() runs unguarded on every fresh install and marks onboarding complete",
+      "eli5": "Same as A1: fake 'Alex' data was planted on every install and also marked the onboarding as done, so the medical disclaimer was never shown. Fixed.",
       "severity": "high",
       "category": "bug",
       "file": "app/db/database.ts",
@@ -265,6 +273,7 @@
     {
       "id": "A9",
       "title": "Editing an entry re-anchors its timezone/local_date to the current device zone",
+      "eli5": "Editing an entry (even just fixing a typo in the note) while you were in a different time zone than when you logged it could move the entry to a different calendar day. Fixed: the original date and time zone are kept unless you change them on purpose.",
       "severity": "high",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -296,6 +305,7 @@
     {
       "id": "A10",
       "title": "Backup import accepts out-of-range intensity and invalid dates: crashes Stats and leaves partial imports",
+      "eli5": "Restoring a backup file did not check the data inside. A bad number or date could crash the Stats screen or leave half a backup imported. Fixed: every row is checked and the import is all-or-nothing.",
       "severity": "high",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -327,6 +337,7 @@
     {
       "id": "A11",
       "title": "Import accepts any JSON shape: no field/range validation, can brick the Home screen",
+      "eli5": "Same family as A10: the backup import accepted almost any file content, which could break the Home screen. Fixed.",
       "severity": "high",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -358,6 +369,7 @@
     {
       "id": "A12",
       "title": "Editing an entry silently re-anchors its timezone and calendar day to the device's current timezone",
+      "eli5": "Same as A9: a harmless edit could silently shift an entry to another day after travelling. Fixed.",
       "severity": "high",
       "category": "bug",
       "file": "app/components/EntryForm.tsx",
@@ -389,6 +401,7 @@
     {
       "id": "A13",
       "title": "Deleting an entry replaces the root stack's top route with a second `(tabs)` navigator, leaving the original one mounted underneath",
+      "eli5": "After deleting an entry, the app opened a second copy of the main screens on top of the first, like opening the app inside itself. Fixed: it now goes back properly.",
       "severity": "high",
       "category": "bug",
       "file": "app/entry/[id].tsx",
@@ -420,6 +433,7 @@
     {
       "id": "A14",
       "title": "Save button can be tapped twice, creating duplicate entries and popping two screens",
+      "eli5": "Tapping Save twice quickly saved the entry twice and jumped back two screens. Fixed: the button ignores the second tap.",
       "severity": "high",
       "category": "bug",
       "file": "app/components/EntryForm.tsx",
@@ -451,6 +465,7 @@
     {
       "id": "A15",
       "title": "Backup drops timezone/local_date, so a restore re-dates entries in the importing device's timezone",
+      "eli5": "Backups did not store which time zone each entry was logged in, so restoring on a phone in another time zone shifted late-night entries to the next day. Fixed: the time zone is saved and restored.",
       "severity": "high",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -482,6 +497,7 @@
     {
       "id": "A16",
       "title": "Change tile shows a red up-arrow captioned \"0%\" when the previous period averaged 0 (\"None\")",
+      "eli5": "The 'change this week' tile could show a big red 'worse' arrow with '0%' written under it, because two parts of the code disagreed. Fixed.",
       "severity": "high",
       "category": "bug",
       "file": "app/stats/sevenDayTrend.ts",
@@ -512,6 +528,7 @@
     {
       "id": "A17",
       "title": "Restoring to a new device silently drops every custom trigger / sound-type link",
+      "eli5": "Restoring a backup on a new phone silently dropped any custom triggers or sound types you had created, without telling you. Fixed: they are recreated and anything skipped is reported.",
       "severity": "high",
       "category": "design-decision",
       "file": "app/db/queries.ts",
@@ -543,6 +560,7 @@
     {
       "id": "A18",
       "title": "24 of 27 locales are missing 135-174 of the 559 keys; `settings.on` is missing in all 27",
+      "eli5": "Most of the 28 languages were missing a quarter of the app's text, so parts of the screen showed English. Fixed: every language now has every string.",
       "severity": "high",
       "category": "i18n",
       "file": "app/i18n/locales/en.json",
@@ -573,6 +591,7 @@
     {
       "id": "A19",
       "title": "The six intensity level labels on the entry form are hard-coded English and never translated",
+      "eli5": "The six intensity labels on the entry form (None, Faint, Mild...) were always in English no matter which language you chose. Fixed.",
       "severity": "high",
       "category": "i18n",
       "file": "app/components/intensity/IntensityScaleSelector.tsx",
@@ -603,6 +622,7 @@
     {
       "id": "A20",
       "title": "Icon-only controls have no accessibility labels; screen readers announce them as unnamed buttons (one accessibilityLabel in the whole app)",
+      "eli5": "Almost no button in the app had a spoken name for screen readers, so blind users heard 'button, button, button'. Fixed: icon-only controls now have labels.",
       "severity": "high",
       "category": "ux",
       "file": "app/(tabs)/_layout.tsx",
@@ -634,6 +654,7 @@
     {
       "id": "A21",
       "title": "Inactive tab icons/labels and several small text styles use tokens that fail WCAG contrast (1.5:1 and 2.6:1)",
+      "eli5": "Some text and icons were far too light against the background to read comfortably, below the standard accessibility minimum. Fixed: the colours were darkened.",
       "severity": "high",
       "category": "ux",
       "file": "app/(tabs)/_layout.tsx",
@@ -671,6 +692,7 @@
     {
       "id": "A22",
       "title": "CNG workflow with a stale local android/ folder: `run:android` silently builds without six config plugins",
+      "eli5": "Still open. The developer command that builds the Android app reuses an old generated folder, so the test build can silently miss things like Firebase. Only affects developers, but it means the app you test may not be the app you ship.",
       "severity": "medium",
       "category": "architecture",
       "file": "CLAUDE.md",
@@ -695,6 +717,7 @@
     {
       "id": "A23",
       "title": "Stats screen is a 2,298-line god component whose memoisation is defeated by fresh i18n label arrays every render",
+      "eli5": "Still open. The Stats screen is one enormous file, and because some lists are rebuilt on every tap, it redoes heavy calculations far more often than needed, which makes it slow on cheaper phones.",
       "severity": "medium",
       "category": "architecture",
       "file": "app/(tabs)/trends.tsx",
@@ -725,6 +748,7 @@
     {
       "id": "A24",
       "title": "trends.tsx is a 2298-line screen that bundles pure statistics, generic chart components and a 500-line stylesheet; the model's day-aggregation is copied in three places",
+      "eli5": "Still open. The Stats screen file is about 2,400 lines mixing maths, charts and styling, and one calculation is copied in three places. It works, but it is hard and risky to change.",
       "severity": "medium",
       "category": "architecture",
       "file": "app/(tabs)/trends.tsx",
@@ -773,6 +797,7 @@
     {
       "id": "A25",
       "title": "Anchor check-in / entry provenance machinery is dormant and half-wired",
+      "eli5": "Still open. There is a whole 'scheduled check-in' feature built into the app (database tables, notifications, logic) that is never switched on. It is dead weight and could misbehave if someone turns it on as-is.",
       "severity": "medium",
       "category": "architecture",
       "file": "app/db/queries.ts",
@@ -803,6 +828,7 @@
     {
       "id": "A26",
       "title": "The anchor check-in subsystem is dead code: never started, never scheduled, never handled on tap",
+      "eli5": "Still open. Same as A25: the check-in feature is unused code that ships with the app.",
       "severity": "medium",
       "category": "architecture",
       "file": "app/utils/notifications.ts",
@@ -827,6 +853,7 @@
     {
       "id": "A27",
       "title": "app/ vs src/features boundary is bidirectional, and non-route modules under app/ are registered as navigable routes",
+      "eli5": "Still open. The code folders import each other in both directions, and some helper files sit in the folder that defines screens, so they accidentally become openable 'pages' that would crash if someone navigated to them.",
       "severity": "medium",
       "category": "architecture",
       "file": "src/features/achievements/sync.ts",
@@ -863,6 +890,7 @@
     {
       "id": "A28",
       "title": "userInterfaceStyle: 'light' locks iOS to light mode, so the 'Automatic' theme can never be dark on iOS",
+      "eli5": "Still open. On iPhone the app forces light mode, so choosing 'Automatic' theme never gives you dark mode even when the phone is dark.",
       "severity": "medium",
       "category": "bug",
       "file": "app.json",
@@ -887,6 +915,7 @@
     {
       "id": "A29",
       "title": "iOS is forced to light mode, so Appearance → Automatic can never resolve to dark on iPhone/iPad",
+      "eli5": "Still open. Same as A28: the automatic theme can never be dark on iPhone.",
       "severity": "medium",
       "category": "bug",
       "file": "app.json",
@@ -911,6 +940,7 @@
     {
       "id": "A30",
       "title": "`userInterfaceStyle: \"light\"` forces iOS to light appearance, so the app's own 'Automatic' theme can never resolve to dark on iOS",
+      "eli5": "Still open. Same as A28.",
       "severity": "medium",
       "category": "bug",
       "file": "app.json",
@@ -935,6 +965,7 @@
     {
       "id": "A31",
       "title": "Change tile shows \"0%\" under a maximum-worse arrow when the previous week averaged intensity 0",
+      "eli5": "Same as A16: a red arrow with '0%' under it. Fixed.",
       "severity": "medium",
       "category": "bug",
       "file": "app/stats/sevenDayTrend.ts",
@@ -965,6 +996,7 @@
     {
       "id": "A32",
       "title": "Stats 'All' range is silently capped at the newest 1000 entries",
+      "eli5": "Still open. The Stats 'All' range only looks at the newest 1,000 entries. After roughly a year of heavy logging, 'All' quietly stops being all.",
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
@@ -1001,6 +1033,7 @@
     {
       "id": "A33",
       "title": "'All' range is silently capped at the 1000 most recent entries; the header date range, 'of N days' tile, monthly buckets and the model all treat that subset as the whole diary",
+      "eli5": "Still open. Same as A32: with more than 1,000 entries, the start date, day counts and charts under 'All' are based on a cut-off diary.",
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
@@ -1031,6 +1064,7 @@
     {
       "id": "A34",
       "title": "Stats 'All' range silently truncates at the 1,000 most recent entries and disagrees with Reports",
+      "eli5": "Still open. Same as A32, and the PDF report is not cut off, so Stats and the report can disagree.",
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
@@ -1061,6 +1095,7 @@
     {
       "id": "A35",
       "title": "Stats windows go stale across midnight: the fingerprint only tracks diary content, so returning to the tab on a new day shows yesterday's 7D/30D/90D window",
+      "eli5": "Still open. If you leave the Stats tab open past midnight and come back, it still shows yesterday's 7/30/90-day window until something else changes.",
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
@@ -1097,6 +1132,7 @@
     {
       "id": "A36",
       "title": "Startup DB init/reminders load has no catch: a migration failure crash-loops with no breadcrumb, no fallback and the splash never hides",
+      "eli5": "Still open. If the database fails to open or update at startup, the app just crashes every time with no error message and no way to recover.",
       "severity": "medium",
       "category": "bug",
       "file": "app/_layout.tsx",
@@ -1127,6 +1163,7 @@
     {
       "id": "A37",
       "title": "Reminder notifications are rescheduled at launch with i18n still on 'en', and never re-synced after a language change",
+      "eli5": "Still open. When the app starts, reminder notifications may be re-created in English before your chosen language has loaded, and changing the language later does not update them.",
       "severity": "medium",
       "category": "bug",
       "file": "app/_layout.tsx",
@@ -1151,6 +1188,7 @@
     {
       "id": "A38",
       "title": "LockScreen re-prompts on every 'active' transition, so a cancelled biometric prompt immediately reopens",
+      "eli5": "Still open. With the app lock on, if you cancel the Face ID / fingerprint prompt, it immediately pops up again, so you cannot dismiss it.",
       "severity": "medium",
       "category": "bug",
       "file": "app/components/LockScreen.tsx",
@@ -1193,6 +1231,7 @@
     {
       "id": "A39",
       "title": "Automatic language never matches Indonesian on Android (device reports legacy code 'in')",
+      "eli5": "Still open. Android reports Indonesian with an old code ('in' instead of 'id'), so Indonesian phones get English even though the app has an Indonesian translation.",
       "severity": "medium",
       "category": "bug",
       "file": "app/contexts/LanguageContext.tsx",
@@ -1217,6 +1256,7 @@
     {
       "id": "A40",
       "title": "Multi-statement writes (saveEntry, updateEntry, importEntries) run outside transactions",
+      "eli5": "Saving or editing an entry wrote several database rows one by one, so an interruption could leave an entry missing its triggers. Fixed: writes are now all-or-nothing.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1247,6 +1287,7 @@
     {
       "id": "A41",
       "title": "Deleting an entry orphans its join rows, so a custom trigger/sound type used only on deleted entries can never be deleted",
+      "eli5": "Still open. Deleting an entry leaves behind leftover links to its triggers, so a custom trigger used only on a deleted entry still counts as 'in use' and can never be deleted.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1277,6 +1318,7 @@
     {
       "id": "A42",
       "title": "deleteEntry leaves orphan join rows; FK cascade is inert",
+      "eli5": "Still open. Same as A41.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1301,6 +1343,7 @@
     {
       "id": "A43",
       "title": "Deleting an entry leaves orphaned join rows, inflating usage counts so custom triggers/sound types become undeletable",
+      "eli5": "Still open. Same as A41: leftover links inflate usage counts and block deleting custom triggers.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1325,6 +1368,7 @@
     {
       "id": "A44",
       "title": "importEntries has no transaction and almost no validation: partial imports and out-of-range values",
+      "eli5": "Backup import had almost no checks and no all-or-nothing protection. Fixed.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1355,6 +1399,7 @@
     {
       "id": "A45",
       "title": "Import is not transactional: a failure mid-file leaves a partial import behind an 'Import Failed' dialog",
+      "eli5": "A failure halfway through a backup import left the first half imported and the second half missing. Fixed: it now imports everything or nothing.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1385,6 +1430,7 @@
     {
       "id": "A46",
       "title": "Import validation only checks `created_at` is truthy and `intensity` is a number — out-of-range and wrong-typed values are persisted",
+      "eli5": "The import accepted impossible values (like intensity 9) and stored them. Fixed: invalid rows are rejected and counted.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1415,6 +1461,7 @@
     {
       "id": "A47",
       "title": "Import runs row-by-row with no transaction, so a bad row leaves a half-imported, duplicable dataset",
+      "eli5": "Same as A45: a bad row could leave a half-imported, duplicated dataset. Fixed.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1445,6 +1492,7 @@
     {
       "id": "A48",
       "title": "Out-of-range intensity is clamped to 'Severe' on Home/Calendar and survives the edit screen with nothing selected",
+      "eli5": "An invalid intensity from a bad backup was shown as 'Severe' on Home and Calendar as if it were real. Fixed at the source: such values can no longer be imported.",
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
@@ -1475,6 +1523,7 @@
     {
       "id": "A49",
       "title": "Backup omits timezone/local_date/source, so restores re-bucket days in the importing device's zone",
+      "eli5": "Same as A15: backups lacked time-zone info so restores could move entries to the wrong day. Fixed.",
       "severity": "medium",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -1505,6 +1554,7 @@
     {
       "id": "A50",
       "title": "Double-tapping Save inserts the same entry twice",
+      "eli5": "Same as A14: double-tapping Save created two identical entries. Fixed.",
       "severity": "medium",
       "category": "bug",
       "file": "app/components/EntryForm.tsx",
@@ -1535,6 +1585,7 @@
     {
       "id": "A51",
       "title": "On iOS the date/time pickers are never dismissed and stay inlined in the layout",
+      "eli5": "Still open. On iPhone, once you open the date or time picker on the entry form it never goes away; it stays stuck on the screen.",
       "severity": "medium",
       "category": "bug",
       "file": "app/components/EntryForm.tsx",
@@ -1571,6 +1622,7 @@
     {
       "id": "A52",
       "title": "iOS export leaves the full-diary JSON in the cache forever and records 'export completed' even when the user cancels",
+      "eli5": "Still open. On iPhone, exporting a backup leaves a full plain-text copy of your diary in a temporary folder forever, and the app records 'exported' even if you cancelled.",
       "severity": "medium",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -1601,6 +1653,7 @@
     {
       "id": "A53",
       "title": "Linking.openURL calls are unhandled, so \"Email Support\" and the legal/website links silently do nothing when no handler app exists",
+      "eli5": "Still open. If the phone has no mail app or browser, tapping 'Email support' or a web link does nothing at all, with no message.",
       "severity": "medium",
       "category": "bug",
       "file": "app/support.tsx",
@@ -1625,6 +1678,7 @@
     {
       "id": "A54",
       "title": "PDF is deleted the instant the Android chooser returns, before the receiving app has necessarily read it",
+      "eli5": "Still open. On Android the PDF report is deleted the moment the share menu closes, which can be before the app you shared it to has actually read it, so the attachment may be empty.",
       "severity": "medium",
       "category": "bug",
       "file": "src/features/reports/reportExport.ts",
@@ -1655,6 +1709,7 @@
     {
       "id": "A55",
       "title": "Report PDF is deleted the instant the Android share chooser hands off, before the target app has read it; cancel still counts as shared",
+      "eli5": "Still open. Same as A54, plus cancelling the share still counts as 'shared'.",
       "severity": "medium",
       "category": "bug",
       "file": "src/features/reports/reportExport.ts",
@@ -1685,6 +1740,7 @@
     {
       "id": "A56",
       "title": "hexToRgba copied 23 times, makeStyles boilerplate 38 times, back-button header and modal shells duplicated per file",
+      "eli5": "Still open. One small colour helper is copy-pasted into 21 files and the same header/back-button code is repeated everywhere, so design changes have to be made in dozens of places.",
       "severity": "medium",
       "category": "code-quality",
       "file": "app/settings.tsx",
@@ -1727,6 +1783,7 @@
     {
       "id": "A57",
       "title": "Six settings screens and the Triggers/Sound Types screens are near-verbatim copies; hexToRgba is defined in 23 files",
+      "eli5": "Several settings screens were near-identical copies. Fixed: they now share one implementation.",
       "severity": "medium",
       "category": "code-quality",
       "file": "app/components/SingleChoiceScreen.tsx",
@@ -1763,6 +1820,7 @@
     {
       "id": "A58",
       "title": "Anchor check-in subsystem (prompts table, source column, 9 queries, 90 lines of scheduling) is dead code shipped with a migration that runs every launch",
+      "eli5": "Still open. Same as A25: the unused check-in feature ships with the app and runs a pointless database step on every launch.",
       "severity": "medium",
       "category": "code-quality",
       "file": "app/utils/notifications.ts",
@@ -1787,6 +1845,7 @@
     {
       "id": "A59",
       "title": "`userInterfaceStyle: \"light\"` is dead config on Android and breaks the Automatic theme on iOS",
+      "eli5": "Still open. Same as A28: the forced light setting breaks automatic dark mode on iPhone and does nothing on Android.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app.json",
@@ -1811,6 +1870,7 @@
     {
       "id": "A60",
       "title": "Guide says no direction is named when the 95% range crosses zero; the Trigger Impact panel names one at 60% probability regardless",
+      "eli5": "Still open. The in-app explanation says the app will not claim a trigger makes things worse or better when the evidence is too uncertain, but the Trigger Impact card does make that claim at 60% likelihood anyway.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/(tabs)/trends.tsx",
@@ -1847,6 +1907,7 @@
     {
       "id": "A61",
       "title": "The 'legacy'/'scheduled'/'self_initiated' entry source is documented as excluding pre-anchor entries from the inferential model, but no model consumer reads it",
+      "eli5": "Still open. Code comments promise that older entries are excluded from the statistics model, but nothing actually does that.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/db/queries.ts",
@@ -1871,6 +1932,7 @@
     {
       "id": "A62",
       "title": "Re-importing a backup duplicates every entry — no identity or dedup on import",
+      "eli5": "Still open. Importing the same backup twice doubles every entry. There is no check for duplicates.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/db/queries.ts",
@@ -1907,6 +1969,7 @@
     {
       "id": "A63",
       "title": "Import always appends; restoring your own backup duplicates every entry",
+      "eli5": "Still open. Same as A62.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/db/queries.ts",
@@ -1937,6 +2000,7 @@
     {
       "id": "A64",
       "title": "'Restore from backup' appends with no duplicate detection, so a second import doubles every entry",
+      "eli5": "Still open. Same as A62: 'Restore from backup' always adds on top of what is there, so restoring your own backup doubles everything.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/my-data.tsx",
@@ -1967,6 +2031,7 @@
     {
       "id": "A65",
       "title": "Paywall is shown immediately after the disclaimer, before the user has logged anything, and the promo copy promises features that are not actually gated",
+      "eli5": "Still open. The subscription paywall appears right after the welcome screens, before you have logged a single entry. (The old 'unlimited entries' promise is gone, so only the timing remains.)",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/onboarding/privacy.tsx",
@@ -2009,6 +2074,7 @@
     {
       "id": "A66",
       "title": "The ridge penalty and posterior variance use the marginal variance of intensity, not the residual variance, so the stated prior SD of 0.35 and the '95% range' describe a model that only runs when triggers explain nothing",
+      "eli5": "Still open. A technical detail in the statistics model: it measures 'noise' in a way that makes it too cautious when a trigger really matters, so a real effect can be shrunk and its uncertainty overstated.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/stats/triggerModel.ts",
@@ -2033,6 +2099,7 @@
     {
       "id": "A67",
       "title": "The same Switch control means \"applied\" on Reminders/Reports but \"pending until Save\" on Triggers/Sound Types; Cancel and hardware back discard silently",
+      "eli5": "Still open. On the Reminders screen a switch applies immediately, but on Triggers and Sound Types it only applies after you tap Save, and going back throws your changes away without asking.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/components/ManageItemsScreen.tsx",
@@ -2063,6 +2130,7 @@
     {
       "id": "A68",
       "title": "Dates follow the device locale while all text (and the PDF) follow the app language, producing mixed-language screens",
+      "eli5": "Dates and month names followed the phone's language while the rest of the app followed the in-app language, so screens mixed two languages. Fixed.",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/utils/datetime.ts",
@@ -2099,6 +2167,7 @@
     {
       "id": "A69",
       "title": "Dates, month names and chart axis labels follow the device locale while all other text follows the in-app Language setting, producing mixed-language screens",
+      "eli5": "Same as A68. Fixed.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/utils/datetime.ts",
@@ -2129,6 +2198,7 @@
     {
       "id": "A70",
       "title": "24 locales fall back to English for 49 keys outside the documented Learn/Reports/Milestones exception",
+      "eli5": "Many languages were missing the Trigger Impact text and a few other strings. Fixed.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/i18n/locales/sk.json",
@@ -2159,6 +2229,7 @@
     {
       "id": "A71",
       "title": "Delete-entry confirmation dialog has a hardcoded English \"Cancel\" button",
+      "eli5": "Still open. The 'Cancel' button on every delete confirmation is always in English.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/components/ConfirmDialog.tsx",
@@ -2189,6 +2260,7 @@
     {
       "id": "A72",
       "title": "24 of 27 translated locales are missing a quarter to a third of the UI strings, and shared dialogs hard-code English",
+      "eli5": "Most languages were missing large chunks of the app's text. Fixed. The English 'Cancel' button is tracked separately (A71).",
       "severity": "medium",
       "category": "i18n",
       "file": "app/i18n/locales/bg.json",
@@ -2225,6 +2297,7 @@
     {
       "id": "A73",
       "title": "Shared dialogs hard-code \"Cancel\", \"Delete\" and \"OK\" instead of using the existing common.* keys",
+      "eli5": "Still open. Same as A71: 'Cancel', 'Delete' and 'OK' are hard-coded in English in shared dialogs.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/components/ConfirmDialog.tsx",
@@ -2249,6 +2322,7 @@
     {
       "id": "A74",
       "title": "Hard-coded \"Cancel\" (and default \"OK\") in shared dialogs used by every destructive action",
+      "eli5": "Still open. Same as A71.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/components/ConfirmDialog.tsx",
@@ -2273,6 +2347,7 @@
     {
       "id": "A75",
       "title": "Intensity level names under the scale icons are hardcoded English",
+      "eli5": "Same as A19: intensity labels were always English. Fixed.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/components/intensity/IntensityScaleSelector.tsx",
@@ -2303,6 +2378,7 @@
     {
       "id": "A76",
       "title": "Plural forms stop at _one/_other and the runtime has no Intl.PluralRules, so every language gets English plural rules",
+      "eli5": "Still open. Languages like Russian, Czech or Polish have several plural forms (1 entry, 2 entries, 5 entries each use a different word ending). The app only knows the English one/many rule, so some counts read wrongly.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/i18n/index.ts",
@@ -2339,6 +2415,7 @@
     {
       "id": "A77",
       "title": "de/es/fr are missing five in-use keys; English leaks into fully translated locales",
+      "eli5": "German, Spanish and French were missing a handful of strings. Fixed.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/i18n/locales/de.json",
@@ -2375,6 +2452,7 @@
     {
       "id": "A78",
       "title": "Support-directory country names are always English because Intl.DisplayNames is unavailable on Hermes",
+      "eli5": "Still open. In the local-support directory, country names are always shown in English because the phone's JavaScript engine lacks the feature that would translate them.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/support-directory.tsx",
@@ -2405,6 +2483,7 @@
     {
       "id": "A79",
       "title": "German copy calls Trigger Impact three different names: 'Auslöserwirkung' (Learn), 'Trigger-Einfluss' (guide) and 'Auslöser-Einfluss' (Stats card, Milestones)",
+      "eli5": "Still open. German text calls the Trigger Impact feature by three different names in different places, which is confusing.",
       "severity": "medium",
       "category": "i18n",
       "file": "src/features/learn/articles/de.ts",
@@ -2435,6 +2514,7 @@
     {
       "id": "A80",
       "title": "PDF prints built-in trigger names in English and numbers with a '.' decimal regardless of report language",
+      "eli5": "Still open. In the PDF report, trigger names like 'Poor sleep' stay in English even when the report is in another language, and decimals always use a dot instead of a comma.",
       "severity": "medium",
       "category": "i18n",
       "file": "src/features/reports/reportHtml.ts",
@@ -2477,6 +2557,7 @@
     {
       "id": "A81",
       "title": "PDF report prints built-in trigger names in English regardless of app language",
+      "eli5": "Still open. Same as A80.",
       "severity": "medium",
       "category": "i18n",
       "file": "src/features/reports/reportHtml.ts",
@@ -2519,6 +2600,7 @@
     {
       "id": "A82",
       "title": "The methodology guide describes features the shipped model no longer has: a collinearity flag and a 90% display threshold",
+      "eli5": "Still open. The 'how the statistics work' guide describes rules the app no longer follows (for example a 90% threshold that is now 60%).",
       "severity": "medium",
       "category": "i18n",
       "file": "src/features/statistics/guides/en.ts",
@@ -2555,6 +2637,7 @@
     {
       "id": "A83",
       "title": "Thirteen useMemos depend on i18n label arrays that are new objects on every render, so they recompute on every tap/toggle regardless of the fingerprint optimisation",
+      "eli5": "Still open. Same as A23: the Stats screen redoes heavy calculations on every tap because some lists are recreated each time.",
       "severity": "medium",
       "category": "performance",
       "file": "app/(tabs)/trends.tsx",
@@ -2585,6 +2668,7 @@
     {
       "id": "A84",
       "title": "DB-pull helper drops a personal health database into the repo root with no .gitignore rule",
+      "eli5": "Still open. A developer helper script copies a real user's health database into the project folder, where it could accidentally be committed to GitHub.",
       "severity": "medium",
       "category": "security",
       "file": "pulldb.sh",
@@ -2609,6 +2693,7 @@
     {
       "id": "A85",
       "title": "Highest-risk logic (schema migration/backfill, local-day date math, import/export) has zero tests",
+      "eli5": "Still open. The riskiest parts of the code (database upgrades, date handling, backup import/export) have no automated tests at all.",
       "severity": "medium",
       "category": "testing",
       "file": "app/db/database.ts",
@@ -2633,6 +2718,7 @@
     {
       "id": "A86",
       "title": "fitTemporalProfile and the suspectReverse heuristic have no test; the existing test scripts are not runnable from the repo and never cover the shipped aggregation",
+      "eli5": "Still open. The 'day before / day after' statistics have no tests, and the existing test scripts cannot even be run without extra setup.",
       "severity": "medium",
       "category": "testing",
       "file": "app/stats/triggerModel.ts",
@@ -2657,6 +2743,7 @@
     {
       "id": "A87",
       "title": "Clinical review package omits the 'Medicines and tinnitus' article, yet claims all customer-facing clinical statements were checked",
+      "eli5": "The clinical review checklist did not include the 'Medicines and tinnitus' article even though it ships. Fixed: it is listed now.",
       "severity": "medium",
       "category": "testing",
       "file": "docs/release-checklists/learn-clinical-review-package.md",
@@ -2693,6 +2780,7 @@
     {
       "id": "A88",
       "title": "Tests exist but cannot be run from the repo: no test/lint/typecheck scripts, tsx not installed, no ESLint config, minimal tsconfig",
+      "eli5": "Still open. There are test files, but no command to run them, the tool they need is not installed, and nothing checks the code automatically.",
       "severity": "medium",
       "category": "testing",
       "file": "package.json",
@@ -2723,6 +2811,7 @@
     {
       "id": "A89",
       "title": "No typecheck, lint or format gate; `tsc` passes today but nothing enforces it",
+      "eli5": "Still open. Nothing enforces type-checking or linting; it only works because someone remembers to run it.",
       "severity": "medium",
       "category": "testing",
       "file": "package.json",
@@ -2747,6 +2836,7 @@
     {
       "id": "A90",
       "title": "Test suite has no runner, is never executed, and is already failing",
+      "eli5": "Still open. Same as A88: the tests have no runner (the one failing test was fixed, but nothing runs them).",
       "severity": "medium",
       "category": "testing",
       "file": "tests/features.validation.ts",
@@ -2783,6 +2873,7 @@
     {
       "id": "A91",
       "title": "Custom tab bar buttons discard the accessibility props react-navigation supplies; the Add FAB is an unlabeled icon-only control",
+      "eli5": "Still open. The custom tab bar throws away the accessibility information for the four main tabs, so screen readers do not say 'tab' or 'selected'. Only the + button was fixed.",
       "severity": "medium",
       "category": "ux",
       "file": "app/(tabs)/_layout.tsx",
@@ -2819,6 +2910,7 @@
     {
       "id": "A92",
       "title": "Fixed-height text boxes and 9–10pt type break under OS font scaling; no font-scaling strategy exists",
+      "eli5": "Still open. If you turn up the system font size for accessibility, some labels get cut off because their boxes have fixed heights.",
       "severity": "medium",
       "category": "ux",
       "file": "app/(tabs)/index.tsx",
@@ -2843,6 +2935,7 @@
     {
       "id": "A93",
       "title": "Three dead-end \"Coming soon\" rows (Pitch Test, Rate app, Widgets) ship in the production More tab",
+      "eli5": "Still open. The 'Rate app' row in More still opens a 'Coming soon' screen. (Pitch Test was removed and Widgets is now real.)",
       "severity": "medium",
       "category": "ux",
       "file": "app/(tabs)/more.tsx",
@@ -2891,6 +2984,7 @@
     {
       "id": "A94",
       "title": "Internal note \"Clinical review required before release\" is rendered to users in the Learn footer",
+      "eli5": "An internal note ('Clinical review required before release') was visible to users at the bottom of the Learn screen. Fixed: removed.",
       "severity": "medium",
       "category": "ux",
       "file": "app/learn/index.tsx",
@@ -2921,6 +3015,7 @@
     {
       "id": "A95",
       "title": "No data-access layer: screens call SQLite directly in render/focus, duplicate derived facts, and pass state through a module-level global",
+      "eli5": "Still open. Every screen talks to the database on its own, in its own way, so facts like 'logged today?' are computed in several places and can disagree.",
       "severity": "low",
       "category": "architecture",
       "file": "app/(tabs)/_layout.tsx",
@@ -2945,6 +3040,7 @@
     {
       "id": "A96",
       "title": "Home computes its 7-day stats from a 200-row cap while Stats uses 1000, so the two can disagree despite the comment promising they cannot",
+      "eli5": "Still open. Home looks at the last 200 entries and Stats at the last 1,000, so for heavy loggers the two screens can show different numbers.",
       "severity": "low",
       "category": "architecture",
       "file": "app/(tabs)/index.tsx",
@@ -2969,6 +3065,7 @@
     {
       "id": "A97",
       "title": "Eight context providers re-implement the same get/setSetting boilerplate and nest eight deep",
+      "eli5": "Still open. Eight settings are each wrapped in their own nearly identical code layer; adding a new setting means copying it all again.",
       "severity": "low",
       "category": "architecture",
       "file": "app/_layout.tsx",
@@ -2993,6 +3090,7 @@
     {
       "id": "A98",
       "title": "\"Today\" is captured at render time on both tab screens, so neither notices a date rollover while it is on screen",
+      "eli5": "Still open. The Home and Calendar tabs decide what 'today' is when they are drawn and do not notice midnight passing, so after midnight you may be told you cannot log 'future' days.",
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/calendar.tsx",
@@ -3017,6 +3115,7 @@
     {
       "id": "A99",
       "title": "Pending-date focus branch leaves `skipFocusResetRef` armed, so the next ordinary tab return skips the snap-to-today once",
+      "eli5": "Still open. A small navigation glitch: after deleting an entry from the Calendar, the next time you return to the Calendar tab it may not jump back to the current month as usual.",
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/calendar.tsx",
@@ -3047,6 +3146,7 @@
     {
       "id": "A100",
       "title": "\"Yesterday\" is derived by subtracting 24 h, which is not one calendar day across a DST change",
+      "eli5": "Still open. 'Yesterday' is calculated as 'now minus 24 hours', which is wrong for one hour after a daylight-saving change.",
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/index.tsx",
@@ -3071,6 +3171,7 @@
     {
       "id": "A101",
       "title": "Greeting is computed once per mount and never refreshes with the time of day",
+      "eli5": "Still open. The 'Good morning' greeting is set once when the app opens and never changes, so it can still say 'Good morning' at 7 pm.",
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/index.tsx",
@@ -3095,6 +3196,7 @@
     {
       "id": "A102",
       "title": "Change caption can print \"-0%\" / \"+0%\" because the sign is taken from the unrounded value",
+      "eli5": "Still open. The change caption can read '-0%' or '+0%' because the sign comes from the unrounded number.",
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/index.tsx",
@@ -3119,6 +3221,7 @@
     {
       "id": "A103",
       "title": "Startup DB initialisation has no error path: a failing migration crashes the app without being reported",
+      "eli5": "Still open. Same as A36: a database failure at startup crashes the app with no message or report.",
       "severity": "low",
       "category": "bug",
       "file": "app/_layout.tsx",
@@ -3149,6 +3252,7 @@
     {
       "id": "A104",
       "title": "Name uniqueness is case-sensitive in the schema but case-insensitive in the add path",
+      "eli5": "Still open. The database treats 'dehydration' and 'Dehydration' as two different names, but the 'add trigger' code treats them as the same, so a future built-in trigger could appear twice next to a user's custom one.",
       "severity": "low",
       "category": "bug",
       "file": "app/db/database.ts",
@@ -3191,6 +3295,7 @@
     {
       "id": "A105",
       "title": "Pulsatile/Thrumming split migration no-ops if the user already created a custom 'Pulsatile', leaving the combined built-in row forever",
+      "eli5": "Still open. The upgrade that split 'Pulsatile / Thrumming' into two sound types does nothing if the user had already created their own 'Pulsatile', leaving the old combined entry stuck forever.",
       "severity": "low",
       "category": "bug",
       "file": "app/db/database.ts",
@@ -3215,6 +3320,7 @@
     {
       "id": "A106",
       "title": "Entry save has no error path: a failed SQLite write throws inside the press handler and crashes the app with no message",
+      "eli5": "Still open. If saving an entry fails (for example the phone is out of storage), the app crashes instead of showing an error, and what you typed is lost.",
       "severity": "low",
       "category": "bug",
       "file": "app/entry/new.tsx",
@@ -3245,6 +3351,7 @@
     {
       "id": "A107",
       "title": "Keyboard overlap subtracts the bottom safe-area inset on iOS too, over-lifting the footer",
+      "eli5": "Still open. On iPhones with a home indicator, the Save bar floats a bit too high above the keyboard, leaving a visible gap.",
       "severity": "low",
       "category": "bug",
       "file": "app/hooks/useKeyboardOverlap.ts",
@@ -3269,6 +3376,7 @@
     {
       "id": "A108",
       "title": "Source links call `Linking.openURL` without handling rejection, unlike the support directory",
+      "eli5": "Still open. Same as A53: links in the Learn articles do nothing if there is no browser, with no message.",
       "severity": "low",
       "category": "bug",
       "file": "app/learn/[slug].tsx",
@@ -3293,6 +3401,7 @@
     {
       "id": "A109",
       "title": "Import does not re-evaluate milestones, so the More-tab 'new' badge never fires for restored data",
+      "eli5": "Still open. After restoring a backup, milestones you have earned are not recalculated, so the 'new milestone' badge does not appear until later.",
       "severity": "low",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -3323,6 +3432,7 @@
     {
       "id": "A110",
       "title": "rangeDayCount('All') counts days from a UTC instant while every other Stats figure uses local day keys, so the Entries tile can read '2 of 1 days'",
+      "eli5": "Still open. The 'of N days' number under 'All' is calculated from elapsed hours instead of calendar days, so it can be off by one (even '2 of 1 days').",
       "severity": "low",
       "category": "bug",
       "file": "app/stats/sevenDayTrend.ts",
@@ -3347,6 +3457,7 @@
     {
       "id": "A111",
       "title": "Overlapping syncReminderNotifications calls interleave cancel-all/schedule and produce duplicate notifications",
+      "eli5": "Still open. If reminders are changed quickly twice in a row, the two updates can overlap and leave duplicate or wrong notifications scheduled.",
       "severity": "low",
       "category": "bug",
       "file": "app/utils/notifications.ts",
@@ -3377,6 +3488,7 @@
     {
       "id": "A112",
       "title": "Reminder sync is cancel-all-then-reschedule with no serialisation; overlapping toggles can leave a disabled reminder scheduled",
+      "eli5": "Still open. Same as A111: flipping a reminder on and off fast can leave it scheduled even though it shows as off.",
       "severity": "low",
       "category": "bug",
       "file": "app/utils/notifications.ts",
@@ -3407,6 +3519,7 @@
     {
       "id": "A113",
       "title": "'First pattern' milestone requires 90% probability while Trigger Impact states a direction at 60%",
+      "eli5": "Still open. The 'First pattern' milestone needs 90% certainty, but the Trigger Impact card already tells you 'likely worse' at 60%, so you can see a pattern on screen while the milestone stays locked.",
       "severity": "low",
       "category": "bug",
       "file": "src/features/achievements/evaluate.ts",
@@ -3431,6 +3544,7 @@
     {
       "id": "A114",
       "title": "PDF report drops out-of-range intensities from the distribution but keeps them in entries/average/max and draws the trend point off-canvas",
+      "eli5": "The PDF could include invalid intensity values from a bad backup. No longer applies: such values can no longer be imported.",
       "severity": "low",
       "category": "bug",
       "file": "src/features/reports/reportData.ts",
@@ -3461,6 +3575,7 @@
     {
       "id": "A115",
       "title": "'Generated' date in the PDF is the UTC date, not the user's local date",
+      "eli5": "Still open. The 'Generated' date on the PDF uses UTC, so in some time zones it shows yesterday's or tomorrow's date.",
       "severity": "low",
       "category": "bug",
       "file": "src/features/reports/reportHtml.ts",
@@ -3485,6 +3600,7 @@
     {
       "id": "A116",
       "title": "AGENTS.md is a stale August snapshot committed in October and contradicts CLAUDE.md",
+      "eli5": "Still open. The AGENTS.md documentation file is an old, outdated copy that contradicts the main documentation and could mislead contributors.",
       "severity": "low",
       "category": "code-quality",
       "file": "AGENTS.md",
@@ -3521,6 +3637,7 @@
     {
       "id": "A117",
       "title": "AGENTS.md is a stale fork of CLAUDE.md with contradicting guidance; CLAUDE.md itself misstates the intensity scale",
+      "eli5": "Still open. Same as A116; it also still says intensity goes 1 to 5 when it is really 0 to 5.",
       "severity": "low",
       "category": "code-quality",
       "file": "AGENTS.md",
@@ -3551,6 +3668,7 @@
     {
       "id": "A118",
       "title": "Dead template entry (App.tsx/index.ts) and stale README/prompt.txt describe an app that does not exist",
+      "eli5": "Still open. The README describes user accounts, a server backend and login that do not exist, and two leftover template files are still in the project.",
       "severity": "low",
       "category": "code-quality",
       "file": "README.md",
@@ -3581,6 +3699,7 @@
     {
       "id": "A119",
       "title": "Dead code and duplicate route files: unused PlaceholderScreen, SCALE_LABELS, settings `cs`, several unused styles, and two empty `/add` route files",
+      "eli5": "Still open. Leftover unused code and two empty 'add' pages that show a blank screen if opened by link.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/(tabs)/add.tsx",
@@ -3605,6 +3724,7 @@
     {
       "id": "A120",
       "title": "Future-day toast timer is never assigned, and rapid taps overlap two Animated sequences; month navigation also double-fetches entries",
+      "eli5": "Still open. Tapping two future days quickly on the Calendar makes the second warning toast disappear too early, and changing month loads the data twice.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/(tabs)/calendar.tsx",
@@ -3629,6 +3749,7 @@
     {
       "id": "A121",
       "title": "Dead sort option, unused styles, and a ghost render that runs the temporal fit and mounts an InfoModal twice per open panel",
+      "eli5": "Still open. A hidden 'longest streak' sort option can never work, a few styles are unused, and a panel renders its content twice behind the scenes.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/(tabs)/trends.tsx",
@@ -3653,6 +3774,7 @@
     {
       "id": "A122",
       "title": "handleSave leaves `saving` stuck true if authenticate() rejects",
+      "eli5": "If the fingerprint check failed with an error while saving the App Lock setting, the Save button stayed disabled. Fixed.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/components/SingleChoiceScreen.tsx",
@@ -3683,6 +3805,7 @@
     {
       "id": "A123",
       "title": "Dead component with hard-coded English and ten unreferenced translation keys",
+      "eli5": "Still open. An unused placeholder screen and nine translation strings that nothing ever shows.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/components/PlaceholderScreen.tsx",
@@ -3713,6 +3836,7 @@
     {
       "id": "A124",
       "title": "Intensity is 0–5 in code but documented as 1–5, with no DB constraint",
+      "eli5": "Still open. Intensity is 0 to 5 in the app but one old doc still says 1 to 5, and the database does not enforce the range.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/db/database.ts",
@@ -3755,6 +3879,7 @@
     {
       "id": "A125",
       "title": "Dead state, unused imports and unused styles in both entry forms",
+      "eli5": "Still open. A couple of leftover unused lines in the entry form (an animation setting that is switched on but never used).",
       "severity": "low",
       "category": "code-quality",
       "file": "app/components/EntryForm.tsx",
@@ -3797,6 +3922,7 @@
     {
       "id": "A126",
       "title": "Automatic first-day-of-week resolution is duplicated in the settings screen",
+      "eli5": "Still open. The 'which day starts the week' logic is written twice, so the Settings subtitle and the Calendar could disagree if one copy changes.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/first-day-of-week.tsx",
@@ -3821,6 +3947,7 @@
     {
       "id": "A127",
       "title": "`Animated.event` and the interpolation nodes are rebuilt on every render of the host screen",
+      "eli5": "Still open. The scrolling-header animation is rebuilt on every redraw; wasteful but not visible today.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/hooks/useHeaderScrollAnim.ts",
@@ -3845,6 +3972,7 @@
     {
       "id": "A128",
       "title": "`.map(t => …)` shadows the i18n `t` on the same line that calls `triggerLabel(t, …)`",
+      "eli5": "A variable name clash in the triggers list could have caused a crash after a future edit. Fixed by the shared screen rewrite.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/components/ManageItemsScreen.tsx",
@@ -3875,6 +4003,7 @@
     {
       "id": "A129",
       "title": "Deprecated `expo-router/babel` plugin still configured; warns on every bundle",
+      "eli5": "Still open. An outdated build plugin is still configured and prints a warning every time the developer starts the app.",
       "severity": "low",
       "category": "code-quality",
       "file": "babel.config.js",
@@ -3899,6 +4028,7 @@
     {
       "id": "A130",
       "title": "metro.config.js carries a no-op condition override with a false comment plus a stub for an unused dependency",
+      "eli5": "Still open. The build config still contains a line that does nothing, with a comment claiming it fixes something. (The other half, a stub for a removed library, is gone.)",
       "severity": "low",
       "category": "code-quality",
       "file": "metro.config.js",
@@ -3935,6 +4065,7 @@
     {
       "id": "A131",
       "title": "Unused dependencies, dead template files, empty routes and a deprecated Babel plugin",
+      "eli5": "Still open. Some installed libraries are never used and some leftover files are still in the project. (One unused chart library was removed.)",
       "severity": "low",
       "category": "code-quality",
       "file": "package.json",
@@ -3971,6 +4102,7 @@
     {
       "id": "A132",
       "title": "Dependency hygiene: floating `latest` CLI tag, two unused packages, and a broken `web` script",
+      "eli5": "Still open. One developer tool is pinned to 'latest', so a reinstall could pull in an incompatible version; the 'web' command is broken.",
       "severity": "low",
       "category": "code-quality",
       "file": "package.json",
@@ -4001,6 +4133,7 @@
     {
       "id": "A133",
       "title": "Stale committed artefacts: pulldb.sh targets Expo Go's data dir, prompt.txt is an unrelated scaffold prompt, App.tsx/index.ts are the unused template entry",
+      "eli5": "Still open. Old developer leftovers (a script pointing at the wrong app, an unrelated prompt file, unused template files) are still in the repo.",
       "severity": "low",
       "category": "code-quality",
       "file": "pulldb.sh",
@@ -4025,6 +4158,7 @@
     {
       "id": "A134",
       "title": "withEnglishMetadata throws at module-evaluation time and only guards one direction of drift",
+      "eli5": "Still open. If a Learn article's identifier is mistyped in one language, the whole Learn screen crashes instead of showing a fallback.",
       "severity": "low",
       "category": "code-quality",
       "file": "src/features/learn/content.ts",
@@ -4061,6 +4195,7 @@
     {
       "id": "A135",
       "title": "`LEARN_CONTENT_UPDATED` is unused and the hard-coded 'Content updated August 2026' footer is already stale",
+      "eli5": "The Learn screen showed an out-of-date 'Content updated August 2026' line. No longer applies: that line was removed.",
       "severity": "low",
       "category": "code-quality",
       "file": "src/features/learn/content.ts",
@@ -4103,6 +4238,7 @@
     {
       "id": "A136",
       "title": "iPad support is declared (including landscape) while every layout is phone-width with no maximum content width",
+      "eli5": "Still open. The app says it supports iPad, but every screen is designed for a phone, so on an iPad things stretch awkwardly.",
       "severity": "low",
       "category": "design-decision",
       "file": "app.json",
@@ -4133,6 +4269,7 @@
     {
       "id": "A137",
       "title": "Calendar cells encode a day's maximum intensity while every chart encodes the day's mean",
+      "eli5": "Still open. The Calendar colours a day by its worst entry, while the charts use the day's average, and nothing tells you that.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/(tabs)/calendar.tsx",
@@ -4157,6 +4294,7 @@
     {
       "id": "A138",
       "title": "`impact` is declared INTEGER but holds a TEXT enum; legacy integer rows survive every reader invisibly",
+      "eli5": "The 'impact' column had the wrong type in the database. Fixed.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/db/database.ts",
@@ -4187,6 +4325,7 @@
     {
       "id": "A139",
       "title": "'Delete All Data' also erases event-based milestones that the diary cannot reconstruct",
+      "eli5": "Still open. 'Delete all data' also erases milestones like 'read a guide' that cannot be re-earned from the diary.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/db/queries.ts",
@@ -4211,6 +4350,7 @@
     {
       "id": "A140",
       "title": "Back-dated entries get the current wall-clock time, and today's entries can be timestamped in the future",
+      "eli5": "Still open. When you log an entry for a past day from the Calendar, it gets the current time of day instead of asking, and you can pick a time in the future.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/entry/new.tsx",
@@ -4235,6 +4375,7 @@
     {
       "id": "A141",
       "title": "Onboarding requires a name before the app can be used, though the name only personalises the greeting",
+      "eli5": "Still open. Onboarding forces you to type a name even though it is only used for the greeting.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/onboarding/name.tsx",
@@ -4259,6 +4400,7 @@
     {
       "id": "A142",
       "title": "'Coverage %' means two different things depending on the range toggle",
+      "eli5": "Still open. 'Coverage %' on the PDF means different things depending on the range chosen, so the same diary can show 6% or 100%.",
       "severity": "low",
       "category": "design-decision",
       "file": "src/features/reports/reportData.ts",
@@ -4283,6 +4425,7 @@
     {
       "id": "A143",
       "title": "No native per-app language declaration (locales_config.xml / CFBundleLocalizations)",
+      "eli5": "Still open. The app does not tell the phone which languages it supports, so it does not appear in the system's per-app language settings.",
       "severity": "low",
       "category": "i18n",
       "file": "app.json",
@@ -4307,6 +4450,7 @@
     {
       "id": "A144",
       "title": "Averages always use '.' as decimal separator",
+      "eli5": "Still open. Decimal numbers always use a dot (3.5) even in languages that use a comma (3,5).",
       "severity": "low",
       "category": "i18n",
       "file": "app/(tabs)/index.tsx",
@@ -4331,6 +4475,7 @@
     {
       "id": "A145",
       "title": "Serbian ships Latin-script only and is auto-selected for Cyrillic-script devices",
+      "eli5": "Still open. Serbian is only available in Latin script, and phones set to Cyrillic Serbian get the Latin version without being told.",
       "severity": "low",
       "category": "i18n",
       "file": "app/contexts/LanguageContext.tsx",
@@ -4355,6 +4500,7 @@
     {
       "id": "A146",
       "title": "Reminder notifications can be (re)scheduled in English at cold start and are never re-synced after a language change",
+      "eli5": "Still open. Same as A37: reminder notifications are not re-translated after you change the app language.",
       "severity": "low",
       "category": "i18n",
       "file": "app/contexts/LanguageContext.tsx",
@@ -4379,6 +4525,7 @@
     {
       "id": "A147",
       "title": "`reports.pdf.notEnoughImpact` is missing from de/es/fr, so one PDF paragraph falls back to English",
+      "eli5": "One PDF sentence was missing in German, Spanish and French. Fixed.",
       "severity": "low",
       "category": "i18n",
       "file": "app/i18n/locales/de.json",
@@ -4409,6 +4556,7 @@
     {
       "id": "A148",
       "title": "Section labels are shouted in the JSON for some screens and uppercased via style on others, forcing translators to choose casing",
+      "eli5": "Still open. Some section headings are written in capitals in the translation files and others are capitalised by the code, which is inconsistent and confusing for translators.",
       "severity": "low",
       "category": "i18n",
       "file": "app/i18n/locales/en.json",
@@ -4433,6 +4581,7 @@
     {
       "id": "A149",
       "title": "Recent-entries list constructs a new Intl.DateTimeFormat for every row older than yesterday, on every focus",
+      "eli5": "Still open. The Home list creates a new date formatter for every row every time it is shown; a small performance waste.",
       "severity": "low",
       "category": "performance",
       "file": "app/(tabs)/index.tsx",
@@ -4457,6 +4606,7 @@
     {
       "id": "A150",
       "title": "Screen-view analytics logs raw pathnames including entry ids, fragmenting screen names",
+      "eli5": "Still open. Analytics records screen names with the entry number in them (entry/1, entry/2...), which splits the statistics into hundreds of pieces.",
       "severity": "low",
       "category": "performance",
       "file": "app/_layout.tsx",
@@ -4487,6 +4637,7 @@
     {
       "id": "A151",
       "title": "getAllEntriesWithRelations is O(entries x joinRows) and runs on every Save via syncAchievements",
+      "eli5": "Still open. After every save, the app rescans the whole diary in a slow way to check milestones, so Save gets slower the bigger the diary.",
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
@@ -4511,6 +4662,7 @@
     {
       "id": "A152",
       "title": "Every save re-evaluates achievements over the whole diary with an O(entries × join rows) scan on the JS thread",
+      "eli5": "Still open. Same as A151.",
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
@@ -4535,6 +4687,7 @@
     {
       "id": "A153",
       "title": "Per-save achievement sync and per-row date formatting scale badly with diary size",
+      "eli5": "Still open. Same as A151, plus the date formatting waste from A149.",
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
@@ -4559,6 +4712,7 @@
     {
       "id": "A154",
       "title": "All 28 locale JSON files are eagerly bundled into the JS bundle",
+      "eli5": "Still open. All 28 translations are packed into the app even though you only use one. Acceptable, but adds to app size.",
       "severity": "low",
       "category": "performance",
       "file": "app/i18n/index.ts",
@@ -4583,6 +4737,7 @@
     {
       "id": "A155",
       "title": "Three 1 MB onboarding PNGs account for ~3 MB of the app for illustrations shown once",
+      "eli5": "Still open. The three onboarding pictures are about 7 MB together (now six image files), far bigger than needed for screens seen once.",
       "severity": "low",
       "category": "performance",
       "file": "app/onboarding/index.tsx",
@@ -4625,6 +4780,7 @@
     {
       "id": "A156",
       "title": "SYSTEM_ALERT_WINDOW and legacy external-storage permissions ship because app.json never blocks Expo's optional defaults",
+      "eli5": "Still open. The Android app still asks for a 'draw over other apps' permission and old storage permissions it never uses, which looks bad in the Play Store listing.",
       "severity": "low",
       "category": "security",
       "file": "app.json",
@@ -4649,6 +4805,7 @@
     {
       "id": "A157",
       "title": "Android auto-backup is left on (Expo default), so the SQLite health diary is uploaded to Google Drive outside the App Lock",
+      "eli5": "Android was backing up the unencrypted diary to Google Drive by default. Fixed: automatic backup is off.",
       "severity": "low",
       "category": "security",
       "file": "app.json",
@@ -4679,6 +4836,7 @@
     {
       "id": "A158",
       "title": "iOS export and import leave health-data copies in the cache directory, and iOS export is recorded as completed even if the share sheet is cancelled",
+      "eli5": "Still open. Same as A52: on iPhone, export and import leave plain-text copies of the diary in a temporary folder, and export is recorded as done even if cancelled.",
       "severity": "low",
       "category": "security",
       "file": "app/my-data.tsx",
@@ -4721,6 +4879,7 @@
     {
       "id": "A159",
       "title": "Import reads and parses the whole picked file synchronously with no size cap",
+      "eli5": "Still open. Import loads the whole chosen file into memory with no size limit, so picking a huge file can freeze the app.",
       "severity": "low",
       "category": "security",
       "file": "app/my-data.tsx",
@@ -4751,6 +4910,7 @@
     {
       "id": "A160",
       "title": "Calibration study reports FAIL but always exits 0",
+      "eli5": "Still open. The calibration test prints 'FAIL' but still reports success to any script that runs it.",
       "severity": "low",
       "category": "testing",
       "file": "tests/stats/calibration.test.ts",
@@ -4775,6 +4935,7 @@
     {
       "id": "A161",
       "title": "Hard-coded light-mode colours leak into dark mode on the Calendar count badge and Learn list",
+      "eli5": "Still open. A couple of colours (the entry-count badge on the Calendar, the amber Learn labels) are fixed light-mode colours and look wrong in dark mode.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/calendar.tsx",
@@ -4811,6 +4972,7 @@
     {
       "id": "A162",
       "title": "Home greeting is computed once per language and never refreshed, so it goes stale while the app stays open",
+      "eli5": "Still open. Same as A101: the greeting never updates while the app stays open.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/index.tsx",
@@ -4835,6 +4997,7 @@
     {
       "id": "A163",
       "title": "'Not enough data for this period yet' is shown for two cases where it is false: the 7D range (model can never run) and a trigger present on every logged day",
+      "eli5": "Still open. 'Not enough data for this period yet' is shown even when the real reason is different (the 7-day range can never have enough days, or a trigger was ticked every single day).",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
@@ -4859,6 +5022,7 @@
     {
       "id": "A164",
       "title": "Day-of-week card and 90D weekly buckets hard-code Monday-first, ignoring the First Day of Week setting the Calendar honours",
+      "eli5": "Still open. The day-of-week chart and weekly bars always start on Monday, ignoring your 'first day of week' setting that the Calendar respects.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
@@ -4883,6 +5047,7 @@
     {
       "id": "A165",
       "title": "Range change closes list panels but not the chip-view panel, and the day-before/day-after tiles show point estimates with no uncertainty",
+      "eli5": "Still open. Switching the date range leaves an open trigger panel open with silently changed numbers, and the 'day before / day after' tiles show a number without saying how uncertain it is.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
@@ -4907,6 +5072,7 @@
     {
       "id": "A166",
       "title": "Saved language is applied in a passive effect after the first commit, so the first painted frame is English",
+      "eli5": "Still open. On a cold start the very first frame is drawn in English before switching to your language, causing a brief flash.",
       "severity": "low",
       "category": "ux",
       "file": "app/contexts/LanguageContext.tsx",
@@ -4931,6 +5097,7 @@
     {
       "id": "A167",
       "title": "Intensity scale buttons expose no accessibility role, label or selected state",
+      "eli5": "Intensity buttons did not tell screen readers they were selectable or which one was selected. Fixed.",
       "severity": "low",
       "category": "ux",
       "file": "app/components/intensity/IntensityScaleSelector.tsx",
@@ -4967,6 +5134,7 @@
     {
       "id": "A168",
       "title": "Back navigation discards a partially filled form with no confirmation",
+      "eli5": "Still open. Swiping back or pressing Back on a half-filled entry throws it away without asking 'discard changes?'.",
       "severity": "low",
       "category": "ux",
       "file": "app/components/EntryForm.tsx",
@@ -4997,6 +5165,7 @@
     {
       "id": "A169",
       "title": "Notes field has no length limit, unlike every other text input in the app",
+      "eli5": "Still open. The notes field has no length limit, so a huge pasted text is stored and shown in full, breaking layouts.",
       "severity": "low",
       "category": "ux",
       "file": "app/components/EntryForm.tsx",
@@ -5021,6 +5190,7 @@
     {
       "id": "A170",
       "title": "Layouts use physical left/right properties and unmirrored chevrons (RTL not ready for the planned Arabic)",
+      "eli5": "Still open. Layouts are not ready for right-to-left languages like Arabic (planned later); not a bug today.",
       "severity": "low",
       "category": "ux",
       "file": "app/components/SingleChoiceScreen.tsx",
@@ -5057,6 +5227,7 @@
     {
       "id": "A171",
       "title": "Unknown-slug fallback renders a bare text with no header or back button",
+      "eli5": "Still open. Opening a Learn link to an article that does not exist shows one line of text with no header or back button.",
       "severity": "low",
       "category": "ux",
       "file": "app/learn/[slug].tsx",
@@ -5081,6 +5252,7 @@
     {
       "id": "A172",
       "title": "\"Skip\" on the onboarding slides does the same thing as \"Continue\" on the last slide and does not skip the rest of onboarding",
+      "eli5": "Still open. On the last welcome slide 'Skip' and 'Continue' do the same thing, and 'Skip' does not actually skip the name and disclaimer steps.",
       "severity": "low",
       "category": "ux",
       "file": "app/onboarding/index.tsx",
@@ -5105,6 +5277,7 @@
     {
       "id": "A173",
       "title": "Reminder is enabled and scheduled before the permission prompt; a denial leaves the switch on with nothing that can fire",
+      "eli5": "Still open. If you turn on a reminder and then deny the notification permission, the switch stays on even though nothing can ever fire.",
       "severity": "low",
       "category": "ux",
       "file": "app/reminders.tsx",
@@ -5135,6 +5308,7 @@
     {
       "id": "A174",
       "title": "Delete icons are 24×24pt and several icon buttons are under the 44pt/48dp minimum tap target",
+      "eli5": "Still open. Delete icons and some other buttons are smaller than the recommended minimum tap size, so taps can land on the neighbouring switch.",
       "severity": "low",
       "category": "ux",
       "file": "app/reminders.tsx",
@@ -5171,6 +5345,7 @@
     {
       "id": "A175",
       "title": "Developer-only 'Reset onboarding' section and three 'Coming soon' menu rows ship in the production UI",
+      "eli5": "The developer-only 'Reset onboarding' section and 'Coming soon' rows were visible to everyone. No longer applies: the developer section is hidden in release builds and the rows were removed (only 'Rate app' remains, tracked as A93).",
       "severity": "low",
       "category": "ux",
       "file": "app/settings.tsx",
@@ -5219,6 +5394,7 @@
     {
       "id": "A176",
       "title": "'Curious mind' milestone says 'Read one of the guides in Learn' but opening the statistics guide listed on the Learn screen never unlocks it",
+      "eli5": "Reading the statistics guide from the Learn screen did not unlock the 'Curious mind' milestone. Fixed.",
       "severity": "low",
       "category": "ux",
       "file": "app/learn/index.tsx",
@@ -5249,6 +5425,7 @@
     {
       "id": "A177",
       "title": "Linking.openURL rejections are unhandled on five screens, so buttons silently do nothing without a mail/browser app",
+      "eli5": "Still open. Same as A53: 'Contact support' and other links fail silently if there is no mail app or browser.",
       "severity": "low",
       "category": "ux",
       "file": "app/support.tsx",
@@ -5273,6 +5450,7 @@
     {
       "id": "A178",
       "title": "Note line breaks are collapsed in the PDF report",
+      "eli5": "Still open. Line breaks in your notes are flattened into one long line in the PDF report.",
       "severity": "low",
       "category": "ux",
       "file": "src/features/reports/reportHtml.ts",
@@ -5297,6 +5475,7 @@
     {
       "id": "L1",
       "title": "The live privacy policy does not describe the app that ships",
+      "eli5": "Still open. The privacy policy on the website describes a different app: it mentions ads, user accounts, syncing and collecting your age, none of which exist, and it does not mention over-the-air updates or the in-app consent question. App stores reject apps whose policy does not match.",
       "severity": "critical",
       "category": "legal",
       "file": "app/about.tsx",
@@ -5327,6 +5506,7 @@
     {
       "id": "L2",
       "title": "Analytics, crash and performance telemetry start on launch with no consent and no opt-out",
+      "eli5": "Mostly fixed. Usage statistics and crash reports are now only sent if you say yes in the app. Still unconditional: performance measurements (S11), the link between Firebase and the subscription service (S10), and the analytics identity surviving 'Delete all data' (S13).",
       "severity": "critical",
       "category": "legal",
       "file": "app/utils/consent.ts",
@@ -5363,6 +5543,7 @@
     {
       "id": "L3",
       "title": "The subscription sells features that do not exist",
+      "eli5": "The subscription promised 'unlimited entries and full reports' but unlocked nothing. Fixed: Pro now gates real features and the wording matches.",
       "severity": "critical",
       "category": "legal",
       "file": "app/(tabs)/more.tsx",
@@ -5393,6 +5574,7 @@
     {
       "id": "L4",
       "title": "Fake health data is written into every fresh install",
+      "eli5": "Same as A1: fake health data on every install. Fixed.",
       "severity": "critical",
       "category": "legal",
       "file": "app/db/database.ts",
@@ -5423,6 +5605,7 @@
     {
       "id": "L5",
       "title": "Learn content ships while still flagged as clinically unreviewed",
+      "eli5": "The Learn articles shipped with a visible 'clinical review required' note. Fixed: the note is gone and an internal review was done; an outside clinician sign-off is still pending (S7).",
       "severity": "high",
       "category": "legal",
       "file": "app/i18n/locales/en.json",
@@ -5454,6 +5637,7 @@
     {
       "id": "L6",
       "title": "Android backs up the unencrypted symptom database to Google Drive by default",
+      "eli5": "Same as A157: the diary was being backed up to Google Drive unencrypted. Fixed.",
       "severity": "high",
       "category": "legal",
       "file": "app.json",
@@ -5485,6 +5669,7 @@
     {
       "id": "L7",
       "title": "Legal and safety text falls back to English in 24 of 28 languages",
+      "eli5": "Legal and safety text fell back to English in 24 languages. Fixed: it is translated everywhere (machine-translated, still worth a native check).",
       "severity": "high",
       "category": "legal",
       "file": "app/i18n/locales/en.json",
@@ -5516,6 +5701,7 @@
     {
       "id": "L8",
       "title": "Store disclosures cannot be verified from the repo and must match #1",
+      "eli5": "The store privacy forms must list Firebase, RevenueCat and EAS, and the advertising ID permission had to be blocked. Code side fixed; filling in the store forms is a human task.",
       "severity": "high",
       "category": "legal",
       "file": "app.json",
@@ -5547,6 +5733,7 @@
     {
       "id": "L9",
       "title": "\"Wellness, not health\" is only partly true, and one planned feature would break it",
+      "eli5": "Still open as a process item. The app is positioned as 'wellness, not medical', which holds as long as it never diagnoses or measures. The planned Pitch Test (which would have crossed that line) was removed; a short regulatory memo is still to write.",
       "severity": "medium",
       "category": "legal",
       "file": "app/(tabs)/more.tsx",
@@ -5583,6 +5770,7 @@
     {
       "id": "L10",
       "title": "Subscription terms live in the RevenueCat dashboard, not the repo",
+      "eli5": "Cannot be checked from the code. The subscription price, renewal terms and legal links live in the RevenueCat dashboard, so someone must check them there or on a device.",
       "severity": "medium",
       "category": "legal",
       "file": "app/paywall.tsx",
@@ -5613,6 +5801,7 @@
     {
       "id": "L11",
       "title": "Accessibility",
+      "eli5": "Buttons had no screen-reader names and text contrast was too low. No longer applies: both were fixed.",
       "severity": "medium",
       "category": "legal",
       "file": "app/about.tsx",
@@ -5643,6 +5832,7 @@
     {
       "id": "L12",
       "title": "Lock-screen notifications name the condition",
+      "eli5": "Still open. Reminder notifications say 'tinnitus' on the lock screen, where anyone can read them. A neutral wording option would help.",
       "severity": "low",
       "category": "legal",
       "file": "app/i18n/locales/en.json",
@@ -5667,6 +5857,7 @@
     {
       "id": "L13",
       "title": "Tests never run",
+      "eli5": "Still open. Same as A88: the tests are never run automatically.",
       "severity": "low",
       "category": "legal",
       "file": "package.json",
@@ -5691,6 +5882,7 @@
     {
       "id": "L14",
       "title": "Startup crash path",
+      "eli5": "Still open. Same as A36: a startup failure means a crash with no message.",
       "severity": "low",
       "category": "legal",
       "file": "app/_layout.tsx",
@@ -5715,6 +5907,7 @@
     {
       "id": "L15",
       "title": "Native UI theme",
+      "eli5": "Still open. Same as A28: the app forces light mode at the system level, so system dialogs look light inside dark mode.",
       "severity": "low",
       "category": "legal",
       "file": "app.json",
@@ -5739,6 +5932,7 @@
     {
       "id": "L16",
       "title": "Repo hygiene that can leak into store copy",
+      "eli5": "Still open. The README still describes accounts and a backend that do not exist, and developer leftovers are in the repo. (The iOS bundle identifier is set now.)",
       "severity": "low",
       "category": "legal",
       "file": "README.md",
@@ -5769,6 +5963,7 @@
     {
       "id": "L17",
       "title": "Disclaimer acknowledgement is not recorded",
+      "eli5": "Still open. The app does not record that you tapped 'I understand' on the medical disclaimer, which would be cheap evidence if ever questioned.",
       "severity": "low",
       "category": "legal",
       "file": "app/onboarding/disclaimer.tsx",
@@ -5799,6 +5994,7 @@
     {
       "id": "S1",
       "title": "Anyone can unlock Premium for free via Settings > Developer > Subscription Tier",
+      "eli5": "Anyone could switch themselves to Premium for free in a hidden Settings section. Fixed: that section only exists in developer builds.",
       "severity": "high",
       "category": "security",
       "file": "app/contexts/SubscriptionContext.tsx",
@@ -5831,6 +6027,7 @@
     {
       "id": "S2",
       "title": "Pitch Test and Widgets are sold as Pro but only open a 'Coming soon' screen for subscribers",
+      "eli5": "Pitch Test and Widgets were sold as Pro features but only showed 'Coming soon'. Fixed: Pitch Test is gone and Widgets is a real feature.",
       "severity": "high",
       "category": "legal",
       "file": "app/(tabs)/more.tsx",
@@ -5863,6 +6060,7 @@
     {
       "id": "S3",
       "title": "Stats keeps old-language axis labels and date range after a language switch",
+      "eli5": "Still open. After changing the app language, the Stats charts keep their axis labels in the old language until the diary changes or the app restarts.",
       "severity": "low",
       "category": "i18n",
       "file": "app/(tabs)/trends.tsx",
@@ -5900,6 +6098,7 @@
     {
       "id": "S4",
       "title": "Locked Pro cards and badged controls in Stats have no screen-reader role or label",
+      "eli5": "Still open. The locked Pro cards in Stats have no name for screen readers, so blind users are not told they open the paywall.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
@@ -5931,6 +6130,7 @@
     {
       "id": "S5",
       "title": "report_created is logged even when the share or save is cancelled",
+      "eli5": "Still open. The app counts a report as 'created' even when you cancel the share or save, inflating usage numbers.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/reports.tsx",
@@ -5962,6 +6162,7 @@
     {
       "id": "S6",
       "title": "LanguageContext mutates module state inside useMemo",
+      "eli5": "Still open. A technical detail: the language setting is changed in a place React does not expect, which works today but could misbehave with future React rendering modes.",
       "severity": "low",
       "category": "code-quality",
       "file": "app/contexts/LanguageContext.tsx",
@@ -5987,6 +6188,7 @@
     {
       "id": "S7",
       "title": "Learn is shown by default before independent clinician sign-off",
+      "eli5": "Still open. The Learn articles (including one naming medicine types) are shown to all Pro users, but an independent clinician has not yet signed them off, and the remote kill switch was removed.",
       "severity": "medium",
       "category": "legal",
       "file": "app/(tabs)/more.tsx",
@@ -6024,6 +6226,7 @@
     {
       "id": "S8",
       "title": "Dark-mode textMuted still fails 4.5:1 on small informational text",
+      "eli5": "Muted text in dark mode was too low-contrast. Fixed.",
       "severity": "low",
       "category": "ux",
       "file": "app/constants/theme.ts",
@@ -6055,6 +6258,7 @@
     {
       "id": "S9",
       "title": "App Lock re-locks after in-app system dialogs on Android",
+      "eli5": "With the app lock on, Android re-locked the app right after its own dialogs (file picker, permission prompt, purchase). Fixed.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/contexts/AppLockContext.tsx",
@@ -6090,6 +6294,7 @@
       "file": "app/utils/purchases.ts",
       "line": 29,
       "title": "RevenueCat receives the Firebase app instance id at startup, before usage-data consent",
+      "eli5": "Still open. At startup the app hands your Firebase analytics identifier to the subscription service even if you said no to usage data.",
       "what": "linkFirebase() (app/utils/purchases.ts:29, :35-39) calls analytics getAppInstanceId() and Purchases.setFirebaseAppInstanceID(id) during app start regardless of the new usage_data_consent setting, so the Firebase instance id is sent to RevenueCat for users who declined usage data (2949129).",
       "evidence": "app/utils/purchases.ts:29 `linkFirebase()` called from initPurchases; :35-39 `const id = await getAppInstanceId(); await Purchases.setFirebaseAppInstanceID(id)`. No hasUsageConsent() check in that path (grep in app/utils/purchases.ts).",
       "goesWrong": "A user who answered \"No\" to the usage-data question still has a Firebase identifier linked to their RevenueCat customer record, contradicting the consent screen and the privacy policy wording.",
@@ -6115,6 +6320,7 @@
       "file": "firebase.json",
       "line": 4,
       "title": "Firebase Performance uploads traces without consent: perf_auto_collection_enabled is not set",
+      "eli5": "Still open. Firebase Performance (timing measurements) is still sent to Google regardless of your consent choice; only Analytics and Crashlytics respect it.",
       "what": "firebase.json disables auto-collection only for Analytics and Crashlytics (:4-5). perf_auto_collection_enabled is absent and nothing calls setPerformanceCollectionEnabled, so Firebase Performance starts natively on launch and the traces started in app/my-data.tsx:28 are uploaded for every user, including those who declined. google_analytics_adid_collection_enabled is also unset (low impact, AD_ID is blocked).",
       "evidence": "firebase.json:4-5 contains analytics_auto_collection_enabled:false and crashlytics_auto_collection_enabled:false only; `grep -rn setPerformanceCollectionEnabled app src` → no hits; app/utils/performance.ts never reads usage_data_consent.",
       "goesWrong": "Telemetry still leaves the device for users who said no, so L2 is only partly closed and the Play Data safety form cannot state that collection is optional.",
@@ -6140,6 +6346,7 @@
       "file": "app/components/LockScreen.tsx",
       "line": 1,
       "title": "Lock screen has no BackHandler: Android Back reaches the navigator underneath while locked",
+      "eli5": "Still open. With the app locked, pressing the Android Back button still controls the hidden screens underneath the lock.",
       "what": "The lock screen is rendered as an absolute-fill overlay above the Stack (app/_layout.tsx:137-138). LockScreen.tsx registers no BackHandler, so the hardware Back button while locked pops screens or exits the app underneath the overlay.",
       "evidence": "`grep -n BackHandler app/components/LockScreen.tsx` → nothing; app/_layout.tsx:137-138 `{locked && <LockScreen style={StyleSheet.absoluteFill} />}` after the Stack.",
       "goesWrong": "Pressing Back on a locked app silently navigates or exits; no data is exposed, but the user loses their place and the behaviour is confusing.",
@@ -6165,6 +6372,7 @@
       "file": "app/my-data.tsx",
       "line": 351,
       "title": "Delete All Data does not reset the Firebase analytics instance id",
+      "eli5": "Still open. 'Delete all data' wipes the diary but keeps the same analytics identity, so you are not really starting fresh.",
       "what": "The Delete All Data flow (app/my-data.tsx:351-360) clears the diary and settings but never calls analytics().resetAnalyticsData(), so the Firebase app instance id and its event history survive a full wipe.",
       "evidence": "`grep -rn resetAnalyticsData app src` → no hits; my-data.tsx:351-360 deleteAllEntries + settings reset only.",
       "goesWrong": "A user who wipes the app expecting a clean slate keeps the same analytics identity; the privacy copy promises deletion.",
@@ -6190,6 +6398,7 @@
       "file": "package.json",
       "line": 19,
       "title": "@react-native-firebase/remote-config is still installed after Remote Config was removed",
+      "eli5": "Still open, by the owner's choice. A Firebase library for remote settings is still bundled although nothing uses it; removing it must happen before a store build.",
       "what": "414c920 deleted app/utils/remoteConfig.ts and every flag, but @react-native-firebase/remote-config remains in package.json:19 with no imports, so a native module is compiled into every build for nothing.",
       "evidence": "package.json:19; `grep -rn \"remote-config\" app src` → no hits.",
       "goesWrong": "Dead native code in the binary; removing it later changes the fingerprint runtime version, so it must be done before a store build, not via OTA.",
@@ -6215,6 +6424,7 @@
       "file": "src/features/learn/articles/en.ts",
       "line": 83,
       "title": "No red-flag guidance when logging sudden hearing loss or pulsatile tinnitus",
+      "eli5": "Still open. When someone logs a sudden change or pulsing tinnitus, the app does not gently suggest seeking care, even though that advice exists in a Learn article.",
       "what": "Council item #10 from the v3 review: advice about sudden hearing loss or pulsing tinnitus appears only in one Learn guide (src/features/learn/content.ts:82). The shared EntryForm has no calm prompt when such a sound type or symptom is logged, and there are no entryForm.* strings for it.",
       "evidence": "`grep -rn \"sudden\\|pulsatile\\|urgent\" app/components/EntryForm.tsx app/i18n/locales/en.json` → only the descriptive soundType tooltip.",
       "goesWrong": "A user logging a pulsatile sound or a sudden change gets no nudge to seek care, while the information exists elsewhere in the app.",

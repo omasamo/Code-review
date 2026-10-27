@@ -87,7 +87,8 @@ The scan runs locally only, by design: no API key is ever stored on GitHub. The 
 ```jsonc
 {
   "id": "A10",                    // A = evidence appendix, L = legal review, S = scanner/manual
-  "title": "…", "severity": "high", "category": "bug",
+  "title": "…", "eli5": "one or two plain-language sentences anyone can follow",
+  "severity": "high", "category": "bug",
   "file": "app/db/queries.ts", "line": 334, "verifiers": "3/3",
   "what": "…", "evidence": "…", "goesWrong": "…", "fix": "…",
   "source": "review-2026-10-05", "commit": "5513c30",

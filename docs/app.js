@@ -319,7 +319,7 @@
     const matches = (x) => {
       if (!f.status.has(statusOf(x))) return false;
       if (!f.sev.has(x.severity)) return false;
-      if (f.q) { const q = f.q.toLowerCase(); if (!(`${x.id} ${x.title} ${x.file || ''} ${x.what}`).toLowerCase().includes(q)) return false; }
+      if (f.q) { const q = f.q.toLowerCase(); if (!(`${x.id} ${x.title} ${x.file || ''} ${x.what} ${x.eli5 || ''}`).toLowerCase().includes(q)) return false; }
       return true;
     };
     const shown = list.filter(matches);
@@ -393,6 +393,7 @@
       lines.push('');
       lines.push(`### ${x.id} [${x.severity} · ${x.category}] ${x.title}`);
       if (x.file) lines.push(`Where: ${x.file}${x.line ? ':' + x.line : ''}`);
+      if (x.eli5) lines.push(`In plain words: ${x.eli5}`);
       lines.push(`What: ${x.what}`);
       if (x.evidence) lines.push(`Evidence: ${x.evidence}`);
       if (x.goesWrong) lines.push(`What goes wrong: ${x.goesWrong}`);
@@ -426,6 +427,7 @@
     return `<details class="finding is-${st}" ${open ? 'open' : ''} id="f-${esc(x.id)}">
       <summary><span class="fid"><input type="checkbox" class="fsel" data-id="${esc(x.id)}" ${state.selected.has(x.id) ? 'checked' : ''} aria-label="Select ${esc(x.id)}"> ${esc(x.id)}</span><span><div class="ftitle">${esc(x.title)}</div><div class="fmeta"><span class="badge sev-${x.severity}">${SEV_LABEL[x.severity]}</span><span class="badge cat">${esc(CAT_LABEL[x.category] || x.category)}</span>${loc}${x.verifiers ? `<span>verified ${esc(x.verifiers)}</span>` : ''}${x.source && x.source.startsWith('scan') ? `<span>from scan</span>` : ''}</div></span><span class="badge st-${st}">${STATUS_LABEL[st]}</span></summary>
       <div class="fbody">
+        ${section('In plain words', x.eli5)}
         ${section('What', x.what)}
         ${section('Evidence', x.evidence)}
         ${section('What goes wrong', x.goesWrong)}
@@ -481,7 +483,7 @@
   }
   function issueBody(f) {
     const loc = f.file ? `**Where:** [${f.file}${f.line ? ':' + f.line : ''}](${fileUrl(f.file, f.line)})\n\n` : '';
-    return `${loc}**What:** ${f.what}\n\n${f.evidence ? `**Evidence:** ${f.evidence}\n\n` : ''}${f.goesWrong ? `**What goes wrong:** ${f.goesWrong}\n\n` : ''}${f.fix ? `**Suggested fix:** ${f.fix}\n\n` : ''}---\nDashboard: ${location.origin}${location.pathname}#/f/${f.id}`;
+    return `${loc}${f.eli5 ? `**In plain words:** ${f.eli5}\n\n` : ''}**What:** ${f.what}\n\n${f.evidence ? `**Evidence:** ${f.evidence}\n\n` : ''}${f.goesWrong ? `**What goes wrong:** ${f.goesWrong}\n\n` : ''}${f.fix ? `**Suggested fix:** ${f.fix}\n\n` : ''}---\nDashboard: ${location.origin}${location.pathname}#/f/${f.id}`;
   }
   async function createIssue(f) {
     return gh(`/repos/${state.config.reviewRepo}/issues`, { method: 'POST', body: JSON.stringify({ title: `[${f.id}] ${f.title}`, body: issueBody(f), labels: ['finding', `id:${f.id}`, `severity:${f.severity}`, `category:${f.category}`] }) });
