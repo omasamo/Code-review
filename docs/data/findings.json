@@ -1,7 +1,7 @@
 {
   "version": 1,
   "reviewedCommit": "5513c30",
-  "scannedCommit": "ab207123ea75d23d989432a455407f71ae2b5d4d",
+  "scannedCommit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a",
   "findings": [
     {
       "id": "A1",
@@ -692,7 +692,7 @@
     {
       "id": "A22",
       "title": "CNG workflow with a stale local android/ folder: `run:android` silently builds without six config plugins",
-      "eli5": "Still open. The developer command that builds the Android app reuses an old generated folder, so the test build can silently miss things like Firebase. Only affects developers, but it means the app you test may not be the app you ship.",
+      "eli5": "The developer command that builds the Android app reuses an old generated folder, so the test build can silently miss things like Firebase. Only affects developers, but it means the app you test may not be the app you ship. Fixed on 11 November 2026.",
       "severity": "medium",
       "category": "architecture",
       "file": "CLAUDE.md",
@@ -704,7 +704,7 @@
       "fix": "Document and script the real rule: `npx expo prebuild --clean` (or `rm -rf android ios`) before `run:android` whenever app.json/plugins/native deps change; e.g. add `\"android:clean\": \"expo prebuild --clean --platform android && expo run:android\"`. Alternatively stop ignoring android/ and commit it (then plugins must be applied via prebuild deliberately).",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 22,
       "history": [
         {
@@ -717,6 +717,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Still open: CLAUDE.md:9 and README.md:33 still present `npx expo run:android` as the native-rebuild step with no note that a stale local android/ folder skips prebuild. Nothing in the branch touched this.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: CLAUDE.md commands + README now say `npx expo prebuild --clean --platform android` is required after native dep / plugin / firebase.json changes, and why run:android alone is not enough.",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -919,7 +925,7 @@
     {
       "id": "A27",
       "title": "app/ vs src/features boundary is bidirectional, and non-route modules under app/ are registered as navigable routes",
-      "eli5": "Still open. The code folders import each other in both directions, and some helper files sit in the folder that defines screens, so they accidentally become openable 'pages' that would crash if someone navigated to them.",
+      "eli5": "The code folders import each other in both directions, and some helper files sit in the folder that defines screens, so they accidentally become openable 'pages' that would crash if someone navigated to them. Fixed on 11 November 2026.",
       "severity": "medium",
       "category": "architecture",
       "file": "src/features/achievements/sync.ts",
@@ -931,7 +937,7 @@
       "fix": "Move db/, stats/, utils/, contexts/, hooks/, i18n/, constants/ out of app/ into src/ (expo-router only needs screens and components used by screens in app/), make src/features depend only on src/data + src/domain, and have achievements.tsx call syncAchievements().",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 27,
       "history": [
         {
@@ -956,6 +962,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Still open: `export default db` (app/db/database.ts:312) and `export default i18n` (app/i18n/index.ts:78) remain, so expo-router still registers /db/database and /i18n as routes; the app/ ↔ src/features imports are still bidirectional.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: app/db/database.ts exports `{ db }` and app/i18n/index.ts exports `{ i18n }` (named); no file outside screens under app/ has a default export, so /db/database and /i18n are no longer routes. (The app/ ↔ src/features import direction is unchanged and tracked under A95.)",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -1977,6 +1989,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: The iOS backup JSON is now deleted in finally after the share sheet (my-data.tsx:266-274). last_exported_at and export_completed are still written when the sheet is dismissed — expo-sharing resolves identically for save and dismiss, which the code now documents (:275-278).",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20 (expo-sharing limitation).",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -2069,6 +2087,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: On Android the PDF is deleted 60 s after the chooser returns, leftovers purged on the next report (reportExport.ts:41-60). A dismissed sheet is still logged (as report_created action: share_opened, so no longer counted as saved).",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -2118,6 +2142,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: See A54.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -2179,6 +2209,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: hexToRgba is gone (0 copies; withAlpha in theme.ts). The back-button header JSX and its styles are still repeated per sub-screen.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20: back-button header still repeated per screen.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -2873,7 +2909,7 @@
     {
       "id": "A73",
       "title": "Shared dialogs hard-code \"Cancel\", \"Delete\" and \"OK\" instead of using the existing common.* keys",
-      "eli5": "Partly fixed. Same as A71: 'Cancel', 'Delete' and 'OK' are hard-coded in English in shared dialogs.",
+      "eli5": "Same as A71: 'Cancel', 'Delete' and 'OK' are hard-coded in English in shared dialogs. Fixed on 11 November 2026.",
       "severity": "medium",
       "category": "i18n",
       "file": "app/components/ConfirmDialog.tsx",
@@ -2885,7 +2921,7 @@
       "fix": "Call useTranslation inside ConfirmDialog/StatusDialog and default to t('common.cancel'), t('common.delete'), t('common.ok'); move the share-sheet title to a myData key.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 73,
       "history": [
         {
@@ -2904,6 +2940,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: ConfirmDialog/StatusDialog use common.cancel/delete/ok. The iOS share-sheet `dialogTitle: 'Save Tinnitus Data'` (my-data.tsx:270) is still English.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: The iOS share-sheet title uses t('myData.exportData') (my-data.tsx:270); ConfirmDialog/StatusDialog were already translated.",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -3119,6 +3161,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: Intl.DisplayNames is guarded (support-directory.tsx:21-27) so it can no longer throw, but on Hermes without a polyfill the country names still fall back to the English countryFallback.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -3444,13 +3492,19 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: npm test now runs 4 validation suites (features, trigger model, import validation, i18n plurals) + test:calibration. The migrations (ensureColumn, splitPulsatileThrummingType, cleanOrphanedLinks) and the local-day date math in app/utils/datetime.ts are still untested.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: tests/utils/datetime.validation.ts now covers formatDateKey/computeLocalDate/wallClockIn/fromWallClock/combineDateTime/toZonedDisplayDate incl. DST gap and repeated hour (helpers moved to app/utils/timeZone.ts to run under Node); import validation was already tested. The SQLite migrations (ensureColumn, splitPulsatileThrummingType, cleanOrphanedLinks) remain untested — they need a SQLite runtime in Node.",
+          "commit": "17e7e20"
         }
       ]
     },
     {
       "id": "A86",
       "title": "fitTemporalProfile and the suspectReverse heuristic have no test; the existing test scripts are not runnable from the repo and never cover the shipped aggregation",
-      "eli5": "Partly fixed. The 'day before / day after' statistics have no tests, and the existing test scripts cannot even be run without extra setup.",
+      "eli5": "The 'day before / day after' statistics have no tests, and the existing test scripts cannot even be run without extra setup. Fixed on 11 November 2026.",
       "severity": "medium",
       "category": "testing",
       "file": "app/stats/triggerModel.ts",
@@ -3462,7 +3516,7 @@
       "fix": "Add tsx (or vitest) as a devDependency with `\"test\": \"tsx tests/stats/triggerModel.validation.ts && tsx tests/stats/calibration.test.ts\"`; add a test that builds a world with a known lagged effect and a known confounded one and asserts dayAfter/dayBefore signs and suspectReverse; move the aggregation out of the screen so it can be covered too.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 86,
       "history": [
         {
@@ -3475,6 +3529,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: The test runner exists (tsx devDependency, npm test). fitTemporalProfile still has no test.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: tests/stats/temporalProfile.validation.ts covers fitTemporalProfile (carry-over lands on the lag term, confounder → suspectReverse, streak counts below the minimum, non-adjacent days give no lag estimate); in npm test.",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -3598,6 +3658,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: typecheck/test scripts exist; no ESLint/Prettier config and no CI workflow yet.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.289Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Still open: typecheck/test scripts and now 6 suites exist. A GitHub Actions workflow (npm ci → typecheck → npm test → test:calibration) was written on the fix branch but the push was rejected: the Mac's gh token has no `workflow` scope. Needs a token with that scope; no ESLint config yet.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -3745,6 +3811,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: height → minHeight on tiles, tab bar and calendar cells; maxFontSizeMultiplier on Home captions. No scaling strategy on the other screens.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -4686,7 +4758,7 @@
     {
       "id": "A116",
       "title": "AGENTS.md is a stale August snapshot committed in October and contradicts CLAUDE.md",
-      "eli5": "Partly fixed. The AGENTS.md documentation file is an old, outdated copy that contradicts the main documentation and could mislead contributors.",
+      "eli5": "The AGENTS.md documentation file is an old, outdated copy that contradicts the main documentation and could mislead contributors. Fixed on 11 November 2026.",
       "severity": "low",
       "category": "code-quality",
       "file": "AGENTS.md",
@@ -4698,7 +4770,7 @@
       "fix": "Replace AGENTS.md with a one-line pointer to CLAUDE.md (or a symlink), move the per-session 'What was built' logs out of CLAUDE.md into docs/CHANGELOG.md, and keep CLAUDE.md to current architecture + conventions.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 116,
       "history": [
         {
@@ -4735,13 +4807,19 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: AGENTS.md was NOT deleted — CLAUDE.md's 2026-11-11 note says it was. It was rewritten as a copy of CLAUDE.md with the header \"guidance to Codex (claude.ai/code)\" and \"machine-translated by Codex\" (AGENTS.md:3, 173). Delete it or fix the header.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: AGENTS.md deleted (git rm at 972c758).",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
     {
       "id": "A117",
       "title": "AGENTS.md is a stale fork of CLAUDE.md with contradicting guidance; CLAUDE.md itself misstates the intensity scale",
-      "eli5": "Partly fixed. Same as A116; it also still says intensity goes 1 to 5 when it is really 0 to 5.",
+      "eli5": "Same as A116; it also still says intensity goes 1 to 5 when it is really 0 to 5. Fixed on 11 November 2026.",
       "severity": "low",
       "category": "code-quality",
       "file": "AGENTS.md",
@@ -4753,7 +4831,7 @@
       "fix": "Make AGENTS.md a one-line pointer to CLAUDE.md (or a symlink) and fix the scale wording in CLAUDE.md's schema summary.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 117,
       "history": [
         {
@@ -4784,6 +4862,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: See A116 — content now matches CLAUDE.md, header still wrong, and CLAUDE.md claims the file is gone.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: See A116.",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -4901,6 +4985,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: The toast sequence is stopped before restarting (toastSeq ref, calendar.tsx:116) and the month arrows run one SELECT. The focus reset branch still calls getEntriesForMonth and the monthKey effect repeats it once.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -5700,7 +5790,7 @@
     {
       "id": "A140",
       "title": "Back-dated entries get the current wall-clock time, and today's entries can be timestamped in the future",
-      "eli5": "Still open. When you log an entry for a past day from the Calendar, it gets the current time of day instead of asking, and you can pick a time in the future.",
+      "eli5": "When you log an entry for a past day from the Calendar, it gets the current time of day instead of asking, and you can pick a time in the future. Fixed on 11 November 2026.",
       "severity": "low",
       "category": "design-decision",
       "file": "app/entry/new.tsx",
@@ -5712,7 +5802,7 @@
       "fix": "For back-dated entries, either default the time to a neutral value or visually highlight the time row as 'not set'; clamp or reject `combined > new Date()` in handleSave with a small inline message.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 140,
       "history": [
         {
@@ -5731,6 +5821,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Still open: app/entry/new.tsx:23 still initialises entryTime with `new Date()` for a back-dated calendar entry, and nothing bounds the combined timestamp against now (only the date picker has maximumDate, EntryForm.tsx:471/528).",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: app/entry/new.tsx:26 starts a back-dated Calendar entry at 12:00 (today keeps the current time); EntryForm.handleSave clamps the combined timestamp to now (EntryForm.tsx:411-414).",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -6002,7 +6098,7 @@
     {
       "id": "A148",
       "title": "Section labels are shouted in the JSON for some screens and uppercased via style on others, forcing translators to choose casing",
-      "eli5": "Still open. Some section headings are written in capitals in the translation files and others are capitalised by the code, which is inconsistent and confusing for translators.",
+      "eli5": "Some section headings are written in capitals in the translation files and others are capitalised by the code, which is inconsistent and confusing for translators. Fixed on 11 November 2026.",
       "severity": "low",
       "category": "i18n",
       "file": "app/i18n/locales/en.json",
@@ -6014,7 +6110,7 @@
       "fix": "Store sentence case in all locale files and apply `textTransform: 'uppercase'` in the shared section-label style only.",
       "source": "review-2026-10-05",
       "commit": "5513c30",
-      "status": "open",
+      "status": "fixed",
       "issue": 148,
       "history": [
         {
@@ -6033,6 +6129,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Still open: more.personalSection/insightsSection/supportSection, profile.personalInfoSection and myData.manageDataSection are still ALL-CAPS in en.json while app/settings.tsx:365 uppercases via textTransform.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: more.personalSection/insightsSection/supportSection, profile.personalInfoSection and myData.manageDataSection are sentence case in all 28 locales; more.tsx, profile.tsx and my-data.tsx uppercase via textTransform like settings.tsx.",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ]
     },
@@ -6340,6 +6442,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: The six onboarding PNGs are 800×800 at ~0.6 MB each (3.6 MB total, was 7 MB); still PNG, not WebP.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Still open: Left as is on 2026-11-11 at the owner's request (800 px PNGs, ~3.6 MB).",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -6463,6 +6571,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: Export and import cache copies are deleted (my-data.tsx:266-274, 313-322); the iOS \"exported on dismiss\" part remains (see A52).",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -7078,6 +7192,12 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: After a grant the reminder is re-synced (reminders.tsx:72-79). On denial the switch stays on, but the \"Notifications are off\" banner with Allow/Open settings is shown.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:30.290Z",
+          "status": "open",
+          "note": "Re-check at 17e7e20 — Partly fixed: Unchanged at 17e7e20.",
+          "commit": "17e7e20"
         }
       ]
     },
@@ -8977,7 +9097,7 @@
       "fix": "accessibilityLabel={t('entryForm.intensityLevels')[level]} on IntensityIcon; include the level in the row label ('Today 20:00, Moderate'); calendar cells '17, Moderate, 2 entries'.",
       "source": "scan-2026-11-11",
       "commit": "3d06b05",
-      "status": "open",
+      "status": "fixed",
       "issue": 223,
       "history": [
         {
@@ -8991,9 +9111,15 @@
           "status": "open",
           "note": "Re-check at ab20712 — Partly fixed: IntensityIcon, entry rows, calendar cells and the Home tiles announce the level. The Stats overview tiles (app/components/stats/StatTile.tsx) still have no accessibilityLabel, so the Avg/Change level name is not announced there.",
           "commit": "ab20712"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: Stats overview tiles take accessibilityLabel (StatTile.tsx) — Avg announces level name + value, Change the signed levels, Entries the count and days (trends.tsx).",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ],
-      "eli5": "Partly fixed. Someone using a screen reader hears the time of an entry but never the intensity level, which is the one thing the app is for."
+      "eli5": "Someone using a screen reader hears the time of an entry but never the intensity level, which is the one thing the app is for. Fixed on 11 November 2026."
     },
     {
       "id": "S29",
@@ -9341,7 +9467,7 @@
       "fix": "Add stats.trigger.range (\"{{low}} to {{high}}\") to all 28 locales and use t() with the two formatted bounds; a \"–\" en dash would also avoid the word entirely.",
       "source": "scan-2026-11-11",
       "commit": "ab20712",
-      "status": "open",
+      "status": "fixed",
       "issue": 234,
       "history": [
         {
@@ -9349,9 +9475,15 @@
           "status": "open",
           "note": "Found by quality scan at ab20712",
           "commit": "ab207123ea75d23d989432a455407f71ae2b5d4d"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: stats.trigger.range (\"{{low}} to {{high}}\", translated in 28 locales) replaces the literal \" to \" (TriggerImpactCard.tsx:29-33).",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ],
-      "eli5": "Still open. The \"−0.2 to +1.4\" range on the trigger panel always uses the English word \"to\", even when the rest of the screen is in another language."
+      "eli5": "The \"−0.2 to +1.4\" range on the trigger panel always uses the English word \"to\", even when the rest of the screen is in another language. Fixed on 11 November 2026."
     },
     {
       "id": "S40",
@@ -9367,7 +9499,7 @@
       "fix": "Round first: `const r = Number(value.toFixed(digits))` (or compare `Math.abs(value) < 0.5 * 10 ** -digits`) and sign on r; return abs for r === 0.",
       "source": "scan-2026-11-11",
       "commit": "ab20712",
-      "status": "open",
+      "status": "fixed",
       "issue": 235,
       "history": [
         {
@@ -9375,12 +9507,18 @@
           "status": "open",
           "note": "Found by quality scan at ab20712",
           "commit": "ab207123ea75d23d989432a455407f71ae2b5d4d"
+        },
+        {
+          "at": "2026-11-11T21:07:08.891Z",
+          "status": "fixed",
+          "note": "Re-check at 17e7e20 — Fixed: formatSigned signs the rounded value (format.ts:30-38): −0.04 → \"0.0\".",
+          "commit": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a"
         }
       ],
-      "eli5": "Still open. A change so small it rounds to zero can show as \"−0.0\" with a minus sign, which looks like a drop when nothing really changed."
+      "eli5": "A change so small it rounds to zero can show as \"−0.0\" with a minus sign, which looks like a drop when nothing really changed. Fixed on 11 November 2026."
     }
   ],
-  "updatedAt": "2026-11-11T18:47:29.001Z",
+  "updatedAt": "2026-11-11T21:08:17.465Z",
   "scans": [
     {
       "at": "2026-10-10T21:34:09.874Z",
@@ -9454,6 +9592,14 @@
       "added": 2,
       "note": "scan ingested from recheck-ab20712.json",
       "notes": "Re-check of main ab20712 (merge of fix/review-v4-2026-11-11, 6 commits from 3d06b05, 172 files). Every one of the 173 open findings was re-verified in the code of the branch, file by file, then a regression pass over the whole diff (data layer, lifecycle, forms, stats maths, reports, i18n, native). tsc 0 errors, npm test 5/5 PASS, expo config OK; all 499 literal t() keys used in code exist in en.json. 137 fixed; 17 partly fixed (notes in history, incl. S28 moved from fixed); 4 still open that the branch should have fixed (A22, A27, A140, A148); 15 remain human tasks or owner decisions. No hard regression found. 2 new low findings."
+    },
+    {
+      "at": "2026-11-11T21:07:08.890Z",
+      "head": "17e7e20c77a01f3fd3856e29ffcaedda1f76fd3a",
+      "fixed": 11,
+      "added": 0,
+      "note": "scan ingested from recheck-17e7e20.json",
+      "notes": "Re-check of main 17e7e20 (merge of fix/review-v4-leftovers-2026-11-11, one commit 972c758, 52 files). Each fix verified in the tree by reading the changed lines and by grep (no default export outside routes, no ALL-CAPS label left in 28 locales, no literal \" to \", AGENTS.md absent). tsc 0 errors; npm test now 6 suites (datetime and temporal profile added), all PASS. The pure time-zone helpers moved to app/utils/timeZone.ts so they run under Node. A CI workflow was written but could not be pushed: the Mac's GitHub token lacks the `workflow` scope (push rejected), so A89 stays open. Onboarding PNGs (A155) deliberately left as they are at the owner's request. 11 fixed, 0 new."
     }
   ]
 }
