@@ -1,7 +1,7 @@
 {
   "version": 1,
   "reviewedCommit": "5513c30",
-  "scannedCommit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2",
+  "scannedCommit": "3d06b054c121f86264a136782d83823df17dfd28",
   "findings": [
     {
       "id": "A1",
@@ -721,7 +721,7 @@
       "severity": "medium",
       "category": "architecture",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1617,
+      "line": 1611,
       "verifiers": "3/3",
       "what": "StatsScreen rebuilds its five i18n label arrays on every render (i18next returnObjects returns a fresh copy; distressLabels is a literal), so the 13 useMemos keyed on them (day-of-week, per-period enum fields, smoothed enum trends) recompute on every local state change (trigger row toggle, trend view, day-of-week chip, range). The expensive date bucketing (itemBuckets) stays cached, so the cost is a few ms of wasted work per interaction and defeated memoisation for any future React.memo children, not visible lag; the fingerprint optimisation at :1482-1495 is unaffected. Fix: useMemo the labels on i18n.language; separately, the 2,298-line file (29 top-level functions/components, 500-line makeStyles) should be split into app/stats/ compute modules and per-card components.",
       "evidence": "File is 2,298 lines (wc). trends.tsx:1497-1501 `const dowLabels = t('stats.dowLabels', { returnObjects: true }) as string[]; ... const distressLabels = [t(...), t(...), t(...)];`. node_modules/i18next/dist/cjs/i18next.js:630 `const copy = resTypeIsArray ? [] : {};` (new array per call). trends.tsx:1547 `useMemo(() => computeDayOfWeekBuckets(processed, range, dowLabels), [processed, range, dowLabels])` and :1549-1562 twelve more memos keyed on pitchLabels/durationLabels/locationLabels/distressLabels. Re-render triggers: setOpenTriggers (:1748), setTrendView (:1689), setDowCategory (:1760), setShownRange (:1466).",
@@ -742,6 +742,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Worse: trends.tsx is now 2,456 lines.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.812Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: trends.tsx:1611-1615 rebuilds dowLabels/pitch/duration/location/distress label arrays every render (i18next returnObjects returns a fresh array each call, verified on 26.3.6); they feed 13 memos at :1661-1676 and the fresh buckets reset chart selection via useEffect(() => setSelected(null), [buckets]).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -791,6 +797,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true but line numbers moved: computeDistribution :94, computeTopTriggers :162, CollapsiblePanel :209, computeDayOfWeekBuckets :870, computeEnumField :1007, computeSoundTypes :1243, PercentAxis :1311, StackedTrendChart :1365, makeStyles :1948 (file now 2,456 lines); byDay aggregation still duplicated in reportData.ts:80-82 and evaluate.ts:110-116, and IntensityTrendChart.tsx:12 still says 'Stats keeps its own copy'.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: trends.tsx is 2,438 lines (2,456 → 2,438 after the Pro-badge removal).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -822,6 +834,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: startAnchorEra, scheduleAnchorIfNeeded, openPrompt, pendingAnchor, markPromptAnswered, getAnchorAdherence (queries.ts:9-100, notifications.ts:74-115) have no callers; the prompts table and anchor_era_start remain.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: startAnchorEra/scheduleAnchorIfNeeded still have no caller in app/, src/ or modules/; defaultEntrySource() always returns legacy, rearmPendingAnchor() always returns early, the prompts table and backfillLegacySource still run on every launch.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -847,6 +865,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A25 — unchanged at notifications.ts:70-146, 174-198.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -909,6 +933,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: app.json:9 userInterfaceStyle is still \"light\".",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -934,6 +964,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A28.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -959,6 +995,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A28.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1000,7 +1042,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1604,
+      "line": 1598,
       "verifiers": "3/3",
       "what": "Stats loads only `getRecentEntries(1000)` (queries.ts:209-214, `ORDER BY created_at DESC LIMIT ?`), and `filterItems`/`rangeDayCount` in app/stats/sevenDayTrend.ts (58-59, 295-301) treat that truncated list as \"All\", so past 1000 entries every 'All' figure and the \"of N days\" span exclude the oldest data, while app/reports.tsx:31 uses the unlimited `getAllEntriesWithRelations()` and reportData.ts:26/87 applies no cutoff for 'ALL' — the two screens disagree.",
       "evidence": "trends.tsx:1484 `const nextEntries = getRecentEntries(1000);`. app/stats/sevenDayTrend.ts:58-59 `if (range === 'All') return p.tsList;` and 295-300 `rangeDayCount` uses `p.oldestTs` of that truncated list. app/reports.tsx:31 uses `getAllEntriesWithRelations()` (no limit), so Stats 'All' and the PDF report's 'ALL' disagree.",
@@ -1027,6 +1069,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true, line moved: trends.tsx:1604 `getRecentEntries(1000)` (queries.ts:209-213 ORDER BY created_at DESC LIMIT ?), while app/reports.tsx:46 uses the unlimited getAllEntriesWithRelations(); CLAUDE.md:34 still says 200.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: trends.tsx:1598 getRecentEntries(1000); index.tsx:107,117 getRecentEntries(200).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1037,7 +1085,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1604,
+      "line": 1598,
       "verifiers": "3/3",
       "what": "Stats loads only the 1000 most recent entries (getRecentEntries(1000), ORDER BY created_at DESC LIMIT), but processEntries derives oldestTs/oldestDay from that capped set, so for diaries over 1000 entries the 'All' header start date, the Entries tile's 'of N days' denominator, the monthly chart's first bucket and the trigger model/distribution all silently exclude the oldest entries while being presented as the complete history; the join-table queries remain unbounded, fetching rows that can never be matched.",
       "evidence": "trends.tsx l.1484 `getRecentEntries(1000)`; app/db/queries.ts l.209-213 `ORDER BY created_at DESC LIMIT ?`. formatRangeDates for 'All' uses `p.oldestDay` (trends.tsx l.54-57); rangeDayCount uses `p.oldestTs` (app/stats/sevenDayTrend.ts l.295-300); monthlyItemBuckets starts at `p.oldestDay` (l.174-181); the model input is `filterItems(processed, 'All')` = all 1000 (l.1524). Meanwhile getAllEntryTriggers()/getAllEntryTinnitusTypes() (l.1485-1486) are unbounded, so join rows for the dropped entries are fetched and fingerprinted but never used.",
@@ -1058,6 +1106,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true, line moved from 1484 to 1604; getAllEntryTriggers()/getAllEntryTinnitusTypes() at :1605-1606 remain unbounded and the oldest-day derivation in sevenDayTrend.ts is still from the capped list.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A32.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1068,7 +1122,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1604,
+      "line": 1598,
       "verifiers": "3/3",
       "what": "Stats loads only the 1,000 most recent entries (getRecentEntries(1000), ORDER BY created_at DESC LIMIT) and uses that set for the \"All\" range too, so users with >1,000 entries get a truncated start date, day count, entry count and distributions on Stats, while Reports (getAllEntriesWithRelations, uncapped) shows the full history; CLAUDE.md:34 still documents the cap as 200.",
       "evidence": "trends.tsx:1484 `const nextEntries = getRecentEntries(1000);`; queries.ts:209-213 `ORDER BY created_at DESC LIMIT ?`; sevenDayTrend.ts:31-38 derives `oldestDay` from whatever was loaded, feeding formatRangeDates (trends.tsx:54-57) and rangeDayCount (sevenDayTrend.ts:295-300); app/reports.tsx:31 `setEntries(getAllEntriesWithRelations())` has no cap. CLAUDE.md 'Stats are computed on the fly from getRecentEntries(200)'.",
@@ -1089,6 +1143,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true, line moved to 1604; Reports (app/reports.tsx:46) is uncapped and CLAUDE.md:34 still documents the cap as 200.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A32.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1099,7 +1159,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1603,
+      "line": 1601,
       "verifiers": "3/3",
       "what": "Stats focus effect only re-renders when the diary-content fingerprint changes, but every range window (filterItems/dailyItemBuckets/formatRangeDates) is derived from new Date() inside memos keyed on [processed, range]; returning to the still-mounted tab after midnight without a diary change shows yesterday's window until the user switches range or edits an entry.",
       "evidence": "fingerprintStatsInput (l.69-83) folds only entry/trigger/type fields. useFocusEffect (l.1483-1495): `if (fp !== lastFingerprint.current) { ... setEntries(...) }` otherwise only `setHasLoaded(true)` (a no-op after first focus). itemBuckets (l.1507), stats (l.1513), periodChange (l.1514), rangeDates (l.1568) etc. depend on [processed, range] only, yet app/stats/sevenDayTrend.ts filterItems l.61-63 (`const cutoff = new Date()`), dailyItemBuckets l.129-131 and formatRangeDates trends.tsx l.50-62 all read the current date. By contrast Home sets unconditionally (app/(tabs)/index.tsx l.92 `setEntries(getRecentEntries(200))`).",
@@ -1126,6 +1186,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true, lines moved: fingerprintStatsInput (:76-90) folds only entry/trigger/type fields with no day key, and the focus effect (:1603-1615) only sets state when the fingerprint changed; filterItems/dailyItemBuckets/monthly buckets still read new Date() (sevenDayTrend.ts:61,131,140,178,309), so a still-mounted Stats tab shows yesterday's window after midnight.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Fingerprint guard at trends.tsx:1601-1606 only tracks diary content; filterItems/rangeDayCount read new Date() inside memos keyed on [processed, range].",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1136,7 +1202,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/_layout.tsx",
-      "line": 160,
+      "line": 162,
       "verifiers": "3/3",
       "what": "Root startup block (app/_layout.tsx:96-106) runs initDatabase() and getReminders() in try/finally with no catch and no ErrorBoundary exported anywhere, so any DB/migration exception becomes an uncaught fatal on every launch (crash loop) with no recordError breadcrumb, no fallback UI, and the splash never hidden; the non-critical reminders read shares the same fate-deciding block.",
       "evidence": "app/_layout.tsx:96-106 `try { initDatabase(); const reminders = getReminders(); ... } finally { setAppReady(true); }` — contrast with :88 and :90-94 where initRemoteConfig/initPurchases are caught and sent to recordError. No file under app/ exports `ErrorBoundary`, and expo-router only wraps a route in its `Try` boundary when the route exports one (node_modules/expo-router/build/useScreens.js:139-145 `if (ErrorBoundary) { ... <Try catch={ErrorBoundary}> }`). `SplashScreen.hideAsync()` is only called from `SafeAreaProvider onLayout` (:114), which never renders on this path. initDatabase runs schema-altering migrations on every launch (app/db/database.ts:91-104: ensureColumn ×5, backfills, splitPulsatileThrummingType, seeds).",
@@ -1157,6 +1223,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: _layout.tsx:160-174 is try { initDatabase() … } finally { setAppReady(true) } with no catch, and there is no ErrorBoundary.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: _layout.tsx:162-175 try { initDatabase(); applyUsageConsent(); … } finally { setAppReady(true) } with no catch; no ErrorBoundary export anywhere; openDatabaseSync runs at module import (database.ts:4).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1182,6 +1254,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: notifications.ts:163-164 bakes title/body into the scheduled request; nothing re-syncs on i18n languageChanged (WidgetSync does, reminders do not).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1225,6 +1303,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — reopened, the problem is still present: The code is unchanged from the finding: LockScreen.tsx:59-62 still calls attempt() on every AppState 'active' event with only busyRef/doneRef guards (:33); after user_cancel status is set to 'idle' (:43) and busyRef is reset in finally (:48), so the 'active' fired by the prompt closing re-triggers attempt(). cancelAuthenticate() in appLock.ts:58 only clears orphaned sessions, it does not stop the re-prompt. Last commit touching the file is b49ca80 (overlay rendering), which did not change this logic.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: LockScreen still prompts on every AppState active; busyRef/doneRef only stop overlapping prompts and a re-prompt after success, not after a cancel.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1291,7 +1375,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
-      "line": 296,
+      "line": 309,
       "verifiers": "3/3",
       "what": "`deleteEntry` (queries.ts:286-288) deletes only the `entries` row; foreign keys are never enabled (DB opened plainly at database.ts:4, no `PRAGMA foreign_keys`), so the schema's `ON DELETE CASCADE` never fires and `entry_triggers`/`entry_tinnitus_types` rows are orphaned. Usage counts (queries.ts:110, :148-150) and the delete guards (:134, :172) count join rows without joining `entries`, so a custom trigger or sound type used only on since-deleted entries is reported as \"used on past entries\" and can be disabled but never deleted (app/triggers.tsx:72, app/sound-types.tsx:72). Stats are unaffected because join rows are keyed by entry_id and AUTOINCREMENT ids are not reused.",
       "evidence": "app/db/queries.ts:286-288: `deleteEntry(id) { db.runSync('DELETE FROM entries WHERE id = ?', [id]); }`. No `PRAGMA foreign_keys` anywhere (grep), which `deleteAllEntries` (queries.ts:395-400) explicitly works around by deleting both join tables. `getTriggersForManagement` (queries.ts:146-154) computes `COUNT(et.entry_id)` via `LEFT JOIN entry_triggers` with no join to `entries`, so orphans count. app/triggers.tsx:72-75 blocks delete when `usageCount > 0`, and `deleteTrigger` (queries.ts:171-175) refuses on the same count.",
@@ -1312,6 +1396,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: no PRAGMA foreign_keys anywhere in database.ts; deleteEntry is a single DELETE (queries.ts:296-298); deleteAllEntries runs four DELETEs without a transaction (queries.ts:560-565).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: No PRAGMA foreign_keys (the only PRAGMA is table_info at database.ts:112); deleteEntry (queries.ts:309-311) deletes from entries only; orphans are counted by COUNT(ett.entry_id) in getTriggersForManagement/getTinnitusTypesForManagement and block deleteTrigger/deleteTinnitusType.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1322,7 +1412,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
-      "line": 297,
+      "line": 309,
       "verifiers": "3/3",
       "what": "deleteEntry (queries.ts:286-288) deletes only from `entries`; because no `PRAGMA foreign_keys = ON` is ever issued (expo-sqlite defaults to OFF), the `ON DELETE CASCADE` on entry_tinnitus_types/entry_triggers (database.ts:39,45) is inert, so join rows are orphaned. The management screens' usage_count queries (queries.ts:110-112, 148-150) and the deleteTrigger/deleteTinnitusType guards (queries.ts:134-135, 172-173) count join rows without joining entries, so a custom trigger/sound type used on a since-deleted entry is shown as 'in use' and can never be deleted (app/triggers.tsx:72, app/sound-types.tsx:72).",
       "evidence": "queries.ts:286-288: `export function deleteEntry(id) { db.runSync('DELETE FROM entries WHERE id = ?', [id]); }` — no join-table delete. No `PRAGMA foreign_keys` in app/, src/ or node_modules/expo-sqlite (grep), and CLAUDE.md itself states cascade is inert; `deleteAllEntries` (queries.ts:395-400) clears both join tables explicitly, showing the author knew. `getTriggersForManagement` (queries.ts:146-154) computes `COUNT(et.entry_id) AS usage_count` from the join table alone without joining `entries`; `deleteTrigger` (171-175) refuses when `cnt > 0` using the same join-table-only count; app/triggers.tsx:72 `if (row.usageCount > 0) { setBlockedInfo(true); return; }`.",
@@ -1337,6 +1427,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A41; deleteAllEntries (queries.ts:573-578) is still four autocommit statements.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1347,7 +1443,7 @@
       "severity": "medium",
       "category": "bug",
       "file": "app/db/queries.ts",
-      "line": 297,
+      "line": 309,
       "verifiers": "3/3",
       "what": "deleteEntry deletes only the entries row; with no PRAGMA foreign_keys the schema's ON DELETE CASCADE/SET NULL never run, so entry_triggers/entry_tinnitus_types rows (and prompts.entry_id) are orphaned. Management usage counts and the deleteTrigger/deleteTinnitusType guards count those join rows without joining entries, so a custom trigger/sound type used only on a since-deleted entry stays permanently undeletable. No health-data corruption (entries.id is AUTOINCREMENT so ids are never reused; stats and export key by live entry ids).",
       "evidence": "app/entry/[id].tsx:290 calls `deleteEntry(Number(id))`; app/db/queries.ts:286-288 runs only `DELETE FROM entries WHERE id = ?`. app/db/database.ts has no `PRAGMA foreign_keys` (grep shows only `PRAGMA table_info`), and CLAUDE.md notes cascade is inert — which is why deleteAllEntries (queries.ts:395-399) wipes the join tables explicitly. getTriggersForManagement (queries.ts:146-153) counts `COUNT(et.entry_id)` with no join to entries; app/triggers.tsx:72 and :129 block deletion when `usageCount > 0`.",
@@ -1362,6 +1458,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A41.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1616,13 +1718,19 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true but the code moved into the shared EntryForm: `setShowDatePicker(Platform.OS === 'ios')` at EntryForm.tsx:466 and `setShowTimePicker(Platform.OS === 'ios')` at :477, with no display prop or dismiss path, so the iOS picker stays mounted.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: EntryForm.tsx:466,477 setShowDatePicker(Platform.OS === \"ios\") keeps the inline picker mounted; no display prop, no Done. ReminderPromptHost.tsx:89-94 already uses display=\"compact\" on iOS.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A52",
       "title": "iOS export leaves the full-diary JSON in the cache forever and records 'export completed' even when the user cancels",
-      "eli5": "Still open. On iPhone, exporting a backup leaves a full plain-text copy of your diary in a temporary folder forever, and the app records 'exported' even if you cancelled.",
+      "eli5": "Partly fixed. On iPhone, exporting a backup leaves a full plain-text copy of your diary in a temporary folder forever, and the app records 'exported' even if you cancelled.",
       "severity": "medium",
       "category": "bug",
       "file": "app/my-data.tsx",
@@ -1647,6 +1755,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: the Android staging file is deleted (my-data.tsx:107-118); the iOS backup JSON in Paths.cache is still never deleted after the share sheet (my-data.tsx:257-263).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: iOS export still writes to Paths.cache and never deletes (my-data.tsx:257-268); Sharing.shareAsync resolves on dismiss so last_exported_at and export_completed are written even on cancel. New in this range: the imported JSON (copyToCacheDirectory: true, my-data.tsx:292-298) is never deleted either (S25).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1672,13 +1786,19 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: support.tsx:54, about.tsx:14 and learn/[slug].tsx:66 still call Linking.openURL with no catch.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A54",
       "title": "PDF is deleted the instant the Android chooser returns, before the receiving app has necessarily read it",
-      "eli5": "Still open. On Android the PDF report is deleted the moment the share menu closes, which can be before the app you shared it to has actually read it, so the attachment may be empty.",
+      "eli5": "Partly fixed. On Android the PDF report is deleted the moment the share menu closes, which can be before the app you shared it to has actually read it, so the attachment may be empty.",
       "severity": "medium",
       "category": "bug",
       "file": "src/features/reports/reportExport.ts",
@@ -1703,13 +1823,19 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: reportExport.ts:12-20 deletes the PDF in finally only after shareAsync resolves, which is right on iOS; on Android it still depends on when the chooser returns.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: Unchanged since 6be7c70: PDF deleted after shareAsync resolves; Android cannot tell cancel from share.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A55",
       "title": "Report PDF is deleted the instant the Android share chooser hands off, before the target app has read it; cancel still counts as shared",
-      "eli5": "Still open. Same as A54, plus cancelling the share still counts as 'shared'.",
+      "eli5": "Partly fixed. Same as A54, plus cancelling the share still counts as 'shared'.",
       "severity": "medium",
       "category": "bug",
       "file": "src/features/reports/reportExport.ts",
@@ -1734,13 +1860,19 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: see A54 (reportExport.ts:12-20).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: See A54.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A56",
       "title": "hexToRgba copied 23 times, makeStyles boilerplate 38 times, back-button header and modal shells duplicated per file",
-      "eli5": "Still open. One small colour helper is copy-pasted into 21 files and the same header/back-button code is repeated everywhere, so design changes have to be made in dozens of places.",
+      "eli5": "Partly fixed. One small colour helper is copy-pasted into 21 files and the same header/back-button code is repeated everywhere, so design changes have to be made in dozens of places.",
       "severity": "medium",
       "category": "code-quality",
       "file": "app/settings.tsx",
@@ -1777,6 +1909,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: hexToRgba is still a local copy in 21 files (settings, my-data, widgets, support, reports, achievements, profile, medical-disclaimer, reminders, learn/index, the three tabs and 8 components); theme.ts exports none.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: hexToRgba is still defined in 21 files, plus withAlpha (trends.tsx:193) and scaleColor (theme.ts:7).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1839,6 +1977,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A25 — anchor.* strings still ship in 28 locales.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1864,6 +2008,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A28.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1874,7 +2024,7 @@
       "severity": "medium",
       "category": "design-decision",
       "file": "app/(tabs)/trends.tsx",
-      "line": 325,
+      "line": 324,
       "verifiers": "3/3",
       "what": "The Trigger Impact verdict line (trends.tsx:310-323) names a direction whenever max(probWorse, probBetter) >= 0.6, without checking ciLow/ciHigh, so a trigger with effect +0.6, SE 0.35 shows \"61% likely to be meaningfully worse\" in the worse colour while its 95% range (-0.09 to +1.29) crosses zero. The methodology guide (src/features/statistics/guide.ts:53, also es line 124 / fr line 159, and the 90% \"confident\" rule at line 60) promises no directional label in that case. The comment at trends.tsx:292-295 is not stale: it describes the ciLine block (296-305), which does gate on the interval; only the verdict block and the guide disagree.",
       "evidence": "guide.ts:53 — 'If the span crosses zero, both improvement and worsening remain plausible, so the app does not add a directional label.' vs app/(tabs)/trends.tsx:316-323 — `prob >= 0.6 ? { color: worse ? SCALE_COLORS[4] : SCALE_COLORS[0] } : ss.corrVerdictWeak` and `{prob >= 0.6 ? t(worse ? 'stats.trigger.probWorse' : 'stats.trigger.probBetter', { percent })` with `prob = Math.max(data.probWorse, data.probBetter)` (line 275); the trends.tsx comment on lines 292-295 still describes the old rule ('The direction is only named when the whole interval sits on one side of zero'). Same sentence is carried into es/fr/de guides.",
@@ -1901,6 +2051,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: guides/en.ts:34 says no directional label when the span crosses zero; trends.tsx:325-337 prints \"{percent}% likely…\" whenever probability ≥ 0.6, and the PDF does the same (reportHtml.ts:116-118).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: trends.tsx:322-337: the verdict sentence prints \"{percent}% likely\" whenever prob >= 0.6 with no look at ciLow/ciHigh, so a panel can show \"-0.2 to +1.4 levels\" and \"60% likely to be meaningfully worse\" together; only the suffix labels (:306-311) require ciLow > 0. reportHtml.ts:119-120 repeats it; guides/en.ts:34 still promises no label when the span crosses zero.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1926,6 +2082,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: source column still written as legacy for every entry; no model consumer reads it.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1936,7 +2098,7 @@
       "severity": "medium",
       "category": "design-decision",
       "file": "app/db/queries.ts",
-      "line": 504,
+      "line": 509,
       "verifiers": "3/3",
       "what": "importEntries inserts every backup entry unconditionally (no id in the export payload and no created_at/field match), so importing the same backup twice or onto a device that already holds the data duplicates every entry with no selective undo.",
       "evidence": "app/db/queries.ts:331-361 inserts unconditionally; the export payload (app/my-data.tsx:141-151) carries no entry id or hash. CLAUDE.md records 'entries are appended (not replaced)' as deliberate, but no dedup exists.",
@@ -1963,6 +2125,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: importEntries (queries.ts:496-523) inserts every row again on a second import of the same file.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: importEntries (queries.ts:489-539) still inserts every validated row with no identity check.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -1973,7 +2141,7 @@
       "severity": "medium",
       "category": "design-decision",
       "file": "app/db/queries.ts",
-      "line": 504,
+      "line": 509,
       "verifiers": "3/3",
       "what": "importEntries (queries.ts:343-346) inserts every backup row unconditionally and my-data.tsx:200 calls it with no dedup or replace option, so re-importing your own backup on the same device doubles every entry and all derived stats, despite the UI labelling the action \"Restore entries from a backup file\".",
       "evidence": "queries.ts:327-331 comment and 343-346 unconditional `INSERT INTO entries (...)` for every row; my-data.tsx:200 `importEntries(parsed.entries)` with no pre-check against existing rows and no replace mode.",
@@ -1994,6 +2162,12 @@
           "status": "open",
           "note": "Re-check at 611eeb5 — Still open: See A62 — no dedup was added in 1370d30.",
           "commit": "611eeb5"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A62.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2025,13 +2199,19 @@
           "status": "open",
           "note": "Re-check at 611eeb5 — Still open: See A62 — the import still appends.",
           "commit": "611eeb5"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A62.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A65",
       "title": "Paywall is shown immediately after the disclaimer, before the user has logged anything, and the promo copy promises features that are not actually gated",
-      "eli5": "Still open. The subscription paywall appears right after the welcome screens, before you have logged a single entry. (The old 'unlimited entries' promise is gone, so only the timing remains.)",
+      "eli5": "Partly fixed. The subscription paywall appears right after the welcome screens, before you have logged a single entry. (The old 'unlimited entries' promise is gone, so only the timing remains.)",
       "severity": "medium",
       "category": "design-decision",
       "file": "app/onboarding/privacy.tsx",
@@ -2068,6 +2248,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: The timing claim still holds: onboarding/privacy.tsx:6 pushes `/paywall` unconditionally after the consent step, before any entry is logged (Remote Config gate removed in 414c920). The second half is outdated: isSubscribed now gates real features in 13 files (e.g. ChartTypeContext.tsx:42-43, FieldCard lockedFeature) and the banner subtitle is now 'Trigger insights, full stats, reports & more' (en.json:157), which matches what is gated.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: Promo copy is now truthful (banner, Home Premium card, locked cards name real features); the paywall is still pushed from the onboarding privacy step before any entry is logged.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2103,7 +2289,7 @@
       "severity": "medium",
       "category": "design-decision",
       "file": "app/components/ManageItemsScreen.tsx",
-      "line": 135,
+      "line": 194,
       "verifiers": "3/3",
       "what": "Triggers and Sound Types stage Switch toggles in local state until Save (handleSave, lines 84-97), but the header back button (line 104), the Cancel footer button (line 148) and the Android hardware back all call router.back() with no isDirty check or beforeRemove/usePreventRemove guard, silently discarding pending toggles. Reminders (reminders.tsx:56-58 updateReminder on toggle) and Reports (reports.tsx:99) apply the same Switch control instantly, so a user has no cue which rule applies. The split itself is documented as intentional in CLAUDE.md; the missing unsaved-changes guard is the actionable gap.",
       "evidence": "triggers.tsx:132-137 `<Switch value={row.active} onValueChange={() => toggleActive(row.id)} .../>` (local state), :84-97 handleSave writes DB, :148-161 footer with Cancel = `router.back()` and no dirty-check; sound-types.tsx:132 identical. reminders.tsx:115-120 `<Switch value={defaultReminder.enabled === 1} onValueChange={() => toggleEnabled(defaultReminder)}` → :56-65 `updateReminder(...)` immediately. reports.tsx:99 `<Switch value={includeNotes} onValueChange={setIncludeNotes} ... />` immediate.",
@@ -2124,6 +2310,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true but moved into the shared ManageItemsScreen: isDirty exists (:86-89) but is only used to no-op handleSave and disable Save (:114, :199); the header back (:135) and footer Cancel (:194) call router.back() directly with no dirty prompt and no BackHandler/usePreventRemove (grep), while reminders.tsx:59 still applies its ThemedSwitch instantly.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: ManageItemsScreen.tsx:194 and SingleChoiceScreen.tsx:147 Cancel/back still discard pending toggles, a new custom item and a queued delete without confirmation.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2254,6 +2446,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: ConfirmDialog.tsx:23 default confirmLabel \"Delete\", :59 hard-coded \"Cancel\", no t().",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: ConfirmDialog.tsx:58 <Text>Cancel</Text> is still literal English in all 28 languages; :23 default confirmLabel \"Delete\" (all four callers pass a translated label).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2316,6 +2514,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A71.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2341,6 +2545,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A71.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2409,6 +2619,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — correction: lv DOES have _zero for all 11 plural keys; ru/uk have _few/_many for only 4 of 11, hr/sr/ro _few for 4, sl _two/_few for 4; still no Intl.PluralRules polyfill (iOS Hermes 0.14.1 binary has no PluralRules symbols).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Simulated with the repo i18next 26.3.6: ru 55, uk 55, ro 38, hr 21, sr 21, sl 14 English renderings for myData.entriesLogged/daysAgo/importCompleteMessage/dataDeletedMessage/importSkippedEntries/importSkippedLinks and personalization.activeCount (only _one/_other; i18next falls to fallbackLng, not to _other). pl/cs/sk/lt/lv complete. No compatibilityJSON setting, intl-pluralrules not installed.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2477,6 +2693,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: support-directory.tsx:20-26 now calls Intl.DisplayNames with a fallback, but whether Hermes provides it on device was not verified; if not, the fallback is still English.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: support-directory.tsx:23-24 unchanged; Hermes Intl.DisplayNames still unverified, English fallback silent.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2514,7 +2736,7 @@
     {
       "id": "A80",
       "title": "PDF prints built-in trigger names in English and numbers with a '.' decimal regardless of report language",
-      "eli5": "Still open. In the PDF report, trigger names like 'Poor sleep' stay in English even when the report is in another language, and decimals always use a dot instead of a comma.",
+      "eli5": "Partly fixed. In the PDF report, trigger names like 'Poor sleep' stay in English even when the report is in another language, and decimals always use a dot instead of a comma.",
       "severity": "medium",
       "category": "i18n",
       "file": "src/features/reports/reportHtml.ts",
@@ -2551,6 +2773,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Partly fixed, lines moved: sound types now go through soundTypeLabel (reportHtml.ts:3,69, commit 8a476a7), but the trigger tables still print escapeHtml(item.name) raw at :114 and :119 and triggerLabel is imported nowhere under src/features/reports; numbers still use toFixed(1) (:18 signed(), :103 average) with no Intl.NumberFormat.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: reportHtml.ts:114,119 still escapeHtml(item.name) for triggers (sound types translated at :69); numbers still toFixed with \".\" (A144).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2594,6 +2822,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true at new lines: reportHtml.ts:114 (days-present table) and :119 (effect table) render escapeHtml(item.name); `grep triggerLabel src/features/reports` is empty while soundTypeLabel is used at :69.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A80.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2631,6 +2865,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Guide moved to src/features/statistics/guides/en.ts; the 90% threshold and 'flags' sentence are gone, but en.ts:34 still says 'If the span crosses zero ... the app does not add a directional label' while trends.tsx:319-335 prints '{{percent}}% likely worse/better' whenever prob >= 0.6 regardless of the interval, and en.json:113 SORTING still says Effect 'ranks by the size of the difference' while trends.tsx:568-576 sorts by signed value.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A60 — the guide sentence is in all 28 guide files.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2641,7 +2881,7 @@
       "severity": "medium",
       "category": "performance",
       "file": "app/(tabs)/trends.tsx",
-      "line": 1617,
+      "line": 1611,
       "verifiers": "3/3",
       "what": "The five i18n label arrays (l.1497-1501) are rebuilt on every StatsScreen render (i18next returnObjects allocates a fresh array; distressLabels is a literal), so the 13 useMemos that list them as deps (l.1547-1562: dowBuckets, four dow enum buckets, four enum period datasets, four smoothed enum trends) recompute on every local state change — trigger-row tap, bars/line toggle, day-of-week category switch — bypassing the fingerprint optimisation. Fix: wrap each label array in useMemo keyed on t / i18n.language.",
       "evidence": "trends.tsx l.1497-1501: `const dowLabels = t('stats.dowLabels', { returnObjects: true }) as string[];` (same for pitch/duration/location) and `const distressLabels = [t(...), t(...), t(...)]`. i18next builds a new container per call: node_modules/i18next/dist/esm/i18next.js l.628 `const copy = resTypeIsArray ? [] : {};` ... l.655 `res = copy;`. Those arrays are deps of dowBuckets (l.1547), dowPitch/dowDuration/dowLocation/dowDistress (l.1549-1552), pitchData..distressData (l.1553-1556) and pitchTrend..distressTrend (l.1559-1562). computeDayOfWeekBuckets constructs a Date per entry (l.784) and smoothStackedTrend runs four rolling passes.",
@@ -2662,6 +2902,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true, lines moved: dowLabels/pitchLabels/durationLabels/locationLabels are fresh t(..., { returnObjects: true }) results and distressLabels a literal array (trends.tsx:1617-1621), not wrapped in useMemo, and they are deps of the memos at :1667-1681 (dowBuckets, dowPitch/Duration/Location, pitchData/durationData/locationData, pitchTrend/durationTrend/locationTrend).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Same evidence as A23: label arrays recreated per render at trends.tsx:1611-1615.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2687,6 +2933,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: pulldb.sh still tracked, no *.db rule in .gitignore.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2805,6 +3057,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: package.json has only start/android/ios/web scripts; tsx is not a devDependency; no .github/workflows. tsc and the three test scripts pass when run by hand.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: package.json scripts: start/android/ios/web only; tsx not a devDependency; no .github/workflows.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2830,6 +3088,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A88.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2867,6 +3131,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — Partly fixed as the dashboard says: the count is now derived (features.validation.ts:76 `articles.length === englishArticles.length`), but the suite still has no runner (tsx not installed, no test script, no CI).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A88 — the three scripts pass when run by hand.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -2914,7 +3184,7 @@
       "severity": "medium",
       "category": "ux",
       "file": "app/(tabs)/index.tsx",
-      "line": 481,
+      "line": 504,
       "verifiers": "3/3",
       "what": "Stat tiles (index.tsx:415-441, trends.tsx:2110-2138) and the tab bar (_layout.tsx:117) use fixed pixel heights around 10-12pt text with no allowFontScaling/maxFontSizeMultiplier anywhere in the app, so at large OS accessibility text sizes labels and captions overflow their rows and overlap neighbouring content; the entry-form scale buttons (new.tsx:578-581) are partly protected by adjustsFontSizeToFit but remain vertically tight.",
       "evidence": "grep `allowFontScaling|maxFontSizeMultiplier|getFontScale` → no matches. index.tsx:415-441 `tileLabelWrap: { height: 24 }`, `tileTopWrap: { height: 42 }`, `tileBottomWrap: { height: 17 }` holding 10pt (:420-428) and 12pt (:449-454) text; trends.tsx:2110-2138 same with 30/54/20. new.tsx:578 `scaleBtn: { flex: 1, height: 74, ... }` with a 54px icon + `fontSize: 9` label (:581). (tabs)/_layout.tsx:117 `height: 74 + insets.bottom` with 12pt labels (:177-181). reports.tsx:139 `metricLabel: { fontSize: 9.5 }`, learn/index.tsx:99 `fontSize: 9.5`.",
@@ -2929,17 +3199,23 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Fixed heights still hold text: StatTile trends.tsx:2250-2278 and index.tsx:504-530, IntensityScaleSelector.tsx:96 labelLine height 20, calendar dayCell height 60, tab bar height 74, primary buttons 52-56.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A93",
       "title": "Three dead-end \"Coming soon\" rows (Pitch Test, Rate app, Widgets) ship in the production More tab",
-      "eli5": "Still open. The 'Rate app' row in More still opens a 'Coming soon' screen. (Pitch Test was removed and Widgets is now real.)",
+      "eli5": "Partly fixed. The 'Rate app' row in More still opens a 'Coming soon' screen. (Pitch Test was removed and Widgets is now real.)",
       "severity": "medium",
       "category": "ux",
       "file": "app/(tabs)/more.tsx",
-      "line": 264,
+      "line": 248,
       "verifiers": "3/3",
       "what": "Pitch Test (line 185), Rate app (254) and Widgets (274) rows all route via the ungated `cs()` helper at line 111 to the placeholder `app/coming-soon.tsx`; no __DEV__/remote-config guard hides them, so release users see fully-styled rows that dead-end on \"Coming soon\".",
       "evidence": "more.tsx:185 `onPress={cs('more.pitchTest')}`, :254 `onPress={cs('more.rateApp')}`, :274 `onPress={cs('more.widgets')}`, where :111 `const cs = (titleKey) => () => router.push({ pathname: '/coming-soon', ... })`. app/coming-soon.tsx:32-33 renders `t('comingSoon.label')` / `t('comingSoon.sub')` (en.json:544-545). The same file already has a remote-config gate pattern at :150 `isPromoBannerEnabled()`.",
@@ -2978,6 +3254,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — Partly fixed: Pitch Test row is gone and Widgets (more.tsx:186-189) is a real screen, but 'Rate app' still uses onPress={cs('more.rateApp')} (more.tsx:264-266) which pushes /coming-soon via the ungated cs() helper at :115.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: \"Rate app\" still pushes /coming-soon (more.tsx:248 onPress={cs(\"more.rateApp\")}).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3059,6 +3341,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Home cap 200 (index.tsx:107,117) vs Stats 1000 (trends.tsx:1598).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3109,6 +3397,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Calendar and Home still capture today at render/focus; Stats memos keyed on content only (A35).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3175,7 +3469,7 @@
       "severity": "low",
       "category": "bug",
       "file": "app/(tabs)/index.tsx",
-      "line": 105,
+      "line": 123,
       "verifiers": "3/3",
       "what": "Time-of-day greeting is memoized on `[t]` only (line 96) while `greeting()` reads the clock (line 36); since the Home tab never unmounts and no focus/AppState hook recomputes it, the greeting stays at whatever period the app was first opened in until a restart or language change.",
       "evidence": "index.tsx:96 `const greet = useMemo(() => greeting(t), [t]);` — `greeting()` reads `new Date().getHours()` (line 36). `t` from react-i18next is referentially stable until the language changes. Lines 111-113 state: \"Home's tab screen stays mounted for the app's whole lifetime (bottom tabs don't unmount on switch), so the useState initializer above only ever ran once\". The focus effect (lines 89-94) re-renders the screen but a `[t]`-keyed memo does not recompute.",
@@ -3190,6 +3484,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: index.tsx:123 useMemo(() => greeting(t), [t]) — Home stays mounted for the app lifetime, so the greeting only changes with the language.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3225,7 +3525,7 @@
       "severity": "low",
       "category": "bug",
       "file": "app/_layout.tsx",
-      "line": 160,
+      "line": 162,
       "verifiers": "3/3",
       "what": "initDatabase() (migrations, backfills, seeds) runs inside try/finally with no catch at app/_layout.tsx:96-106, unlike the adjacent initRemoteConfig/initPurchases calls that route errors to recordError. A SQLite failure at startup escapes the effect, unmounts the root tree (no ErrorBoundary anywhere in app/), and crashes the app on every launch with no user-facing message or recovery path. Crashlytics' global JS handler would still log the fatal in release builds, but without the context breadcrumb and with no way for the user to export data or escape the crash loop.",
       "evidence": "app/_layout.tsx:96-106 `try { initDatabase(); const reminders = getReminders(); ... } finally { setAppReady(true); }` — no catch; crashlytics wrapper exists (`recordError`, imported at :12) but is only used for remote config/purchases.",
@@ -3246,6 +3546,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: see A36 (_layout.tsx:160-174).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A36.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3289,6 +3595,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — reopened, the problem is still present: The described problem is unchanged: database.ts:15 and :22 still declare `name TEXT NOT NULL UNIQUE` with no COLLATE (grep -c COLLATE database.ts = 0), and the seeds still use exact-name `INSERT OR IGNORE` (:200, :235, with a built-in 'Dehydration' at :227) that cannot match a user's case-variant custom row; the dashboard note cites queries.ts:124/162 COLLATE NOCASE, which was already in place when the finding was written and is the add-path side of the mismatch, not a fix.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Schema still UNIQUE without COLLATE; the mismatch now also lets a backup disable a built-in through the import path (S21).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3461,7 +3773,7 @@
       "severity": "low",
       "category": "bug",
       "file": "app/utils/notifications.ts",
-      "line": 117,
+      "line": 155,
       "verifiers": "3/3",
       "what": "syncReminderNotifications (cancel-all then re-schedule, plus re-arming the anchor) is never serialized and is called fire-and-forget without .catch from app/reminders.tsx:53 and app/_layout.tsx:101; two overlapping runs (rapid toggles, or a toggle during the startup sync) each schedule every reminder and the anchor after both cancels, yielding duplicate daily notifications that nothing can detect since no ids are persisted, and any native rejection is silently swallowed.",
       "evidence": "app/utils/notifications.ts:117 `await Notifications.cancelAllScheduledNotificationsAsync();` followed by a sequential `await scheduleNotificationAsync` per reminder (:119-133) with no mutex. app/reminders.tsx:51-54 `function refreshAndSync(next) { setReminders(next); syncReminderNotifications(next, t); }` — not awaited, no catch; called from toggleEnabled (:59), handleTimeChange (:69), handleAddReminder (:75), confirmDelete (:84). app/_layout.tsx:100-102 starts another run at launch, also un-awaited and without `.catch`.",
@@ -3482,6 +3794,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Not confirmed: notifications.ts:117-118 still cancels all then reschedules from the DB; serialisation of overlapping calls was not verified, so this stays open.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Confirmed: notifications.ts:155-177 cancelAll then one scheduleNotificationAsync per reminder with no serialisation; un-awaited callers at reminders.tsx:98, ReminderPromptHost.tsx:65, _layout.tsx:170.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3492,7 +3810,7 @@
       "severity": "low",
       "category": "bug",
       "file": "app/utils/notifications.ts",
-      "line": 118,
+      "line": 155,
       "verifiers": "3/3",
       "what": "syncReminderNotifications (cancel-all then per-reminder schedule, no serialisation or generation guard) is fired without await/catch from reminders.tsx refreshAndSync and _layout.tsx launch; overlapping runs can interleave so an earlier run's schedule lands after a later run's cancel-all, leaving a reminder the UI shows as off (or a stale time) scheduled, and the launch sync skips cleanup when no reminder is enabled. Native rejections are unhandled.",
       "evidence": "notifications.ts:117 `await Notifications.cancelAllScheduledNotificationsAsync();` followed by one awaited `scheduleNotificationAsync` per enabled reminder (:122-132). reminders.tsx:51-54 `function refreshAndSync(next) { setReminders(next); syncReminderNotifications(next, t); }` — not awaited, not caught, no in-flight guard; also started from _layout.tsx:100-102 on launch.",
@@ -3513,6 +3831,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Not confirmed: see A111 (notifications.ts:117-118).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A111.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3538,6 +3862,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: evaluate.ts:79-81 still says 0.9 is the probability at which the card states a direction; the card uses 0.6.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3631,6 +3961,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: AGENTS.md (131 lines) still exists and still says 'guidance to Codex' (:3), 'intensity (required, 1–5)' (:30), 'PlaceholderScreen — used by Stats, Calendar, More' (:47), 'add screen resets all form state' (:53); CLAUDE.md:34 still says getRecentEntries(200) and :49 the PlaceholderScreen claim. The cited '[ ] Implement onboarding/Stats' TODO lines are gone (3100ded trimmed the AGENTS.md backlog).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: AGENTS.md, README.md (\"iOS 11.0\", # store links), prompt.txt, pulldb.sh (Expo Go package), App.tsx/index.ts unchanged.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3662,6 +3998,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Partly fixed: see A116.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A116.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3693,6 +4035,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: README.md:35 \"Create an account or log in\", :60 \"Backend: Node.js with Express\", :63 \"Push notifications via FCM\".",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A116.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3718,6 +4066,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: PlaceholderScreen.tsx has no importer; settings.tsx:92 cs unused; dead styles trends.tsx:2079, :2304-2315, calendar.tsx:504-510, :563-574.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -3830,6 +4184,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: PlaceholderScreen is still unimported with hard-coded 'Content coming soon.'; nine keys (common.today/yesterday, stats.topTriggers, localSupport.search/international/countries/notFoundBody, entryForm.durationConstantSub/EpisodicSub) still have no literal or templated t() reference. `common.edit` is now used (ExpandableEntryRow.tsx:264 accessibilityLabel), so it is nine keys, not ten.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: PlaceholderScreen.tsx:13 still carries \"Content coming soon.\" with no importer — delete rather than translate.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4022,6 +4382,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: babel.config.js:5 still lists expo-router/babel (a warn-only stub in SDK 55).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4096,6 +4462,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: react-native-gifted-charts and the metro stub are gone (c584d9e), but the rest holds: @expo/vector-icons (package.json:13, 0 imports in app/src), @react-native-community/cli 'latest' (:47), App.tsx/index.ts/prompt.txt/pulldb.sh (host.exp.exponent) present, app/add.tsx + app/(tabs)/add.tsx empty Views, PlaceholderScreen unimported, babel.config.js:5 expo-router/babel, EntryForm.tsx:36-37 LayoutAnimation enable with no use.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: @expo/vector-icons and react-dom still listed; @react-native-firebase/remote-config kept on purpose (S14).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4127,6 +4499,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: package.json:47 still `\"@react-native-community/cli\": \"latest\"`, :13 @expo/vector-icons unused, :9 web script and :39 react-dom with no node_modules/react-native-web. The react-native-gifted-charts + metro stub part was removed in c584d9e.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: @react-native-community/cli is still \"latest\" (lock pins 20.2.0).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4152,6 +4530,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A116.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4263,6 +4647,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: ios.supportsTablet is true (app.json:11) with phone-only layouts.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: app.json:11 supportsTablet true, orientation portrait, no tablet layouts.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4288,6 +4678,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: calendar.tsx:275-277 Math.max vs sevenDayTrend.ts:278-283 avgOrNull; Month Glance widget also uses max; no hint text.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4404,7 +4800,7 @@
       "severity": "low",
       "category": "design-decision",
       "file": "src/features/reports/reportData.ts",
-      "line": 123,
+      "line": 121,
       "verifiers": "3/3",
       "what": "'Coverage %' uses a fixed 30/90-day denominator for 30D/90D (even when the diary is younger than the window) but the observed first-to-last span for ALL, so the same diary prints e.g. 6% on the default 90D report and 100% on ALL; the PDF label (reportHtml.ts:84) gives no hint which definition applied.",
       "evidence": "src/features/reports/reportData.ts:89-91 `calendarDays = range === '30D' ? 30 : range === '90D' ? 90 : (last - first + 1)`; :101 `coverage: Math.round((byDay.size / calendarDays) * 100)`. tests/features.validation.ts:42 asserts the fixed-window behaviour is intended for 30D. The default range in app/reports.tsx:26 is '90D'.",
@@ -4419,6 +4815,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: reportData.ts:121-135: 30D/90D divide by the fixed window, ALL by first…last logged day; PDF prints \"{coverage}% coverage\" with no definition.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4444,6 +4846,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: app.json:54 expo-localization plugin has no supportedLocales; a local prebuild shows no locales_config.xml / android:localeConfig and no CFBundleLocalizations in Info.plist. Native change.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4454,7 +4862,7 @@
       "severity": "low",
       "category": "i18n",
       "file": "app/(tabs)/index.tsx",
-      "line": 256,
+      "line": 280,
       "verifiers": "3/3",
       "what": "All user-visible decimal numbers (averages, deltas, chart labels, PDF metrics) are formatted with toFixed(1)/toFixed(0), so comma-decimal locales see an English decimal point; also at app/(tabs)/trends.tsx:176, :181, :1625, app/components/charts/IntensityTrendChart.tsx:250, app/reports.tsx:85, src/features/reports/reportHtml.ts:17 and :83.",
       "evidence": "app/(tabs)/index.tsx:220 `{stats.avg.toFixed(1)} / 5`; app/(tabs)/trends.tsx:1625 same; app/reports.tsx:85 `data.average?.toFixed(1)`; src/features/reports/reportHtml.ts:83 and :17 `signed()` use `toFixed(1)` in the PDF.",
@@ -4469,6 +4877,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Intl.NumberFormat is used nowhere; toFixed(1) at index.tsx:280, trends.tsx:184,189,1739, IntensityTrendChart.tsx:251, widgets.tsx:70, reportHtml.ts:18,103; natively WidgetDays.kt:69 (Locale.US) and Snapshot.swift:166. de.json:125 writes \"+1,2 Stufen\" next to \"2.3 / 5\".",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4519,6 +4933,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A37.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4610,7 +5030,7 @@
       "severity": "low",
       "category": "performance",
       "file": "app/_layout.tsx",
-      "line": 114,
+      "line": 116,
       "verifiers": "3/3",
       "what": "logScreenView(pathname) sends the concrete path, so the dynamic route entry/[id] yields one screen_name per entry id (/entry/1 … /entry/N), fragmenting the edit screen's analytics; learn/[slug] is also dynamic but bounded. Log the route pattern (e.g. via useSegments()) or strip numeric segments instead.",
       "evidence": "app/_layout.tsx:55-59 `const pathname = usePathname(); useEffect(() => { logScreenView(pathname); }, [pathname]);` and app/utils/analytics.ts:14-17 `logScreenViewNative(a, { screen_name: screenName, screen_class: screenName })`. Route `entry/[id]` is registered at app/_layout.tsx:74.",
@@ -4631,6 +5051,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: _layout.tsx:112-116 logs logScreenView(pathname) with the raw path including entry ids.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: _layout.tsx:116 logScreenView(pathname) still sends /entry/42 as screen_name.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4641,7 +5067,7 @@
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
-      "line": 332,
+      "line": 340,
       "verifiers": "3/3",
       "what": "getAllEntriesWithRelations filters the full trigger and type join-row arrays once per entry (O(entries × joinRows)); syncAchievements() runs it synchronously on every entry save/edit before the 200 ms back-navigation timer is scheduled, so the Save delay grows quadratically with diary size. Group join rows into Map<entry_id, …> once, as sevenDayTrend.ts already does.",
       "evidence": "queries.ts:304-311: `entries.map(entry => ({ ..., tinnitus_types: entryTypes.filter(et => et.entry_id === entry.id)..., triggers: entryTriggers.filter(et => et.entry_id === entry.id)... }))`. Called from src/features/achievements/sync.ts:13 inside `syncAchievements()`, which app/entry/new.tsx:333 and app/entry/[id].tsx:279 call right after saving, ahead of `router.back()`. By contrast sevenDayTrend.ts:41-53 already groups join rows into Maps once.",
@@ -4656,6 +5082,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: queries.ts:340-354 still filters the full link arrays per entry; runs on every save via syncAchievements.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4666,7 +5098,7 @@
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
-      "line": 335,
+      "line": 340,
       "verifiers": "3/3",
       "what": "getAllEntriesWithRelations() (app/db/queries.ts:300-312) filters the full entry_triggers and entry_tinnitus_types arrays once per entry (O(entries × join rows)); syncAchievements() calls it synchronously in both save handlers (app/entry/new.tsx:333, app/entry/[id].tsx:279) before setSaved(true), and evaluateAchievements also refits the trigger model each time, so save latency grows with diary size.",
       "evidence": "app/entry/new.tsx:333 and app/entry/[id].tsx:279 call `syncAchievements()` synchronously inside handleSave; src/features/achievements/sync.ts:12-13 calls `getAllEntriesWithRelations()`; app/db/queries.ts:299-312 does `entries.map(entry => entryTypes.filter(et => et.entry_id === entry.id) ... entryTriggers.filter(...))`, i.e. a full scan of both join arrays per entry.",
@@ -4681,6 +5113,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A151.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4691,7 +5129,7 @@
       "severity": "low",
       "category": "performance",
       "file": "app/db/queries.ts",
-      "line": 335,
+      "line": 340,
       "verifiers": "3/3",
       "what": "getAllEntriesWithRelations (queries.ts:306-311) filters the full join-row arrays once per entry (O(entries x joinRows)) and is run on every entry save/edit via syncAchievements (sync.ts:13, new.tsx:334, [id].tsx:279), which also refits the trigger model over the whole diary (evaluate.ts:126); Home's formatEntryDate (index.tsx:52-54) constructs an Intl.DateTimeFormat per recent-entry row on every focus although formatEntryTime/formatDateKey cache theirs.",
       "evidence": "entry/new.tsx:334 and entry/[id].tsx:279 `syncAchievements();` -> sync.ts:13 `getAllEntriesWithRelations()` -> queries.ts:304-311 `entries.map(entry => ({ tinnitus_types: entryTypes.filter(et => et.entry_id === entry.id) ..., triggers: entryTriggers.filter(...) }))`; evaluate.ts:126 `fitTriggerModel(...)` on the whole diary. (tabs)/index.tsx:52-55 `new Intl.DateTimeFormat(undefined, {...timeZone: entry.timezone}).format(...)` inside formatEntryDate, called per row at :267; datetime.ts:40-43 documents the 20x cost and caches elsewhere.",
@@ -4706,6 +5144,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A151.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4774,6 +5218,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — Worse: onboarding/index.tsx:25-38 now requires six PNGs (slide1-3 plus -dark variants) rendered with resizeMode=\"contain\" (:47); assets/onboarding/ totals ~7.2 MB (0.96-1.40 MB each).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: assets/onboarding: six 1254×1254 PNGs, 0.96-1.4 MB each (7.2 MB); assets/home: two 627×627 PNGs, 343 kB each, rendered at 280 pt.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4873,6 +5323,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — Partly fixed only for Android (saveToDeviceAndroid :107-118 deletes its staged copy in finally). iOS branch :257-263 writes the backup to Paths.cache and shares it with no delete; :266-269 set last_exported_at and log export_completed unconditionally after shareAsync; import :293-299 uses copyToCacheDirectory and never deletes the picked copy.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A52 — plus the imported file now also stays in cache (S25).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4929,13 +5385,19 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: calibration.test.ts still exits 0 on FAIL.",
+          "commit": "3d06b05"
         }
       ]
     },
     {
       "id": "A161",
       "title": "Hard-coded light-mode colours leak into dark mode on the Calendar count badge and Learn list",
-      "eli5": "Still open. A couple of colours (the entry-count badge on the Calendar, the amber Learn labels) are fixed light-mode colours and look wrong in dark mode.",
+      "eli5": "Partly fixed. A couple of colours (the entry-count badge on the Calendar, the amber Learn labels) are fixed light-mode colours and look wrong in dark mode.",
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/calendar.tsx",
@@ -4966,6 +5428,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — Partly fixed: learn/index.tsx:92 rowIcon is now `isDark ? hexToRgba(AMBER, 0.18) : '#FEF3C7'` (3a69b58). Still hard-coded: calendar.tsx:552 countBadge `backgroundColor: '#334155'` with :561 `color: '#fff'`, learn/index.tsx:94 category `color: AMBER` (#D97706, :63) and learn/[slug].tsx:77 `color: '#D97706'`, none theme-aware.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: All other hard-coded pastels are theme-gated now; the calendar count badge (calendar.tsx:545-557, #334155 on #151C2E ≈ 1.6:1) remains, and learn/[slug].tsx:93-94 hard-codes #D97706 for the new Key points label.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -4976,7 +5444,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/index.tsx",
-      "line": 105,
+      "line": 123,
       "verifiers": "3/3",
       "what": "Home greeting is memoised on [t] only and the always-mounted tab never recomputes it on focus/resume, so the time-of-day greeting goes stale while the app stays open.",
       "evidence": "index.tsx:96 `const greet = useMemo(() => greeting(t), [t]);`; :89-94 useFocusEffect only calls `setUserName` and `setEntries`; :35-40 greeting reads `new Date().getHours()` at call time.",
@@ -4991,6 +5459,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A101.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5001,7 +5475,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
-      "line": 748,
+      "line": 743,
       "verifiers": "3/3",
       "what": "The trigger panel collapses three distinct \"no estimate\" causes into one generic message: the 7D range can never reach MIN_OBSERVATIONS=8 days (triggerModel.ts l.91/l.158, filterItems l.60-66), and a trigger logged on every day in the period is dropped as collinear (triggerModel.ts l.153-156); `model.result.insufficient` is never read in trends.tsx, so both the list (l.741-743) and chips (l.654-656) views show 'Not enough data for this period yet' even directly under 'N of N days'.",
       "evidence": "triggerModel.ts l.91 `MIN_OBSERVATIONS = 8`, l.158 returns insufficient when `n < 8`; trends.tsx l.1524 fits on `filterItems(processed, range)` which for '7D' has <= 7 distinct days (sevenDayTrend.ts l.60-64). triggerModel.ts l.153-156 drops any trigger with `k === n`; trends.tsx l.1541-1545 maps those to null and l.743 renders `t('stats.trigger.notEnoughYet')`.",
@@ -5016,6 +5490,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: triggerModel.ts:91,158 MIN_OBSERVATIONS = 8 makes 7D structurally insufficient; every row shows \"—\" (trends.tsx:800-801) and every panel \"Not enough data … yet\" (:743, :830); the default Effect sort silently falls back to count.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5026,7 +5506,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
-      "line": 877,
+      "line": 865,
       "verifiers": "3/3",
       "what": "Stats day-of-week buckets (trends.tsx l.785) and 90D weekly buckets (sevenDayTrend.ts l.139-141, duplicated at l.385-387) are hard-coded Monday-first and never read useFirstDayOfWeek().resolvedFirstDay, so they disagree with the Calendar tab when the user picks Sunday or Saturday.",
       "evidence": "trends.tsx l.784-785 `buckets[dow === 0 ? 6 : dow - 1]` with dowLabels fixed Mon..Sun (en.json stats.dowLabels); app/stats/sevenDayTrend.ts l.139-141 `thisMonday` is always Monday; computeLeadingValue l.385-387 repeats it. app/contexts/FirstDayOfWeekContext.tsx l.5 offers 'sunday' | 'monday' | 'saturday' and app/(tabs)/calendar.tsx l.70 uses `useFirstDayOfWeek()` to rotate its grid.",
@@ -5041,6 +5521,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: trends.tsx:865-875 buckets[dow === 0 ? 6 : dow - 1] with Mon…Sun labels; useFirstDayOfWeek is not imported in trends.tsx; 90D weekly buckets (sevenDayTrend.ts:139-143, 386-391) are Monday-anchored too.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5138,7 +5624,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/components/EntryForm.tsx",
-      "line": 290,
+      "line": 289,
       "verifiers": "3/3",
       "what": "Add and edit entry screens (app/entry/new.tsx:344, app/entry/[id].tsx:306) pop on back with no unsaved-changes prompt; no beforeRemove/usePreventRemove/BackHandler anywhere in the app and gestures stay enabled for these routes (app/_layout.tsx:73-74), so hardware back or swipe-back silently discards a partially filled form or unsaved edits.",
       "evidence": "app/entry/new.tsx:344 `<PressableScale onPress={() => router.back()} ...>` and app/entry/[id].tsx:306 do the same; neither screen registers a `beforeRemove` listener and app/_layout.tsx:73-74 configures the entry screens without `gestureEnabled: false`.",
@@ -5159,6 +5645,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: EntryForm.tsx has no beforeRemove/usePreventRemove or dirty check.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: EntryForm.tsx:289 exit → router.back(); header back :416-424 and hardware back :291-300 unconditional; gestureEnabled only off for widgets (:411). No dirty check.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5281,7 +5773,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/reminders.tsx",
-      "line": 57,
+      "line": 101,
       "verifiers": "2/3",
       "what": "toggleEnabled (and handleAddReminder, line 73-77) persist enabled=1 and schedule the notification before awaiting ensureNotificationPermission; on denial only a one-time StatusDialog is shown, the Switch stays on, and no later focus/launch path re-checks or surfaces the blocked state (app/_layout.tsx:100-101 silently skips sync).",
       "evidence": "app/reminders.tsx:56-65 `updateReminder(reminder.id, { enabled: enabling }); refreshAndSync(getReminders()); ... if (enabling) { const granted = await ensureNotificationPermission(); if (!granted) setPermissionBlocked(true); }` — no revert of the toggle. app/_layout.tsx:100-101 then silently skips the sync on later launches when permission is absent.",
@@ -5302,6 +5794,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: reminders.tsx:57-66 persists enabled=1 and syncs before ensureNotificationPermission(); after a denial only a dialog is shown and the switch stays on.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: reminders.tsx:101-107 still persists enabled=1 and syncs before requestPermissionForReminder(); new in this range: a grant is never followed by a re-sync (S22).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5339,6 +5837,12 @@
           "status": "open",
           "note": "Re-check at 611eeb5 — Still open: c03bb6a added labels and roles to the icon buttons but did not enlarge their tap targets.",
           "commit": "611eeb5"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Info buttons ≈39pt (trends.tsx:1943, EntryForm.tsx:654), view toggle ≈30pt (:1949), sort/DOW chips ≈26pt, ManageItemsScreen.tsx:334-336 trash 24pt with no hitSlop, soft-ask time chip ≈33pt, Premium card close 40pt.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5444,6 +5948,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A53.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5500,6 +6010,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — cannot be verified from the code: Depends on the live page https://kappsa.tech/Privacy-Policy/ (linked at about.tsx:101 and UsageConsentScreen.tsx:12) which cannot be checked from the repo. Repo-side facts have changed since the finding: Remote Config is removed, Analytics/Crashlytics are opt-in (firebase.json), allowBackup=false, but Perf (app/utils/performance.ts) and RevenueCat remain; the policy must still be re-checked against that.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Fetched 2026-11-11: kappsa.tech/Privacy-Policy, \"last updated 16.06.2026\". Now names \"Tinnitus Tracker\" (fixed), but still lists Google AdMob, age, email \"if you create an account\" and \"synchronize data across your devices\"; omits Crashlytics, Performance Monitoring, Remote Config, EAS Updates and the in-app opt-in / Settings › Privacy path; \"under 13\" vs Terms \"at least 16\". Terms (governing law Slovakia, auto-renewal, trial conversion, \"not a medical device\") hold up.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5537,6 +6053,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Evidence is outdated: _layout.tsx:87 initCrashlytics no longer exists; firebase.json:4-5 disables analytics/crashlytics auto-collection and consent.ts applyUsageConsent()/setUsageConsent() gate both behind settings.usage_data_consent with an onboarding step and Settings > Privacy. Still true only for Firebase Performance (performance.ts traces run whenever firebaseConfigured(), no consent check) — narrow this to S11/S10/S13.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: Analytics and Crashlytics opt-in with native auto-collection off; Performance still unconditional (S11), RevenueCat↔Firebase link before consent (S10), raw paths in screen views (A150), no resetAnalyticsData (S13). Consent text en.json:713 does not mention Perf and :715 \"change this at any time in Settings > Privacy\" is untrue for it.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5764,6 +6286,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: The cited Pitch Test row (more.tsx:183-185) is gone — grep finds no pitchTest in more.tsx; `cs()` (:115) is now only used for Rate App (:266). The remaining points (regulatory position memo, Trigger Impact wording under change control) are process items with no code counterpart.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: The row is hidden, but more.pitchTest / \"Identify your tinnitus frequency\" (en.json:176-177) still ship in the bundle in 28 locales. Owner decision of 27 Oct: only as a subjective \"Sound Match\" with no measurement claim — delete or rename the keys now.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5795,6 +6323,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — cannot be verified from the code: paywall.tsx:81 still renders `<RevenueCatUI.Paywall` with all copy/pricing/terms in the RevenueCat dashboard (comment :14-15); whether the live template shows price, renewal terms and Terms/Privacy links can only be checked in the dashboard or on a device.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: paywall.tsx:14-15 still renders the RevenueCat template; price/period/Terms/Privacy must be verified on device.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5836,7 +6370,7 @@
       "severity": "low",
       "category": "legal",
       "file": "app/i18n/locales/en.json",
-      "line": 591,
+      "line": 604,
       "verifiers": null,
       "what": "\"Time to log how your tinnitus is doing today.\" (`en.json:414`) under the title \"Tinnitus Tracker\" (`en.json:411`); App Lock does not cover notification previews. Offer a neutral wording option.",
       "evidence": "",
@@ -5851,6 +6385,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: en.json:604 \"Time to log how your tinnitus is doing today.\", :804 \"How is your tinnitus right now?\" (anchor, dead path but ships); custom-reminder placeholder :628 \"e.g. Take evening medication\" nudges medication content into notifications.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5886,7 +6426,7 @@
       "severity": "low",
       "category": "legal",
       "file": "app/_layout.tsx",
-      "line": 160,
+      "line": 162,
       "verifiers": null,
       "what": "`app/_layout.tsx:96–106` wraps `initDatabase()` in try/finally with no catch and there is no error boundary in `app/`; a failed migration on upgrade is a white screen with no report.",
       "evidence": "",
@@ -5901,6 +6441,12 @@
           "at": "2026-10-06T11:24:36.417Z",
           "status": "open",
           "note": "Imported from review-2026-10-05"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: See A36.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -5988,6 +6534,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still not recorded (grep disclaimer_accepted → nothing), but the evidence text is outdated: handleContinue (disclaimer.tsx:26-30) now only does router.push('/onboarding/privacy'); onboarding completion moved to the privacy/paywall step.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: disclaimer.tsx:25-29 \"I Understand\" writes nothing; consent.ts:33 stores only granted/denied without timestamp or policy version (GDPR Art. 7(1)).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6092,6 +6644,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — reopened, the problem is still present: itemBuckets is still `useMemo(() => getItemBuckets(processed, range), [processed, range])` (:1627) and rangeDates `useMemo(() => formatRangeDates(range, processed), [range, processed])` (:1688); the locale-keyed label cache in sevenDayTrend.ts only helps if the memo recomputes, which it does not — the focus effect skips setEntries on an unchanged fingerprint (:1607-1612) and nothing remounts Stats on language change (no key/unmountOnBlur on language anywhere in app/). Labels stay in the old language until the diary changes or restart.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Not re-verified in this pass.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6102,7 +6660,7 @@
       "severity": "low",
       "category": "ux",
       "file": "app/(tabs)/trends.tsx",
-      "line": 438,
+      "line": 439,
       "verifiers": null,
       "what": "The tappable LockedStatsCard wrapper and the Pro-badged chips/toggles added in 3ed8ad4 have no accessibilityRole or accessibilityLabel, unlike the locked entry-form cards.",
       "evidence": "app/(tabs)/trends.tsx:438 (LockedStatsCard), :948 and :1160 (badged controls).",
@@ -6124,6 +6682,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: LockedStatsCard (trends.tsx:429-460) is a bare Pressable with no accessibilityRole/Label; ProBadge.tsx has none either.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: LockedStatsCard (trends.tsx:439) still no role/label; the locked FieldCard (EntryForm.tsx:247-249) uses pointerEvents=\"none\" but its inert chips keep accessibilityRole=\"button\" in the a11y tree; locked rows on More/Settings/Profile give no hint that they open the paywall.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6156,6 +6720,12 @@
           "status": "open",
           "note": "Re-check at 6be7c70 — Still open: reports.tsx:104 logs whenever the sheet was shown; reportExport.ts:22-33 cannot detect a cancel (platform limit).",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: reports.tsx:104 logEvent is outside if (saved); SAF cancel returns null (reportExport.ts:55) and still logs; createAndShareReport returns true on any resolved shareAsync, so the first_report milestone (reports.tsx:84) also unlocks on a cancelled share.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6192,7 +6762,7 @@
       "severity": "medium",
       "category": "legal",
       "file": "app/(tabs)/more.tsx",
-      "line": 223,
+      "line": 208,
       "verifiers": null,
       "what": "On the owner's instruction learn_enabled now defaults to true, so the Learn guides (including the medicines guide that names drug classes) ship visible while the review package still lists independent clinician and native-speaker sign-off as open.",
       "evidence": "app/utils/remoteConfig.ts:11 `learn_enabled: true` with the comment 'independent clinician sign-off is still open'; docs/release-checklists/learn-clinical-review-package.md 'Open items that need a human: 1. Independent clinician sign-off … 2. Native-speaker review of the 27 translations'.",
@@ -6220,6 +6790,12 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still open but the evidence moved: app/utils/remoteConfig.ts and learn_enabled no longer exist (grep → nothing); Learn is shown unconditionally to Pro users at more.tsx:223-226. learn-clinical-review-package.md:3 and :109-113 still list independent clinician sign-off and native-speaker review as open.",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Learn now opens for every Pro user; the 2026-11-10 expansion (≈4× longer, Key points, 28 languages) has only a self-declared addendum in learn-clinical-review-package.md with status \"clinical review pending\"; independent clinician and native-speaker sign-off still blank.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6294,7 +6870,7 @@
       "file": "app/utils/purchases.ts",
       "line": 29,
       "title": "RevenueCat receives the Firebase app instance id at startup, before usage-data consent",
-      "eli5": "Still open. At startup the app hands your Firebase analytics identifier to the subscription service even if you said no to usage data.",
+      "eli5": "Partly fixed. At startup the app hands your Firebase analytics identifier to the subscription service even if you said no to usage data.",
       "what": "linkFirebase() (app/utils/purchases.ts:29, :35-39) calls analytics getAppInstanceId() and Purchases.setFirebaseAppInstanceID(id) during app start regardless of the new usage_data_consent setting, so the Firebase instance id is sent to RevenueCat for users who declined usage data (2949129).",
       "evidence": "app/utils/purchases.ts:29 `linkFirebase()` called from initPurchases; :35-39 `const id = await getAppInstanceId(); await Purchases.setFirebaseAppInstanceID(id)`. No hasUsageConsent() check in that path (grep in app/utils/purchases.ts).",
       "goesWrong": "A user who answered \"No\" to the usage-data question still has a Firebase identifier linked to their RevenueCat customer record, contradicting the consent screen and the privacy policy wording.",
@@ -6310,6 +6886,12 @@
           "status": "open",
           "note": "Found by re-check at 6be7c70",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Partly fixed: Still runs before applyUsageConsent() (_layout.tsx:157 vs :166) and never re-runs after consent is granted in-session; effectively gated only because Firebase returns no instance id while native collection is off.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6336,6 +6918,12 @@
           "status": "open",
           "note": "Found by re-check at 6be7c70",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: firebase.json still has no perf_auto_collection_enabled; setPerformanceCollectionEnabled unused; performance.ts:8-17 only checks firebaseConfigured(). Native change — bundle it with the next store build.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6362,6 +6950,12 @@
           "status": "open",
           "note": "Found by re-check at 6be7c70",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: LockScreen.tsx imports no BackHandler (the only one in the app is EntryForm.tsx:294).",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6388,6 +6982,12 @@
           "status": "open",
           "note": "Found by re-check at 6be7c70",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: my-data.tsx:351-368 confirmDeleteAll; resetAnalyticsData not imported anywhere.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6414,6 +7014,12 @@
           "status": "open",
           "note": "Found by re-check at 6be7c70",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Kept on purpose per CLAUDE.md for future A/B flags — open by design.",
+          "commit": "3d06b05"
         }
       ]
     },
@@ -6446,11 +7052,615 @@
           "status": "open",
           "note": "Independent re-verification at 6be7c70 — still true, references updated: Still true: EntryForm.tsx has no sudden/pulsatile/urgent handling and en.json only has the descriptive soundType tooltip (:440) and the 'Pulsatile' chip name (:777). The red-flag text cited at content.ts:82 now lives in src/features/learn/articles/en.ts:83 ('Know when not to wait').",
           "commit": "6be7c70ece2a122f52ff713db8aedf20726bcbb2"
+        },
+        {
+          "at": "2026-11-11T13:36:29.813Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — Still open: Broadened by S18: every red-flag and crisis sentence lives in Pro-only Learn (more.tsx:208), and the free-tier soundType tooltip (en.json:453) explains pulsatile tinnitus without any \"get it assessed\" line.",
+          "commit": "3d06b05"
         }
       ]
+    },
+    {
+      "id": "S16",
+      "title": "Stats locked card and onboarding copy claim triggers *make* tinnitus louder and promise relief, contradicting the app's association-only framing",
+      "severity": "high",
+      "category": "legal",
+      "file": "app/i18n/locales/en.json",
+      "line": 160,
+      "verifiers": null,
+      "what": "The free-tier Trigger Impact card says \"See which triggers make your tinnitus louder or quieter\" (en.json:160); the empty states say \"its effect on your intensity\" (:147) and \"what affects your tinnitus\" (:149); onboarding says \"what affects your tinnitus and what brings relief\" (:687) and \"monitor progress\" (:692). The Trigger Impact info sheet (:125 \"ASSOCIATION, NOT CAUSE\"), the statistics guide, the PDF disclaimer and the Learn guides all say the opposite. Translated into all 27 other locales.",
+      "evidence": "en.json:160 `\"lockedBody\": \"See which triggers make your tinnitus louder or quieter.\"`; :687 `\"Quick daily logging helps you see what affects your tinnitus and what brings relief.\"`; :692 `\"Spot trends, monitor progress and feel empowered in your tinnitus journey.\"`",
+      "goesWrong": "The first sentence a free user (and a store reviewer) reads about the feature sells a causal, outcome-bearing finding the app cannot deliver; the locked card is also paywall-adjacent promo copy (Apple 3.1.2, Play misleading health claims / Health apps policy).",
+      "fix": "Rewrite to the diary framing already used in homePromo.patternsBody: \"See which of your logged triggers tend to come with louder or quieter days\"; \"how your intensity compares on days with and without it\"; onboarding: \"see which days are harder, and what tends to go with them\" / \"Spot trends in your own diary and bring a clearer picture to your next appointment\". Re-translate the 27 locales.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 211,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. A few sentences in the app say triggers \"make\" tinnitus worse and promise \"relief\", even though everywhere else the app carefully says it only shows patterns, not causes. Store reviewers read exactly these sentences."
+    },
+    {
+      "id": "S17",
+      "title": "Sound Type tooltip gives a diagnostic explanation and a 'sound therapy matching' purpose",
+      "severity": "high",
+      "category": "legal",
+      "file": "app/i18n/locales/en.json",
+      "line": 453,
+      "verifiers": null,
+      "what": "entryForm.tooltips.soundType tells the user what the symptom means: \"Different types can point to different causes. A pulsatile sound (whooshing, rhythmic) may relate to blood flow changes, while a constant high-pitched ring often involves the hearing nerve. Knowing the type also helps with sound therapy matching.\" The app offers no sound therapy, and the pulsatile mention carries no \"get it assessed\" line.",
+      "evidence": "en.json:453, shown by the info button on the Sound Type card in app/components/EntryForm.tsx on both the add and edit screens, free tier.",
+      "goesWrong": "Apple 1.4.1 / Play Health apps: the app interprets a symptom (hearing nerve, blood flow) and implies a treatment use. Free users get the diagnostic hint but none of the red-flag advice that only exists in Pro-only Learn.",
+      "fix": "\"What your tinnitus most sounds like. Select all that apply. Describing the sound helps you and a professional see whether it changes over time. If the sound pulses in time with your heartbeat, mention it to a healthcare professional, and sooner if it is new.\" Drop 'causes', 'hearing nerve', 'sound therapy matching'; re-translate.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 212,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The little info text next to \"Sound Type\" explains what a sound might mean medically (nerve, blood flow) and mentions sound therapy. That is the app explaining a diagnosis, which it must not do."
+    },
+    {
+      "id": "S18",
+      "title": "Every red-flag and crisis sentence is behind the Learn paywall; free users never see urgent-care guidance",
+      "severity": "high",
+      "category": "legal",
+      "file": "app/(tabs)/more.tsx",
+      "line": 208,
+      "verifiers": null,
+      "what": "The only occurrences of 'sudden hearing loss', 'one ear only', 'pulses with your heartbeat', 'head injury' and the crisis-line sentence are in src/features/learn/articles/en.ts (:27, :35, :100, :120, :183). Learn is opened only from the More row, which calls openPaywall('learn') for free users. The Medical Disclaimer (en.json:655/706), the entry form, Stats and Find local support contain nothing equivalent. The repo's own gate (docs/release-checklists/health-content-and-privacy.md:26) requires an urgent-care sentence.",
+      "evidence": "app/(tabs)/more.tsx:208 `onPress={() => (proLocked ? openPaywall('learn') : router.push('/learn'))}`; grep for 'sudden'/'one ear'/'heartbeat' in en.json → only the descriptive soundType tooltip (:453).",
+      "goesWrong": "A free user with new unilateral or pulsatile tinnitus gets a diary and a 'blood flow' tooltip; Apple 1.4.1 expects a 'check with a doctor' reminder; liability exposure if harm follows.",
+      "fix": "Copy-only, no gating change: append one sentence to medicalDisclaimer.text / onboardingDisclaimer.text and the Find local support intro: \"Seek prompt medical assessment, following local guidance, if tinnitus starts suddenly together with hearing loss, is in one ear only, pulses with your heartbeat, follows a head injury, or comes with dizziness or other neurological symptoms. If you feel at immediate risk of harming yourself, contact local emergency or crisis services now.\" Consider un-gating the 'Understanding tinnitus' and 'Preparing for an appointment' guides.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 213,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The advice \"see a doctor quickly if hearing drops suddenly or the sound pulses\" only exists in the Learn section, which free users cannot open. One sentence in the disclaimer would fix it."
+    },
+    {
+      "id": "S19",
+      "title": "iOS widgets never decode the snapshot: WidgetLevel.textColor is non-optional but the app never writes it",
+      "severity": "high",
+      "category": "bug",
+      "file": "targets/widgets/Snapshot.swift",
+      "line": 10,
+      "verifiers": null,
+      "what": "`struct WidgetLevel: Decodable { let color: String; let textColor: String; let label: String }` with `WidgetSnapshot.levels: [WidgetLevel]` non-optional. app/utils/widgets.ts:48,91 writes `levels: SCALE_COLORS.map((color, i) => ({ color, label }))` and has never written textColor (checked back to the first widgets commit). JSONDecoder throws keyNotFound, `try?` at Snapshot.swift:85 returns nil, and every widget view takes the `snapshot == nil` branch.",
+      "evidence": "targets/widgets/Snapshot.swift:8-12; app/utils/widgets.ts:48 `levels: { color: string; label: string }[]`; `textColor` is unused in Widgets.swift.",
+      "goesWrong": "On iOS all five widgets permanently show 'Tap to open the app' regardless of tier, App Lock or data. iOS has never been compiled, so this was never seen.",
+      "fix": "`let textColor: String?` (or delete the field).",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 214,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. On iPhone every home-screen widget would show \"Tap to open the app\" forever, because the widget expects a field the app never writes. Nobody has built the iPhone version yet, so nobody saw it."
+    },
+    {
+      "id": "S20",
+      "title": "iOS edit deep link has a literal '(id)' instead of the interpolated entry id",
+      "severity": "medium",
+      "category": "bug",
+      "file": "targets/widgets/Snapshot.swift",
+      "line": 98,
+      "verifiers": null,
+      "what": "`URL(string: \"tinnitus-app://widget?action=edit&id=(id)\")!` is missing the backslash of Swift string interpolation.",
+      "evidence": "targets/widgets/Snapshot.swift:97-99; app/utils/widgetLinks.ts:38 rejects a non-numeric id and falls back to `{ type: 'open' }`.",
+      "goesWrong": "Tapping Today's Status or the Dashboard on a logged day opens the app instead of that entry's edit screen (no crash).",
+      "fix": "`id=\\(id)`.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 215,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. A typo in the iPhone widget code means tapping today's entry opens the app instead of that entry."
+    },
+    {
+      "id": "S21",
+      "title": "Import can disable a built-in trigger or sound type through a case-insensitive name collision",
+      "severity": "medium",
+      "category": "bug",
+      "file": "app/db/queries.ts",
+      "line": 496,
+      "verifiers": null,
+      "what": "`typeIdByName`/`triggerIdByName` are exact-match maps, but `addCustomTinnitusType`/`addCustomTrigger` (queries.ts:122-128, 160-166) look up `COLLATE NOCASE` and return the existing row's id. A backup listing custom item \"stress\" with is_active:false on a device with built-in \"Stress\" passes `has()` (false), gets the built-in's id back and `setTriggerActive(id, false)` disables the built-in.",
+      "evidence": "queries.ts:496-507 `if (triggerIdByName.has(item.name)) continue; const id = addCustomTrigger(item.name); if (!item.is_active) setTriggerActive(id, false);`",
+      "goesWrong": "Restoring a backup silently hides a built-in trigger or sound type from the entry form.",
+      "fix": "Build the maps with lower-cased keys, or have addCustom* return whether it created a row and only apply is_active when it did.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 216,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. Restoring a backup that contains a custom trigger named like a built-in one (for example \"stress\") can switch the built-in \"Stress\" off without telling you."
+    },
+    {
+      "id": "S22",
+      "title": "Reminder toggle schedules the notification before the permission request and never re-syncs after permission is granted",
+      "severity": "medium",
+      "category": "bug",
+      "file": "app/reminders.tsx",
+      "line": 101,
+      "verifiers": null,
+      "what": "`toggleEnabled` writes enabled=1, calls `refreshAndSync()` (→ syncReminderNotifications) and only then `requestPermissionForReminder()`, which after a grant only refreshes the banner state. On iOS a request added before authorization is rejected (notificationsNotAllowed), so after the user taps Allow nothing is scheduled until the next cold start (_layout.tsx:167-172). `handleBannerPress` (:85-94) and `ReminderPromptHost.accept` do it in the right order.",
+      "evidence": "app/reminders.tsx:76-83 `requestPermissionForReminder` has no sync call; :101-107 `refreshAndSync(getReminders()); … if (enabling) await requestPermissionForReminder();`",
+      "goesWrong": "First-time enable from the Reminders screen: the switch is on, permission granted, no notification ever fires until the app is restarted.",
+      "fix": "In requestPermissionForReminder: `if (granted) syncReminderNotifications(getReminders(), t)`; add a .catch to the fire-and-forget sync calls.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 217,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. If you switch a reminder on and then allow notifications in the system dialog, the reminder is not actually scheduled until you restart the app."
+    },
+    {
+      "id": "S23",
+      "title": "Reminder soft-ask consumes one of its two lifetime asks while the dialog is suppressed by App Lock",
+      "severity": "low",
+      "category": "bug",
+      "file": "app/components/ReminderPromptHost.tsx",
+      "line": 41,
+      "verifiers": null,
+      "what": "The listener calls `markReminderPromptShown()` and logs reminder_prompt_shown inside the setTimeout regardless of `suppressed`; the StatusDialog is rendered with `visible && !suppressed`. If the app is backgrounded/re-locked in that 600 ms window and killed before unlock, one of the two asks is burned unseen.",
+      "evidence": "ReminderPromptHost.tsx:41-50; the timer is also never cleared.",
+      "goesWrong": "A user with App Lock on may never see the second (or either) reminder prompt.",
+      "fix": "Mark shown / log only when the dialog actually becomes visible (effect on `visible && !suppressed`), or skip the request while suppressed.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 218,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The app may only ask twice whether you want reminders. With App Lock on, one of those two asks can be used up without you ever seeing the dialog."
+    },
+    {
+      "id": "S24",
+      "title": "90D chart buckets cover up to 91 days while the tiles filter 90",
+      "severity": "low",
+      "category": "bug",
+      "file": "app/stats/sevenDayTrend.ts",
+      "line": 139,
+      "verifiers": null,
+      "what": "`weeklyItemBuckets` builds 13 Monday-anchored weeks (on a Sunday the first week starts 90 days ago) while `filterItems` (:58-65) cuts at days − 1 = 89.",
+      "evidence": "sevenDayTrend.ts:139-148 vs :58-65.",
+      "goesWrong": "An entry on day 90 appears in the first bar but not in AVG / ENTRIES / CHANGE.",
+      "fix": "Clip the first weekly bucket to the 90-day cutoff, or compute the tiles over the bucket span.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 219,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. On the 90-day view the first bar can include one day that the numbers above the chart leave out."
+    },
+    {
+      "id": "S25",
+      "title": "Imported backup JSON (health data) stays in the app cache forever",
+      "severity": "medium",
+      "category": "security",
+      "file": "app/my-data.tsx",
+      "line": 292,
+      "verifiers": null,
+      "what": "`DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true })` copies the picked file into the cache; after `new File(asset.uri).text()` it is never deleted. The export path explicitly avoids leaving a copy (my-data.tsx:107-118).",
+      "evidence": "app/my-data.tsx:292-298.",
+      "goesWrong": "A full diary copy sits unencrypted in the cache directory outside App Lock, on both platforms.",
+      "fix": "`finally { try { new File(asset.uri).delete() } catch {} }` after reading.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 220,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. When you restore a backup, a copy of that file (your whole diary) is left in a temporary folder and never removed."
+    },
+    {
+      "id": "S26",
+      "title": "Malformed widget deep link throws URIError inside redirectSystemPath",
+      "severity": "low",
+      "category": "bug",
+      "file": "app/utils/widgetLinks.ts",
+      "line": 32,
+      "verifiers": null,
+      "what": "`decodeURIComponent(value)` has no try/catch; the `tinnitus-app://` scheme is public, so any app or `adb shell am start -d 'tinnitus-app://widget?action=%'` reaches app/+native-intent.ts:8.",
+      "evidence": "app/utils/widgetLinks.ts:32; app/+native-intent.ts:8.",
+      "goesWrong": "URIError thrown inside the router's link handling on cold start or resume.",
+      "fix": "Wrap in try/catch and treat as `{ type: 'open' }`.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 221,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. A badly formed link sent to the app (any other app can send one) can crash it on opening instead of being ignored."
+    },
+    {
+      "id": "S27",
+      "title": "Intensity colours used as text fail WCAG contrast (yellow 1.5:1, green 2.0:1, red 3.5:1)",
+      "severity": "high",
+      "category": "ux",
+      "file": "app/(tabs)/trends.tsx",
+      "line": 800,
+      "verifiers": null,
+      "what": "SCALE_COLORS are used as the colour of 12-15 pt text: trigger value (trends.tsx:800 via levelColor), verdict line (:325, SCALE_COLORS[4]/[0]), day-before/after tiles (:373, :379), AVG caption `intensityColor(Math.round(avg))` (trends.tsx:1738, index.tsx:279), change caption (:1767, index.tsx:296). #FACC15 on white/#F1F5F9 ≈ 1.5:1, #22C55E ≈ 2.0:1, #84CC16 ≈ 2.1:1, #EF4444 ≈ 3.5:1.",
+      "evidence": "app/constants/theme.ts SCALE_COLORS; the call sites above.",
+      "goesWrong": "The key numbers on Home and Stats are unreadable for low-vision users and below 3:1 even for large text (A21 fixed textMuted but not these).",
+      "fix": "Keep the colour on the icon or bar and render the number in textPrimary, or add a darkened text variant per level.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 222,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The yellow and green numbers on Home and Stats are far too light against the background for many people to read."
+    },
+    {
+      "id": "S28",
+      "title": "Intensity is never announced to screen readers: IntensityIcon, entry rows, calendar cells and stat tiles carry no label",
+      "severity": "high",
+      "category": "ux",
+      "file": "app/components/intensity/IntensityIcon.tsx",
+      "line": 46,
+      "verifiers": null,
+      "what": "IntensityIcon renders a bare Svg with no accessibilityLabel; ExpandableEntryRow.tsx:232-238 labels the row with the time only; calendar cells (calendar.tsx:281-286) read as '17'; StatTile (trends.tsx:1735, index.tsx:276) has no label.",
+      "evidence": "grep accessibilityLabel in app/components/intensity/ → none.",
+      "goesWrong": "The only health value in the app is invisible to VoiceOver/TalkBack users (A20 fixed buttons and icons, not the data).",
+      "fix": "accessibilityLabel={t('entryForm.intensityLevels')[level]} on IntensityIcon; include the level in the row label ('Today 20:00, Moderate'); calendar cells '17, Moderate, 2 entries'.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 223,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. Someone using a screen reader hears the time of an entry but never the intensity level, which is the one thing the app is for."
+    },
+    {
+      "id": "S29",
+      "title": "Stats range, view, sort and day-of-week controls lack accessibility role, label and selected state",
+      "severity": "medium",
+      "category": "ux",
+      "file": "app/(tabs)/trends.tsx",
+      "line": 1701,
+      "verifiers": null,
+      "what": "Range segments (:1701-1707) have no role/selected; bars/line, list/chips and period/trend toggles (:639-650, :1165-1176, :1803-1815) are icon-only without a label; sort chips (:690-698), DOW chips (:954-958), trigger rows (:778-781, no expanded state), ChartTouchTargets (IntensityTrendChart.tsx:127-131) are invisible unlabeled buttons, one per day. The hidden save hint in EntryForm.tsx:600 (`opacity: 0`) is still read aloud.",
+      "evidence": "The listed lines render Pressable/PressableScale without accessibilityRole/accessibilityState/accessibilityLabel.",
+      "goesWrong": "Screen-reader users cannot tell which range or view is active and hear a row of unnamed buttons over the chart.",
+      "fix": "accessibilityRole=\"tab\"/\"button\", accessibilityState={{ selected, expanded }}, labels for icon-only toggles, one label per chart touch target with its bucket and value; conditional rendering for the hint.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 224,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. Screen readers cannot tell which range or chart view is selected on Stats, and the chart exposes a row of unnamed invisible buttons."
+    },
+    {
+      "id": "S30",
+      "title": "'Verified tinnitus organizations' undercuts the directory's own non-endorsement notice",
+      "severity": "low",
+      "category": "legal",
+      "file": "app/i18n/locales/en.json",
+      "line": 188,
+      "verifiers": null,
+      "what": "more.findLocalSupportSubtitle = \"Verified tinnitus organizations by country\" while the directory disclaimer (:219) says a listing is not an endorsement; the list was last checked on 2026-08-24 (organizations.ts:12).",
+      "evidence": "en.json:188, :208, :219.",
+      "goesWrong": "'Verified' is a representation about third parties the app cannot keep current.",
+      "fix": "\"Independent tinnitus organizations by country\".",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 225,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The support list calls its organisations \"verified\" while also saying that listing is not an endorsement; \"independent\" is the safer word."
+    },
+    {
+      "id": "S31",
+      "title": "npm audit: 35 vulnerabilities (15 high) in production dependencies, all transitive through Expo / apple-targets",
+      "severity": "low",
+      "category": "security",
+      "file": "package.json",
+      "line": 20,
+      "verifiers": null,
+      "what": "`npm audit --omit=dev` at 3d06b05: 35 (4 low, 16 moderate, 15 high), e.g. zod < 4.6.6 via Expo, uuid via @bacons/xcode / @expo/plist. Nothing runtime-exploitable in an offline mobile app; `npm audit fix --force` would downgrade to expo@53.",
+      "evidence": "npm audit --omit=dev output on 2026-11-11.",
+      "goesWrong": "Noise in store security questionnaires and a creeping count if never tracked.",
+      "fix": "Record the count, re-run after each SDK patch, never --force.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 226,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The dependency checker lists 35 known issues in libraries the app pulls in through Expo. None is exploitable in this offline app, but the number should be tracked."
+    },
+    {
+      "id": "S32",
+      "title": "openNotificationSettings opens Android App Info rather than the notification page, and suppresses App Lock for a genuinely external screen",
+      "severity": "low",
+      "category": "design-decision",
+      "file": "app/utils/notifications.ts",
+      "line": 47,
+      "verifiers": null,
+      "what": "Uses `Linking.openSettings()` (Android → App info, the user still has to find Notifications) wrapped in beginSystemUi() so App Lock does not re-lock on return, although CLAUDE.md says screens that really leave the app should re-lock.",
+      "evidence": "app/utils/notifications.ts:47-68.",
+      "goesWrong": "Two extra taps for the user; the OS Settings app is as external as a browser yet skips the lock for up to 5 minutes.",
+      "fix": "expo-intent-launcher with android.settings.APP_NOTIFICATION_SETTINGS + EXTRA_APP_PACKAGE; decide and document whether to suppress the lock here.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 227,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The \"Open settings\" button lands on the app's general info page instead of its notification page, and it keeps the app unlocked while you are in system settings."
+    },
+    {
+      "id": "S33",
+      "title": "Change tile shows 20 × levels as a percentage while the trigger panel uses levels",
+      "severity": "low",
+      "category": "design-decision",
+      "file": "app/stats/sevenDayTrend.ts",
+      "line": 339,
+      "verifiers": null,
+      "what": "`change * (100/5)` prints '+20%' for a one-level rise (trends.tsx:1768-1769, index.tsx:297-298) under the bare label CHANGE, while the same quantity in the trigger panel is shown in levels (signedLevels).",
+      "evidence": "sevenDayTrend.ts:339-344.",
+      "goesWrong": "Two units for one quantity on one screen; '+20%' reads as a percentage of something.",
+      "fix": "Show '+1.0 levels' (reuse signedLevels) or label the unit.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 228,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The \"+20%\" on the Change tile is really \"one level higher\"; the same thing is shown in levels elsewhere on the screen."
+    },
+    {
+      "id": "S34",
+      "title": "PDF trend line spaces logged days evenly by index, hiding gaps",
+      "severity": "low",
+      "category": "design-decision",
+      "file": "src/features/reports/reportHtml.ts",
+      "line": 26,
+      "verifiers": null,
+      "what": "`x = pad + (index / (trend.length - 1)) * …` uses the array index, not the date; there is no x-axis.",
+      "evidence": "reportHtml.ts:26-30.",
+      "goesWrong": "A three-week gap is one step on the clinician's chart.",
+      "fix": "Position by (date − startDate) / (endDate − startDate) and draw month ticks.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 229,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. In the doctor PDF the trend line places every logged day the same distance apart, so a three-week gap looks like one day."
+    },
+    {
+      "id": "S35",
+      "title": "French formal leftover: achievements.yourMilestones is 'VOS ÉTAPES'",
+      "severity": "low",
+      "category": "i18n",
+      "file": "app/i18n/locales/fr.json",
+      "line": 235,
+      "verifiers": null,
+      "what": "The only genuine formal form left after the 2026-10-20 informal-address pass across de/sk/cs/fr/ru/pl/uk/sl (UI, Learn and guides checked by regex and by hand).",
+      "evidence": "fr.json:235 `\"yourMilestones\": \"VOS ÉTAPES\"`.",
+      "goesWrong": "One screen addresses the user formally.",
+      "fix": "\"TES ÉTAPES\".",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 230,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. One French heading still uses the formal \"vous\" form while the rest of the app uses \"tu\"."
+    },
+    {
+      "id": "S36",
+      "title": "Native changes since 6be7c70 (RN 0.83.10, Expo 55.0.32, expo-font plugin, widget Kotlin/Swift) need a store build before the next eas update",
+      "severity": "low",
+      "category": "code-quality",
+      "file": "package.json",
+      "line": 1,
+      "verifiers": null,
+      "what": "Commit 3095f41 bumped react-native 0.83.4 → 0.83.10 and every expo-* package, added react-native-screens/safe-area-context/expo-constants/expo-font/expo-linking as direct deps and the expo-font plugin; bce8b65/c57313b changed modules/home-widgets, Widgets.swift changed. The fingerprint policy keeps a JS-only update away from an old binary, but nothing can ship OTA until a new build is submitted. firebase.json (S11) and expo-localization supportedLocales (A143) are native too — do them in the same build.",
+      "evidence": "git diff 6be7c70..3d06b05 -- package.json app.json modules targets.",
+      "goesWrong": "An `eas update` published now reaches no installed build.",
+      "fix": "EAS build + submit before the next update; record it in CLAUDE.md per the OTA rule.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 231,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The app's native parts changed again, so a new store build is needed before any over-the-air update can reach anyone."
+    },
+    {
+      "id": "S37",
+      "title": "Release-checklist docs reference an in-app 'clinical review required' marker that no longer exists, and the 2026-11-10 Learn expansion has no review entry",
+      "severity": "low",
+      "category": "code-quality",
+      "file": "docs/release-checklists/learn-clinical-review-package.md",
+      "line": 127,
+      "verifiers": null,
+      "what": "health-content-and-privacy.md:16-17 and learn-clinical-review-package.md:127-128 gate release on removing an in-app marker (grep: no such string in app/ or src/); the package still names 'Review candidate: fix/review-findings-2026-10-14' (:5), tracks language review for en/es/fr/de only (:49-54), and the ~4× expansion with Key points (8a62c8c) has only a self-declared addendum with status 'clinical review pending' (:149). CLAUDE.md also says the statistics guide is listed on the Learn index; app/learn/index.tsx renders getLearnArticles() only.",
+      "evidence": "The three documents at the cited lines; `grep -rn \"clinical review\" app src` → none.",
+      "goesWrong": "The documented gate cannot be enforced and the review record does not cover the content that ships.",
+      "fix": "Replace the marker rule with a dated sign-off table per guide and language; add the expansion as a new review candidate.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 232,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. The review checklist tells you to remove an in-app warning that no longer exists, and the big Learn rewrite from 10 November has not been entered as something to review."
+    },
+    {
+      "id": "S38",
+      "title": "'Average pitch / location / distress broken down by day of the week' describes a composition chart as an average",
+      "severity": "low",
+      "category": "ux",
+      "file": "app/i18n/locales/en.json",
+      "line": 83,
+      "verifiers": null,
+      "what": "stats.byDayOfWeek*Desc (:83-85) and trends.tsx:894-900 describe the categorical day-of-week charts as averages; the chart shows shares.",
+      "evidence": "en.json:85 `\"Average location broken down by day of the week\"`.",
+      "goesWrong": "'Average location' is meaningless and translators reproduced it in 27 locales.",
+      "fix": "\"Where tinnitus was noticed, by day of the week\" etc.",
+      "source": "scan-2026-11-11",
+      "commit": "3d06b05",
+      "status": "open",
+      "issue": 233,
+      "history": [
+        {
+          "at": "2026-11-11T13:36:29.690Z",
+          "status": "open",
+          "note": "Found by quality scan at 3d06b05",
+          "commit": "3d06b054c121f86264a136782d83823df17dfd28"
+        }
+      ],
+      "eli5": "Still open. Some Stats descriptions say \"average location\", which makes no sense; the chart shows how often each option was chosen."
     }
   ],
-  "updatedAt": "2026-10-27T13:16:19.867Z",
+  "updatedAt": "2026-11-11T13:40:39.872Z",
   "scans": [
     {
       "at": "2026-10-10T21:34:09.874Z",
@@ -6500,6 +7710,14 @@
       "added": 0,
       "note": "independent re-verification of all 210 findings (second pass, by hand)",
       "notes": "Second, independent pass over every finding at main 6be7c70, treating the dashboard as claims to test. 169 hold, 30 still hold but had outdated file/line/evidence (updated), 4 no longer apply and were closed (A114, A135, A175, L11), 5 were marked fixed in error and are reopened (A38 lock-screen re-prompt, A91 tab-bar accessibility, A104 case-insensitive uniqueness, A130 metro no-op override, S3 stale axis labels), 2 cannot be verified from code (L1 live privacy page, L10 RevenueCat paywall template). The three items left open as unconfirmed this morning are now confirmed open: A78 (Hermes 0.14.1 has no Intl.DisplayNames, no polyfill, silent English fallback), A111/A112 (syncReminderNotifications has no serialisation; callers fire-and-forget). A113 holds (PATTERN_PROBABILITY 0.9 vs direction shown at 0.6). S10–S15 confirmed against code. tsc and the three test scripts pass."
+    },
+    {
+      "at": "2026-11-11T13:36:29.690Z",
+      "head": "3d06b054c121f86264a136782d83823df17dfd28",
+      "fixed": 0,
+      "added": 23,
+      "note": "scan ingested from recheck-3d06b05.json",
+      "notes": "Full review v4 of main 3d06b05 (18 commits, 110 files since 6be7c70: Home Premium card, reminder soft ask, Pro badges removed, widget resize, Month Glance redraw, Expo 55 patch bump, dev tools dev-only, Learn guides expanded with Key points in 28 languages). tsc and the three test scripts pass; all 27 locales have 0 missing keys, 0 placeholder mismatches and structurally identical Learn guides and statistics guides. None of the 150 open findings was fixed in this range; 23 new (S16–S38). The October blockers stay fixed. What remains before release: causal/relief/diagnostic wording in the Stats locked card, onboarding and the Sound Type tooltip; red-flag guidance only inside Pro-only Learn; Firebase Performance outside consent; the live privacy policy (fetched today, still AdMob/age/accounts/sync, 13 vs 16 age); iOS widgets that can never decode the snapshot; a native build before any eas update."
     }
   ]
 }
