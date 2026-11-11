@@ -5985,13 +5985,13 @@
     {
       "id": "L1",
       "title": "The live privacy policy does not describe the app that ships",
-      "eli5": "Still open. The privacy policy on the website describes a different app: it mentions ads, user accounts, syncing and collecting your age, none of which exist, and it does not mention over-the-air updates or the in-app consent question. App stores reject apps whose policy does not match.",
+      "eli5": "Still open. The privacy policy on the website now gets the app's name right, but it still describes ads, user accounts, syncing and collecting your age, none of which exist, and it does not mention crash reporting, over-the-air updates or the in-app consent question. App stores reject apps whose policy does not match.",
       "severity": "critical",
       "category": "legal",
       "file": "app/about.tsx",
-      "line": 95,
+      "line": 101,
       "verifiers": null,
-      "what": "`app/about.tsx:95` links `https://kappsa.tech/Privacy-Policy/`. Checked live today, it:\n- covers an app called **\"TinnitusTrack\"**; the app is \"Tinnitus Tracker\" (`app.json:3`);\n- says the app collects **Age** — nothing collects age (onboarding asks only a name: `app/onboarding/name.tsx`);\n- lists **Google AdMob** — no ads SDK is installed (`package.json:14–43`);\n- omits **Crashlytics** (`app/utils/crashlytics.ts`), **Performance Monitoring** (`app/utils/performance.ts`), **Remote Config** (`app/utils/remoteConfig.ts`) and **EAS Updates**, which contacts `u.expo.dev` on every launch (`app.json:84–87`);\n- says uninstalling \"will permanently remove all data\", which is false while Android Auto Backup is on (see #6).\n\nApple 5.1.1(i) requires the policy to \"identify what data, if any, the app/service collects, how it collects that data, and all uses of that data\" ([App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/#privacy)). Google requires \"a comprehensive and accurate privacy policy\" for health apps ([Play Health apps policy](https://support.google.com/googleplay/android-developer/answer/12991134)) and holds you responsible for Data safety accuracy \"including data collected and handled through any third-party libraries or SDKs\" ([Data safety](https://support.google.com/googleplay/android-developer/answer/10787469)). An inaccurate policy is the most common rejection reason and the easiest to fix.",
+      "what": "app/about.tsx:101 links https://kappsa.tech/Privacy-Policy/. Re-read live on 2026-11-11 (\"Last updated: 16.06.2026\"). It now names \"Tinnitus Tracker\" (the October \"TinnitusTrack\" point is fixed) but still:\n- says the app collects Age (section 02 \"Age\"; section 12 \"your name, age, tinnitus intensity, pitch\") — nothing collects age (onboarding asks only a name, app/onboarding/name.tsx);\n- says \"The App uses Google AdMob to display advertisements\" (section 11; section 05 lists Google AdMob) — no ads SDK is installed (package.json);\n- describes accounts and sync (section 15: \"Email address (if you create an account)\", \"Synchronize data across your devices\", \"request deletion of your account\") — there are no accounts and no sync, and section 04 says everything is stored locally;\n- names only Firebase, Google Analytics for Firebase, RevenueCat and AdMob; omits Crashlytics (app/utils/crashlytics.ts), Performance Monitoring by name (app/utils/performance.ts) and EAS Updates, which contacts u.expo.dev on every launch (app.json updates.url). Remote Config was removed from the app on 2026-10-17, so it no longer needs to be listed;\n- does not describe the in-app opt-in for usage/crash data or the Settings › Privacy switch (section 07 lists only view / export / uninstall; section 15 says withdraw consent by email);\n- states \"not intended for children under the age of 13\" while the Terms require users to be at least 16.\nThe October point about uninstalling not removing data no longer applies: android.allowBackup is false since PR #8, so \"Uninstalling the App will permanently remove all data … from your device\" is now true.",
       "evidence": "",
       "goesWrong": "",
       "fix": "",
@@ -6015,6 +6015,12 @@
           "at": "2026-11-11T13:36:29.813Z",
           "status": "open",
           "note": "Re-check at 3d06b05 — Still open: Fetched 2026-11-11: kappsa.tech/Privacy-Policy, \"last updated 16.06.2026\". Now names \"Tinnitus Tracker\" (fixed), but still lists Google AdMob, age, email \"if you create an account\" and \"synchronize data across your devices\"; omits Crashlytics, Performance Monitoring, Remote Config, EAS Updates and the in-app opt-in / Settings › Privacy path; \"under 13\" vs Terms \"at least 16\". Terms (governing law Slovakia, auto-renewal, trial conversion, \"not a medical device\") hold up.",
+          "commit": "3d06b05"
+        },
+        {
+          "at": "2026-11-11T13:47:08.225Z",
+          "status": "open",
+          "note": "Re-check at 3d06b05 — description rewritten to the live page as of 2026-11-11: name fixed, Remote Config point dropped (feature removed from the app), uninstall point dropped (allowBackup=false); age, AdMob, accounts/sync, missing Crashlytics/Perf/EAS and missing in-app opt-in confirmed with quotes; 13 vs 16 age mismatch added.",
           "commit": "3d06b05"
         }
       ]
@@ -7660,7 +7666,7 @@
       "eli5": "Still open. Some Stats descriptions say \"average location\", which makes no sense; the chart shows how often each option was chosen."
     }
   ],
-  "updatedAt": "2026-11-11T13:40:39.872Z",
+  "updatedAt": "2026-11-11T13:47:08.226Z",
   "scans": [
     {
       "at": "2026-10-10T21:34:09.874Z",
